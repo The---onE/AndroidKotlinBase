@@ -16,15 +16,10 @@
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello Kotlin!" />
-
         <Button
-            android:id="@+id/btnTest"
+            android:id="@+id/btnTempActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test" />
+            android:text="TempActivity" />
     </LinearLayout>
 </RelativeLayout>

@@ -72,7 +72,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // 异常处理
     protected fun filterException(e: Exception): Boolean {
-        if (e != null && Constants.EXCEPTION_DEBUG) {
+        if (Constants.EXCEPTION_DEBUG) {
             // Debug模式
             // 打印异常堆栈跟踪
             e.printStackTrace()
@@ -111,6 +111,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     // 启动新Activity
+    // 格式为startActivity(Activity名::class.java)
     protected fun startActivity(cls: Class<*>) {
         val intent = Intent(this, cls)
         startActivity(intent)
