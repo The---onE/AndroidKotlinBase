@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter
  * 首页ViewPager适配器，管理标签页Fragment和对应标题
  */
 class MyPagerAdapter(fm: FragmentManager,
-                     internal var mFragments: List<Fragment>,
-                     internal var mTitles: List<String>)
+                     private var mFragments: List<Fragment>,
+                     private var mTitles: List<String>)
     : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {

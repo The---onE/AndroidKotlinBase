@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">AndroidKotlinBase</string>
+    <string name="app_name">基础Kotlin框架</string>
+
+    <string name="skip">跳过</string>
 </resources>
