@@ -1,10 +1,9 @@
 package com.xmx.androidkotlinbase.Tools.ActivityBase
 
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.GestureDetector
 import android.view.MotionEvent
-import com.xmx.androidkotlinbase.R
+import kotlinx.android.synthetic.main.tool_bar.*
 
 /**
  * Created by The_onE on 2016/1/1.
@@ -26,11 +25,10 @@ abstract class BaseTempActivity : BaseActivity() {
 
         // 初始化工具栏
         // 布局中必须要有 <include layout="@layout/tool_bar" />
-        val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // 工具栏添加返回按钮
-        toolbar?.setNavigationOnClickListener { onBackPressed() }
+        toolbar.setNavigationOnClickListener { onBackPressed() }
 
         mGestureDetector = GestureDetector(this,
                 // 添加右滑关闭功能

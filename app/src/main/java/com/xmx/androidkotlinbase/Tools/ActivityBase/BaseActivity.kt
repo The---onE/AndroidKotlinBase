@@ -13,7 +13,7 @@ import com.xmx.androidkotlinbase.Constants
 
 /**
  * Created by The_onE on 2017/1/16.
- * Activity基类，初始化插件，声明业务接口，提供常用功能
+ * Activity基类，声明业务接口，提供常用功能
  */
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -89,10 +89,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // 显示提示信息
     protected fun showToast(str: String?) {
-        if (str == null) {
-            str == ""
-        }
-        Toast.makeText(this, str, Toast.LENGTH_SHORT).show()
+        val s = str ?: ""
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
     }
 
     // 显示提示信息
