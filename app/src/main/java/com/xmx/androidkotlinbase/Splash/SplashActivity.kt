@@ -25,6 +25,6 @@ class SplashActivity : BaseSplashActivity() {
         timer = Timer {
             jumpToMainActivity()
         }
-        timer!!.start(10000, once = true)
+        timer!!.start(3000, once = true)
     }
 }
