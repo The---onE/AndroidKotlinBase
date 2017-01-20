@@ -10,7 +10,7 @@ import com.xmx.androidkotlinbase.MyApplication
  * 自定义异常处理器
  */
 
-class CrashHandler : Thread.UncaughtExceptionHandler {
+class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
     // 单例模式
     companion object {
         private var instance: CrashHandler? = null

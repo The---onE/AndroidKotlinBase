@@ -8,9 +8,12 @@ import android.database.Cursor
  * SQLite数据库实体接口，实现该接口后即可通过管理器管理
  */
 interface ISQLEntity {
+    // 数据库中的表结构接口
     fun tableFields(): String
 
+    // 将实体转化为可插入或更新的数据接口
     val content: ContentValues
 
+    // 将查询的数据转化为实体接口
     fun convertToEntity(c: Cursor): ISQLEntity
 }

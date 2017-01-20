@@ -18,7 +18,8 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
     // 管理数据库连接
     protected var database: SQLiteDatabase? = null
     // 数据变更时会更新版本
-    protected var version = System.currentTimeMillis()
+    public var version = System.currentTimeMillis()
+        protected set
     // 是否已打开数据库
     protected var openFlag = false
 

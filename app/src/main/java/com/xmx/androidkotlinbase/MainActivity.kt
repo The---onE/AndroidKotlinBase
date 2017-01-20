@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import com.xmx.androidkotlinbase.Fragments.HomeFragment
-import com.xmx.androidkotlinbase.Fragments.TestFragment
+import com.xmx.androidkotlinbase.Fragments.DataFragment
 import com.xmx.androidkotlinbase.Tools.ActivityBase.BaseActivity
 import com.xmx.androidkotlinbase.Tools.MyPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,12 +22,12 @@ class MainActivity : BaseActivity() {
         // 各标签页Fragment
         val fragments = ArrayList<Fragment>()
         fragments.add(HomeFragment())
-        fragments.add(TestFragment())
+        fragments.add(DataFragment())
 
         // 各标签页标题
         val titles = ArrayList<String>()
         titles.add("首页")
-        titles.add("测试")
+        titles.add("数据")
 
         // 设置ViewPager中的标签页
         viewPager.adapter = MyPagerAdapter(supportFragmentManager, fragments, titles)

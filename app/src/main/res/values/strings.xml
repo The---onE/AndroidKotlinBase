@@ -2,4 +2,35 @@
     <string name="app_name">基础Kotlin框架</string>
 
     <string name="skip">跳过</string>
+
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+
+    <string name="add">添加</string>
+    <string name="add_success">添加成功</string>
+    <string name="add_failure">添加失败</string>
+
+    <string name="update">更新</string>
+    <string name="update_success">更新成功</string>
+    <string name="update_failure">更新失败</string>
+
+    <string name="delete">删除</string>
+    <string name="delete_success">删除成功</string>
+    <string name="delete_failure">删除失败</string>
+
+    <string name="sync">同步</string>
+    <string name="sync_success">同步完成</string>
+    <string name="sync_failure">同步失败</string>
+
+    <string name="edit">编辑</string>
+    <string name="save">保存</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_failure">保存失败</string>
+
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">天</string>
+    <string name="hour">小时</string>
+    <string name="minute">分钟</string>
+    <string name="second">秒</string>
 </resources>
