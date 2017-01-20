@@ -43,4 +43,21 @@ class MainActivity : BaseActivity() {
     override fun processLogic(savedInstanceState: Bundle?) {
     }
 
+    // 点击返回键时添加二次确认
+    private var mExitTime: Long = 0 // 上次按键的时间
+    override fun onBackPressed() {
+//        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START)
+//            return
+//        }
+        // 如果是第一次按键或距离上次按键时间过长，则重新计时
+        if (System.currentTimeMillis() - mExitTime > Constants.LONGEST_EXIT_TIME) {
+            showToast(R.string.confirm_exit)
+            mExitTime = System.currentTimeMillis()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 }
