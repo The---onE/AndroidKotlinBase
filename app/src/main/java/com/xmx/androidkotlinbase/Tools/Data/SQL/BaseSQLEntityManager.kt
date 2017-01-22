@@ -104,7 +104,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return -1
         }
         // 插入数据
-        val flag = database!!.insert(tableName, null, entity.content)
+        val flag = database!!.insert(tableName, null, entity.getContent())
         if (flag > 0) {
             // 数据变更
             version++
@@ -145,40 +145,17 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
 
     // 插入多条实体数据，在同一事务中
     fun insertData(entities: List<Entity>,
-                   success: (total: Int) -> Unit): Boolean {
-        return operationInTransaction(
-                // 在事务中插入数据
-                operation = {
-                    for (entity in entities) {
-                        database!!.insert(tableName, null, entity.content)
-                    }
-                    return@operationInTransaction entities.size
-                },
-                // 插入成功
-                success = {
-                    total ->
-                    success(total)
-                },
-                // 插入失败，处理异常
-                error = {
-                    e ->
-                    ExceptionUtil.filterException(e)
-                }
-        )
-    }
-
-    // 插入多条实体数据，在同一事务中
-    fun insertData(entities: List<Entity>,
-                   proceeding: (index: Int) -> Unit,
-                   success: (total: Int) -> Unit): Boolean {
+                   success: (total: Int) -> Unit,
+                   proceeding: ((index: Int) -> Unit)? = null): Boolean {
         return operationInTransaction(
                 // 在事务中插入数据，每插入一条进行回调
                 operation = {
                     var index = 0
-                    for (entity in entities) {
-                        database!!.insert(tableName, null, entity.content)
+                    entities.forEach {
+                        entity ->
+                        database!!.insert(tableName, null, entity.getContent())
                         index++
-                        proceeding(index)
+                        proceeding?.let { proceeding(index) }
                     }
                     return@operationInTransaction index
                 },
@@ -209,33 +186,8 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
 
     // 删除多条数据，在同一事务中
     fun deleteByIds(ids: List<Long>,
-                    success: (total: Int) -> Unit): Boolean {
-        return operationInTransaction(
-                // 在事务中删除数据
-                operation = {
-                    ids.forEach {
-                        id ->
-                        database!!.delete(tableName, "ID = ?", arrayOf(id.toString()))
-                    }
-                    return@operationInTransaction ids.size
-                },
-                // 删除成功
-                success = {
-                    total ->
-                    success(total)
-                },
-                // 删除失败，处理异常
-                error = {
-                    e ->
-                    ExceptionUtil.filterException(e)
-                }
-        )
-    }
-
-    // 删除多条数据，在同一事务中
-    fun deleteByIds(ids: List<Long>,
-                    proceeding: (index: Int) -> Unit,
-                    success: (total: Int) -> Unit): Boolean {
+                    success: (total: Int) -> Unit,
+                    proceeding: ((index: Int) -> Unit)? = null): Boolean {
         return operationInTransaction(
                 // 在事务中删除数据，每删除一条进行回调
                 operation = {
@@ -244,7 +196,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                         id ->
                         database!!.delete(tableName, "ID = ?", arrayOf(id.toString()))
                         index++
-                        proceeding(index)
+                        proceeding?.let { proceeding(index) }
                     }
                     return@operationInTransaction index
                 },

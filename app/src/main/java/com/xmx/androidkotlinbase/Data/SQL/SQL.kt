@@ -28,17 +28,16 @@ class SQL : ISQLEntity {
     }
 
     // 将实体转化为可插入或更新的数据
-    override val content: ContentValues
-        get() {
-            val content = ContentValues()
-            // 有ID用于更新数据，无ID用于插入数据
-            if (id > 0) {
-                content.put("ID", id)
-            }
-            content.put("Data", data)
-            content.put("Time", time?.time)
-            return content
+    override fun getContent(): ContentValues {
+        val content = ContentValues()
+        // 有ID用于更新数据，无ID用于插入数据
+        if (id > 0) {
+            content.put("ID", id)
         }
+        content.put("Data", data)
+        content.put("Time", time?.time)
+        return content
+    }
 
     // 将查询的数据转化为实体
     override fun convertToEntity(c: Cursor): SQL {

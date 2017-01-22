@@ -12,7 +12,7 @@ interface ISQLEntity {
     fun tableFields(): String
 
     // 将实体转化为可插入或更新的数据接口
-    val content: ContentValues
+    fun getContent(): ContentValues
 
     // 将查询的数据转化为实体接口
     fun convertToEntity(c: Cursor): ISQLEntity
