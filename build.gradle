@@ -4,6 +4,10 @@ buildscript {
     ext.kotlin_version = '1.0.6'
     repositories {
         jcenter()
+        //这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/public"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
@@ -17,6 +21,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        //这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/public"
+        }
     }
 }
 

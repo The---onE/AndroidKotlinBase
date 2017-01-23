@@ -1,7 +1,9 @@
 package com.xmx.androidkotlinbase
 
 import android.app.Activity
+import com.avos.avoscloud.AVOSCloud
 import com.xmx.androidkotlinbase.Tools.CrashHandler
+import com.xmx.androidkotlinbase.Tools.User.UserManager
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -37,7 +39,14 @@ class MyApplication : android.app.Application() {
         instance = this
 
         // 注册异常处理器
-        val crashHandler = CrashHandler.instance()
-        crashHandler.init(this)
+        if (Constants.EXCEPTION_DEBUG) {
+            val crashHandler = CrashHandler.instance()
+            crashHandler.init(this)
+        }
+
+        // 初始化LeanCloud
+        AVOSCloud.initialize(this, Constants.APP_ID, Constants.APP_KEY)
+        // 初始化用户管理器
+        UserManager.instance().setContext(this)
     }
 }
