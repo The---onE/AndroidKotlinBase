@@ -46,15 +46,10 @@ class RegisterActivity : BaseTempActivity() {
                     error = {
                         e ->
                         when (e) {
-                            UserConstants.USERNAME_ERROR -> {
-                                showToast(R.string.username_exist)
-                                btnRegister.isEnabled = true
-                            }
-                            UserConstants.NICKNAME_EXIST -> {
-                                showToast(R.string.nickname_exist)
-                                btnRegister.isEnabled = true
-                            }
+                            UserConstants.USERNAME_EXIST -> showToast(R.string.username_exist)
+                            UserConstants.NICKNAME_EXIST -> showToast(R.string.nickname_exist)
                         }
+                        btnRegister.isEnabled = true
                     },
                     cloudError = {
                         e ->

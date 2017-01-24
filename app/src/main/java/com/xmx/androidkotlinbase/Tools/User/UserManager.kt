@@ -221,7 +221,7 @@ class UserManager private constructor() {
                         error(UserConstants.USERNAME_EXIST)
                     } else {
                         // 该用户名可用
-                        val query2: AVQuery<AVObject> = AVQuery.getQuery(Constants.USER_DATA_TABLE)
+                        val query2 = AVQuery<AVObject>(Constants.USER_DATA_TABLE)
                         // 获取是否有该昵称的用户
                         query2.whereEqualTo("nickname", nickname)
                         query2.countInBackground(object : CountCallback() {

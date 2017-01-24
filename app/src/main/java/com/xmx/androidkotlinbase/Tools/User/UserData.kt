@@ -20,7 +20,7 @@ class UserData {
             data.objectId = o.objectId
             data.username = o.getString("username")
             data.nickname = o.getString("nickname")
-            data.subscribing = o.getList("subscribing") as List<*>
+            data.subscribing = o.getList("subscribing") as? List<*>
 
             return data
         }

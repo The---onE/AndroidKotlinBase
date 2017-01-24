@@ -35,15 +35,10 @@ class LoginActivity : BaseTempActivity() {
                         error = {
                             e ->
                             when (e) {
-                                UserConstants.USERNAME_ERROR -> {
-                                    showToast(R.string.username_error)
-                                    btnLogin.isEnabled = true
-                                }
-                                UserConstants.PASSWORD_ERROR -> {
-                                    showToast(R.string.password_error)
-                                    btnLogin.isEnabled = true
-                                }
+                                UserConstants.USERNAME_ERROR -> showToast(R.string.username_error)
+                                UserConstants.PASSWORD_ERROR -> showToast(R.string.password_error)
                             }
+                            btnLogin.isEnabled = true
                         },
                         cloudError = {
                             e ->
