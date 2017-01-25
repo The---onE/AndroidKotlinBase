@@ -79,23 +79,26 @@ class UserManager private constructor() {
     }
 
     // 获取设备存储的校验码
-    private val checksum: String?
-        get() = mSP?.getString("checksum", "")
+    fun getChecksum(): String {
+        return mSP?.getString("checksum", "") ?: ""
+    }
 
     // 获取设备存储的用户名
-    private val username: String?
-        get() = mSP?.getString("username", "")
+    fun getUsername(): String {
+        return mSP?.getString("username", "") ?: ""
+    }
 
     // 判断是否已登录
-    private val isLoggedIn: Boolean
-        get() = mSP?.getBoolean("loggedin", false) ?: false
+    fun isLoggedIn(): Boolean {
+        return mSP?.getBoolean("loggedin", false) ?: false
+    }
 
     // 登录成功后的处理
     private fun loginProc(user: UserData, un: String, cs: String, nn: String,
                           proc: ((UserData) -> Unit)? = null) {
         // 将用户信息保存到设备
         val editor = mSP?.edit()
-        editor?.let {
+        if (editor != null) {
             editor.putBoolean("loggedin", true)
             editor.putString("username", un)
             editor.putString("checksum", cs)
@@ -144,7 +147,7 @@ class UserManager private constructor() {
                            proc: ((UserData) -> Unit)? = null) {
         // 清空在设备存储的用户信息
         val editor = mSP?.edit()
-        editor?.let {
+        if (editor != null) {
             editor.putBoolean("loggedin", false)
             editor.putString("username", "")
             editor.putString("checksum", "")
@@ -172,9 +175,9 @@ class UserManager private constructor() {
     // 注销
     fun logout(proc: ((UserData) -> Unit)? = null): Boolean {
         // 若为登录状态则执行注销
-        if (isLoggedIn) {
+        if (isLoggedIn()) {
             // 根据用户名查找当前登录的用户数据
-            val username = username
+            val username = getUsername()
             val query = AVQuery<AVObject>(Constants.USER_DATA_TABLE)
             query.whereEqualTo("username", username)
             query.findInBackground(object : FindCallback<AVObject>() {
@@ -345,9 +348,9 @@ class UserManager private constructor() {
                   error: (Int) -> Unit,
                   cloudError: (AVException) -> Unit,
                   proc: ((UserData) -> Unit)? = null) {
-        val username = username ?: ""
+        val username = getUsername() ?: ""
         // 用户未登陆过
-        if (!isLoggedIn || username.isEmpty()) {
+        if (!isLoggedIn() || username.isEmpty()) {
             // 用户未登录
             error(UserConstants.NOT_LOGGED_IN)
             return
@@ -364,7 +367,7 @@ class UserManager private constructor() {
                         val data = UserData.convert(user)
                         val checksum = user.getString("checksumA")
                         // 比对设备存储的校验码是否与云端一致
-                        if (checksum == getSHA(checksum)) {
+                        if (checksum == getSHA(getChecksum())) {
                             // 校验码一致，自动登录成功
                             val nickname = user.getString("nickname")
                             // 生成新的校验码用于下次自动登录
@@ -402,9 +405,9 @@ class UserManager private constructor() {
                    error: (Int) -> Unit,
                    cloudError: (AVException) -> Unit,
                    proc: ((UserData) -> Unit)? = null) {
-        val username = username ?: ""
+        val username = getUsername() ?: ""
         // 用户未登陆过
-        if (!isLoggedIn || username.isEmpty()) {
+        if (!isLoggedIn() || username.isEmpty()) {
             // 用户未登录
             error(UserConstants.NOT_LOGGED_IN)
             return
@@ -421,7 +424,7 @@ class UserManager private constructor() {
                         val data = UserData.convert(user)
                         // 比对设备存储的校验码是否与云端一致
                         val checksum = user.getString("checksumA")
-                        if (checksum == getSHA(checksum)) {
+                        if (checksum == getSHA(getChecksum())) {
                             // 校验登录成功，获取用户数据
                             success(data)
                         } else {
@@ -439,5 +442,4 @@ class UserManager private constructor() {
             }
         })
     }
-
 }

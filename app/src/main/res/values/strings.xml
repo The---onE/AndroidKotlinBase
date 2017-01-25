@@ -64,5 +64,7 @@
     <string name="username_exist">该用户名已被注册</string>
     <string name="nickname_exist">该昵称已被注册</string>
 
+    <string name="logout_success">注销成功</string>
+
     <string name="not_loggedin">请重新登录</string>
 </resources>

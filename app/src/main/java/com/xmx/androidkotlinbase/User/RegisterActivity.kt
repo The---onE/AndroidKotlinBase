@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.User
 
+import android.content.Intent
 import android.os.Bundle
 
 import com.xmx.androidkotlinbase.R
@@ -14,12 +15,14 @@ class RegisterActivity : BaseTempActivity() {
     }
 
     override fun setListener() {
+        // 处理注册逻辑
         btnRegister.setOnClickListener {
             val nickname = editNickname.text.toString()
             val username = editUsername.text.toString()
             val password = editPassword.text.toString()
             val password2 = editPassword2.text.toString()
 
+            // 输入校验
             if (nickname.isBlank()) {
                 showToast(R.string.nickname_hint)
                 return@setOnClickListener
@@ -37,14 +40,18 @@ class RegisterActivity : BaseTempActivity() {
                 return@setOnClickListener
             }
 
+            // 处理注册
             btnRegister.isEnabled = false
             UserManager.instance().register(username, password, nickname,
                     success = {
+                        // 注册成功
                         showToast(R.string.register_success)
+                        setResult(RESULT_OK, Intent())
                         finish()
                     },
                     error = {
                         e ->
+                        // 注册失败
                         when (e) {
                             UserConstants.USERNAME_EXIST -> showToast(R.string.username_exist)
                             UserConstants.NICKNAME_EXIST -> showToast(R.string.nickname_exist)
@@ -53,12 +60,14 @@ class RegisterActivity : BaseTempActivity() {
                     },
                     cloudError = {
                         e ->
+                        // 网络错误，注册失败
                         showToast(R.string.network_error)
                         filterException(e)
                         btnRegister.isEnabled = true
                     })
         }
 
+        // 取消注册
         btnCancel.setOnClickListener {
             finish()
         }

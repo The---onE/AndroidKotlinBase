@@ -5,16 +5,35 @@
     android:orientation="vertical"
     tools:context="com.xmx.androidkotlinbase.Fragments.UserFragment">
 
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="当前状态：未登录" />
+
+    <TextView
+        android:id="@+id/tvUserData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="帐号： \n昵称：" />
+
     <Button
-        android:id="@+id/btnLoginActivity"
+        android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="登录" />
 
     <Button
-        android:id="@+id/btnRegisterActivity"
+        android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="注册" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注销"
+        android:visibility="gone" />
 
 </LinearLayout>
