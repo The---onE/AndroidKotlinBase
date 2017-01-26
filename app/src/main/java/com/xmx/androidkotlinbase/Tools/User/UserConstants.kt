@@ -15,4 +15,5 @@ object UserConstants {
     val LOGIN_SUCCESS = 1 // 登录成功
 
     val LOGIN_REQUEST_CODE = 1000 // 登录请求代码
+    val REGISTER_REQUEST_CODE = 1001 // 登录请求代码
 }

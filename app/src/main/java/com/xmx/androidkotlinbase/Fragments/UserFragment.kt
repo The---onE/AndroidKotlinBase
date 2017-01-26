@@ -43,7 +43,7 @@ class UserFragment : BaseFragment() {
         // 打开注册页
         btnRegister.setOnClickListener {
             startActivityForResult(Intent(context, RegisterActivity::class.java),
-                    UserConstants.LOGIN_REQUEST_CODE)
+                    UserConstants.REGISTER_REQUEST_CODE)
         }
         // 注销
         btnLogout.setOnClickListener {
@@ -62,8 +62,9 @@ class UserFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // 在登录页登录成功
-        if (requestCode == UserConstants.LOGIN_REQUEST_CODE) {
+        // 在登录页登录成功或注册页注册成功
+        if (requestCode == UserConstants.LOGIN_REQUEST_CODE
+                || requestCode == UserConstants.REGISTER_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 loginFlag = true
             }

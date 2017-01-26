@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.User
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 
@@ -56,10 +57,23 @@ class LoginActivity : BaseTempActivity() {
         }
 
         // 打开注册页
-        btnRegister.setOnClickListener { startActivity(RegisterActivity::class.java) }
+        btnRegister.setOnClickListener {
+            startActivityForResult(Intent(this, RegisterActivity::class.java),
+                    UserConstants.REGISTER_REQUEST_CODE)
+        }
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UserConstants.REGISTER_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                setResult(RESULT_OK, Intent())
+                finish()
+            }
+        }
     }
 }
