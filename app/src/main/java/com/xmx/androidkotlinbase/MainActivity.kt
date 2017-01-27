@@ -1,8 +1,13 @@
 package com.xmx.androidkotlinbase
 
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import com.xmx.androidkotlinbase.Fragments.HomeFragment
 import com.xmx.androidkotlinbase.Fragments.DataFragment
 import com.xmx.androidkotlinbase.Fragments.UserFragment
@@ -12,13 +17,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tool_bar.*
 import java.util.*
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+
     // 初始化View
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
 
         // 初始化工具栏
         setSupportActionBar(toolbar)
+
+        // 初始化侧滑菜单
+        val toggle = ActionBarDrawerToggle(
+                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer_layout.setDrawerListener(toggle)
+        toggle.syncState()
+        nav_view.setNavigationItemSelectedListener(this)
 
         // 各标签页Fragment
         val fragments = ArrayList<Fragment>()
@@ -48,6 +61,7 @@ class MainActivity : BaseActivity() {
 
     // 点击返回键时添加二次确认
     private var mExitTime: Long = 0 // 上次按键的时间
+
     override fun onBackPressed() {
 //        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
 //        if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -63,4 +77,18 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    // 侧滑菜单项点击事件
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        val id = item.itemId
+
+        when (id) {
+            R.id.nav_home -> viewPager.currentItem = 0
+            R.id.nav_data -> viewPager.currentItem = 1
+            R.id.nav_user -> viewPager.currentItem = 2
+        }
+
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
 }
