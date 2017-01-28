@@ -70,4 +70,5 @@
     <string name="logout_success">注销成功</string>
 
     <string name="not_loggedin">请重新登录</string>
+    <string name="cannot_check_login">请先进行登录</string>
 </resources>

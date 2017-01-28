@@ -73,6 +73,9 @@ class UserManager private constructor() {
     // 在设备中存储登录信息
     private var mSP: SharedPreferences? = null
 
+    // 是否已登录(注册、登录或自动登录)
+    private var loginFlag = false
+
     fun setContext(context: Context) {
         mContext = context
         mSP = context.getSharedPreferences(USER_SHARED_PREFERENCE, Context.MODE_PRIVATE)
@@ -96,6 +99,7 @@ class UserManager private constructor() {
     // 登录成功后的处理
     private fun loginProc(user: UserData, un: String, cs: String, nn: String,
                           proc: ((UserData) -> Unit)? = null) {
+        loginFlag = true
         // 将用户信息保存到设备
         val editor = mSP?.edit()
         if (editor != null) {
@@ -145,6 +149,7 @@ class UserManager private constructor() {
     // 注销后的处理
     private fun logoutProc(user: UserData,
                            proc: ((UserData) -> Unit)? = null) {
+        loginFlag = false
         // 清空在设备存储的用户信息
         val editor = mSP?.edit()
         if (editor != null) {
@@ -348,7 +353,7 @@ class UserManager private constructor() {
                   error: (Int) -> Unit,
                   cloudError: (AVException) -> Unit,
                   proc: ((UserData) -> Unit)? = null) {
-        val username = getUsername() ?: ""
+        val username = getUsername()
         // 用户未登陆过
         if (!isLoggedIn() || username.isEmpty()) {
             // 用户未登录
@@ -405,16 +410,13 @@ class UserManager private constructor() {
                    error: (Int) -> Unit,
                    cloudError: (AVException) -> Unit,
                    proc: ((UserData) -> Unit)? = null) {
-        val username = getUsername() ?: ""
-        // 用户未登陆过
-        if (!isLoggedIn() || username.isEmpty()) {
-            // 用户未登录
-            error(UserConstants.NOT_LOGGED_IN)
-            return
+        // 若尚未通过注册、登录或自动登录完成登录，则不能校验登录
+        if (!loginFlag) {
+            error(UserConstants.CANNOT_CHECK_LOGIN)
         }
         val query = AVQuery<AVObject>(Constants.USER_DATA_TABLE)
         // 获取是否有该用户名的用户
-        query.whereEqualTo("username", username)
+        query.whereEqualTo("username", getUsername())
         query.findInBackground(object : FindCallback<AVObject>() {
             override fun done(list: List<AVObject>, e: AVException?) {
                 if (e == null) {

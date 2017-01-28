@@ -11,6 +11,7 @@ object UserConstants {
     val USERNAME_ERROR = -4 // 用户名不存在
     val NOT_LOGGED_IN = -5 // 尚未登录
     val CHECKSUM_ERROR = -6 // 校验码错误
+    val CANNOT_CHECK_LOGIN = -10 // 尚未通过注册、登录或自动登录完成登录，不能校验登录
 
     val LOGIN_SUCCESS = 1 // 登录成功
 
