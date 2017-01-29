@@ -9,6 +9,11 @@ import com.xmx.androidkotlinbase.Tools.Utils.ExceptionUtil
 
 import java.security.MessageDigest
 import java.util.Random
+import com.avos.avoscloud.AVException
+import com.avos.avoscloud.SignUpCallback
+import com.avos.avoscloud.AVUser
+import com.avos.avoscloud.LogInCallback
+
 
 /**
  * Created by The_onE on 2016/1/10.
@@ -75,6 +80,11 @@ class UserManager private constructor() : IUserManager {
         fun makeChecksum(): String {
             val checksum = Random().nextInt()
             return "$checksum"
+        }
+
+        // 生成用于AVUser的密码
+        fun makeAVPassword(username: String, seed: String): String {
+            return getSHA("$username$seed")
         }
     }
 
@@ -168,6 +178,42 @@ class UserManager private constructor() : IUserManager {
         }
     }
 
+    // 注册AVUser
+    private fun registerAVUser(username: String, seed: String,
+                               success: () -> Unit,
+                               error: (Exception) -> Unit) {
+        val user = AVUser() // 新建 AVUser 对象实例
+        user.username = username // 设置用户名
+        user.setPassword(makeAVPassword(username, seed)) // 设置密码
+        user.signUpInBackground(object : SignUpCallback() {
+            override fun done(e: AVException?) {
+                if (e == null) {
+                    // 注册成功
+                    success()
+                } else {
+                    // 失败的原因可能有多种，常见的是用户名已经存在。
+                    error(e)
+                }
+            }
+        })
+    }
+
+    // 登录AVUser
+    private fun loginAVUser(username: String, seed: String,
+                            success: () -> Unit,
+                            error: (Exception) -> Unit) {
+        AVUser.logInInBackground(username, makeAVPassword(username, seed),
+                object : LogInCallback<AVUser>() {
+                    override fun done(avUser: AVUser, e: AVException?) {
+                        if (e == null) {
+                            success()
+                        } else {
+                            error(e)
+                        }
+                    }
+                })
+    }
+
     // 注销
     override fun logout(proc: ((UserData) -> Unit)?): Boolean {
         // 若为登录状态则执行注销
@@ -185,6 +231,8 @@ class UserManager private constructor() : IUserManager {
                             val data = UserData.convert(user)
                             // 处理用户注销
                             logoutProc(data, proc)
+                            // AVUser登出
+                            AVUser.logOut();
                             // 取消关注用户订阅频道
                             /*List<String> subscribing = user.getList("subscribing");
                             if (subscribing != null) {
@@ -243,6 +291,9 @@ class UserManager private constructor() : IUserManager {
                                         data.put("nickname", nickname)
                                         val checksum = UserManager.makeChecksum()
                                         data.put("checksumA", UserManager.getSHA(checksum))
+                                        // 用于登录AVUser的字符串
+                                        val seed = UserManager.makeChecksum()
+                                        data.put("checksumAV", seed)
                                         // 用户信息与数据关联
                                         post.put("data", data)
                                         // 设置用户信息权限只读
@@ -255,10 +306,18 @@ class UserManager private constructor() : IUserManager {
                                             override fun done(e: AVException?) {
                                                 if (e == null) {
                                                     // 保存成功
-                                                    // 以注册用户进行登录
-                                                    val d = UserData.convert(data)
-                                                    loginProc(d, username, checksum, nickname)
-                                                    success()
+                                                    // 注册AVUser
+                                                    registerAVUser(username, seed,
+                                                            success = {
+                                                                // 以注册用户进行登录
+                                                                val d = UserData.convert(data)
+                                                                loginProc(d, username, checksum, nickname)
+                                                                success()
+                                                            },
+                                                            error = {
+                                                                e ->
+                                                                cloudError(e)
+                                                            })
                                                 } else {
                                                     cloudError(e)
                                                 }
@@ -303,17 +362,27 @@ class UserManager private constructor() : IUserManager {
                                             if (e == null) {
                                                 // 获取基本数据
                                                 val nickname = data.getString("nickname")
+                                                // 获取用于登录AVUser的字符串
+                                                val seed = data.getString("checksumAV")
                                                 // 生成新的校验码，存于设备和云端用于自动登录校验
                                                 val newChecksum = makeChecksum()
                                                 data.put("checksumA", getSHA(newChecksum))
                                                 data.saveInBackground(object : SaveCallback() {
                                                     override fun done(e: AVException?) {
                                                         if (e == null) {
-                                                            // 处理用户登录
-                                                            val d = UserData.convert(data)
-                                                            loginProc(d, username, newChecksum, nickname)
-                                                            // val info = UserInfo.convert(user)
-                                                            success(d)
+                                                            // 登录AVUser
+                                                            loginAVUser(username, seed,
+                                                                    success = {
+                                                                        // 处理用户登录
+                                                                        val d = UserData.convert(data)
+                                                                        loginProc(d, username,
+                                                                                newChecksum, nickname)
+                                                                        success(d)
+                                                                    },
+                                                                    error = {
+                                                                        e ->
+                                                                        cloudError(e)
+                                                                    })
                                                         } else {
                                                             cloudError(e)
                                                         }
@@ -365,15 +434,25 @@ class UserManager private constructor() : IUserManager {
                         if (checksum == getSHA(getChecksum())) {
                             // 校验码一致，自动登录成功
                             val nickname = user.getString("nickname")
+                            // 获取用于登录AVUser的字符串
+                            val seed = user.getString("checksumAV")
                             // 生成新的校验码用于下次自动登录
                             val newChecksum = makeChecksum()
                             user.put("checksumA", getSHA(newChecksum))
                             user.saveInBackground(object : SaveCallback() {
                                 override fun done(e: AVException?) {
                                     if (e == null) {
-                                        // 处理用户登录
-                                        loginProc(data, username, newChecksum, nickname)
-                                        success(data)
+                                        // 登录AVUser
+                                        loginAVUser(username, seed,
+                                                success = {
+                                                    // 处理用户登录
+                                                    loginProc(data, username, newChecksum, nickname)
+                                                    success(data)
+                                                },
+                                                error = {
+                                                    e ->
+                                                    cloudError(e)
+                                                })
                                     } else {
                                         cloudError(e)
                                     }
