@@ -2,17 +2,9 @@ package com.xmx.androidkotlinbase.Tools.User
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.avos.avoscloud.*
 
-import com.avos.avoscloud.AVACL
-import com.avos.avoscloud.AVException
-import com.avos.avoscloud.AVObject
-import com.avos.avoscloud.AVQuery
-import com.avos.avoscloud.CountCallback
-import com.avos.avoscloud.FindCallback
-import com.avos.avoscloud.GetCallback
-import com.avos.avoscloud.SaveCallback
 import com.xmx.androidkotlinbase.Constants
-import com.xmx.androidkotlinbase.Constants.USER_SHARED_PREFERENCE
 import com.xmx.androidkotlinbase.Tools.Utils.ExceptionUtil
 
 import java.security.MessageDigest
@@ -22,7 +14,7 @@ import java.util.Random
  * Created by The_onE on 2016/1/10.
  * 用户管理器
  */
-class UserManager private constructor() {
+class UserManager private constructor() : IUserManager {
     companion object {
         // 单例模式
         private var instance: UserManager? = null
@@ -36,11 +28,28 @@ class UserManager private constructor() {
 
         // 默认的登录事件
         fun defaultLogin(user: UserData): Unit {
+            // 关注消息推送中用户订阅的频道
+//        val subscribing = user.getList("subscribing")
+//        if (subscribing != null) {
+//            for (sub in subscribing) {
+//                PushService.subscribe(mContext, UserManager.getSHA(sub), ReceiveMessageActivity::class.java)
+//            }
+//            AVInstallation.getCurrentInstallation().saveInBackground()
+//        }
         }
 
         // 默认的注销事件
         fun defaultLogout(user: UserData): Unit {
             //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
+
+            // 取消关注消息推送中用户订阅的频道
+//        val subscribing = user.getList("subscribing")
+//        if (subscribing != null) {
+//            for (sub in subscribing) {
+//                PushService.unsubscribe(mContext, UserManager.getSHA(sub))
+//            }
+//            AVInstallation.getCurrentInstallation().saveInBackground()
+//        }
         }
 
         // 生成数字ID
@@ -78,7 +87,7 @@ class UserManager private constructor() {
 
     fun setContext(context: Context) {
         mContext = context
-        mSP = context.getSharedPreferences(USER_SHARED_PREFERENCE, Context.MODE_PRIVATE)
+        mSP = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCE, Context.MODE_PRIVATE)
     }
 
     // 获取设备存储的校验码
@@ -112,15 +121,6 @@ class UserManager private constructor() {
 
         // 将登录信息保存到云端日志
         saveLog(un)
-
-        // 关注消息推送中用户订阅的频道
-//        val subscribing = user.getList("subscribing")
-//        if (subscribing != null) {
-//            for (sub in subscribing) {
-//                PushService.subscribe(mContext, UserManager.getSHA(sub), ReceiveMessageActivity::class.java)
-//            }
-//            AVInstallation.getCurrentInstallation().saveInBackground()
-//        }
 
         // 自定义处理
         if (proc != null) {
@@ -160,15 +160,6 @@ class UserManager private constructor() {
             editor.apply()
         }
 
-        // 取消关注消息推送中用户订阅的频道
-//        val subscribing = user.getList("subscribing")
-//        if (subscribing != null) {
-//            for (sub in subscribing) {
-//                PushService.unsubscribe(mContext, UserManager.getSHA(sub))
-//            }
-//            AVInstallation.getCurrentInstallation().saveInBackground()
-//        }
-
         // 自定义处理
         if (proc != null) {
             proc(user)
@@ -178,7 +169,7 @@ class UserManager private constructor() {
     }
 
     // 注销
-    fun logout(proc: ((UserData) -> Unit)? = null): Boolean {
+    override fun logout(proc: ((UserData) -> Unit)?): Boolean {
         // 若为登录状态则执行注销
         if (isLoggedIn()) {
             // 根据用户名查找当前登录的用户数据
@@ -214,10 +205,10 @@ class UserManager private constructor() {
     }
 
     // 注册
-    fun register(username: String, password: String, nickname: String,
-                 success: () -> Unit,
-                 error: (Int) -> Unit,
-                 cloudError: (AVException) -> Unit) {
+    override fun register(username: String, password: String, nickname: String,
+                          success: () -> Unit,
+                          error: (Int) -> Unit,
+                          cloudError: (Exception) -> Unit) {
         val query = AVQuery<AVObject>(Constants.USER_INFO_TABLE)
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
@@ -288,10 +279,10 @@ class UserManager private constructor() {
     }
 
     // 登录
-    fun login(username: String, password: String,
-              success: (UserData) -> Unit,
-              error: (Int) -> Unit,
-              cloudError: (AVException) -> Unit) {
+    override fun login(username: String, password: String,
+                       success: (UserData) -> Unit,
+                       error: (Int) -> Unit,
+                       cloudError: (Exception) -> Unit) {
         val query = AVQuery<AVObject>(Constants.USER_INFO_TABLE)
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
@@ -349,10 +340,9 @@ class UserManager private constructor() {
     }
 
     // 用设备保存的数据自动登录，更新校验码
-    fun autoLogin(success: (UserData) -> Unit,
-                  error: (Int) -> Unit,
-                  cloudError: (AVException) -> Unit,
-                  proc: ((UserData) -> Unit)? = null) {
+    override fun autoLogin(success: (UserData) -> Unit,
+                           error: (Int) -> Unit,
+                           cloudError: (Exception) -> Unit) {
         val username = getUsername()
         // 用户未登陆过
         if (!isLoggedIn() || username.isEmpty()) {
@@ -391,7 +381,7 @@ class UserManager private constructor() {
                             })
                         } else {
                             // 校验不一致，用户在其他设备登录，自动注销，需重新登录
-                            logoutProc(data, proc)
+                            logoutProc(data)
                             error(UserConstants.CHECKSUM_ERROR)
                         }
                     } else {
@@ -406,10 +396,9 @@ class UserManager private constructor() {
     }
 
     // 判断是否已登录，若已登录获取用户数据
-    fun checkLogin(success: (UserData) -> Unit,
-                   error: (Int) -> Unit,
-                   cloudError: (AVException) -> Unit,
-                   proc: ((UserData) -> Unit)? = null) {
+    override fun checkLogin(success: (UserData) -> Unit,
+                            error: (Int) -> Unit,
+                            cloudError: (Exception) -> Unit) {
         // 若尚未通过注册、登录或自动登录完成登录，则不能校验登录
         if (!loginFlag) {
             error(UserConstants.CANNOT_CHECK_LOGIN)
@@ -431,7 +420,7 @@ class UserManager private constructor() {
                             success(data)
                         } else {
                             // 校验不一致，用户在其他设备登录，自动注销，需重新登录
-                            logoutProc(data, proc)
+                            logoutProc(data)
                             error(UserConstants.CHECKSUM_ERROR)
                         }
                     } else {
