@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.xmx.androidkotlinbase.Activities.TempActivity
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.Tools.FragmentBase.BaseFragment
+import com.xmx.androidkotlinbase.Tools.Utils.VibratorUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -24,6 +25,26 @@ class HomeFragment : BaseFragment() {
     override fun setListener(view: View) {
         btnTempActivity.setOnClickListener {
             startActivity(TempActivity::class.java)
+        }
+
+        // 震动一秒
+        btnVibrateOnce.setOnClickListener {
+            VibratorUtil.instance().vibrate(context, 1000)
+        }
+
+        // 持续震动
+        btnVibrateForever.setOnClickListener {
+            VibratorUtil.instance().vibrate(context)
+        }
+
+        // 节奏震动
+        btnVibrateRhythm.setOnClickListener {
+            VibratorUtil.instance().vibrate(context, 500, 250, 3)
+        }
+
+        // 取消震动
+        btnCancelVibrate.setOnClickListener {
+            VibratorUtil.instance().cancel(context)
         }
     }
 
