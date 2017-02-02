@@ -17,6 +17,7 @@ import java.util.HashMap
  * A simple [Fragment] subclass.
  */
 class CloudActivity : BaseTempActivity() {
+    var selfFlag = false // 是否只显示自己相关的数据
 
     // 数据列表适配器
     private var cloudAdapter: CloudAdapter? = null
@@ -76,7 +77,7 @@ class CloudActivity : BaseTempActivity() {
         }
 
         // 点击确定添加数据
-        btnCloud.setOnClickListener {
+        btnCloudAdd.setOnClickListener {
             val data = editCloud.text.toString()
             val entity = Cloud()
             entity.data = data
@@ -97,6 +98,16 @@ class CloudActivity : BaseTempActivity() {
                     })
             editCloud.setText("")
         }
+        // 只查询自己的数据
+        btnCloudSelf.setOnClickListener {
+            selfFlag = true
+            updateList()
+        }
+        // 查询全部数据
+        btnCloudAll.setOnClickListener {
+            selfFlag = false
+            updateList()
+        }
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {
@@ -107,18 +118,37 @@ class CloudActivity : BaseTempActivity() {
     // 查询数据并更新至列表中
     private fun updateList() {
         // 查询数据
-        CloudEntityManager.instance().selectByCondition(null,
-                "Time", false,
-                success = {
-                    clouds ->
-                    cloudAdapter?.updateList(clouds)
-                },
-                error = CloudEntityManager.instance().defaultError(this),
-                cloudError = {
-                    e ->
-                    showToast(R.string.sync_failure)
-                    filterException(e)
-                })
+        if (selfFlag) {
+            // 查询自己的数据
+            CloudEntityManager.instance().selectByCondition(null,
+                    "Time", false,
+                    success = {
+                        // 添加用户参数，查询用户数据
+                        user, clouds ->
+                        cloudAdapter?.updateList(clouds)
+                    },
+                    error = CloudEntityManager.instance().defaultError(this),
+                    cloudError = {
+                        e ->
+                        showToast(R.string.sync_failure)
+                        filterException(e)
+                    })
+        } else {
+            // 查询全部数据
+            CloudEntityManager.instance().selectByCondition(null,
+                    "Time", false,
+                    success = {
+                        // 不添加用户参数，查询全部数据
+                        clouds ->
+                        cloudAdapter?.updateList(clouds)
+                    },
+                    error = CloudEntityManager.instance().defaultError(this),
+                    cloudError = {
+                        e ->
+                        showToast(R.string.sync_failure)
+                        filterException(e)
+                    })
+        }
     }
 
 }

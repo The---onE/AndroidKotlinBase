@@ -13,11 +13,26 @@
         android:layout_height="wrap_content"
         android:hint="请输入内容"/>
 
-    <Button
-        android:id="@+id/btnCloud"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add"/>
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnCloudAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"/>
+        <Button
+            android:id="@+id/btnCloudAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全部"/>
+        <Button
+            android:id="@+id/btnCloudSelf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自己"/>
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listCloud"
