@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.xmx.androidkotlinbase.Data.Cloud.CloudActivity
 import com.xmx.androidkotlinbase.Data.SQL.SQLActivity
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.Tools.FragmentBase.BaseFragment
@@ -24,6 +25,9 @@ class DataFragment : BaseFragment() {
     override fun setListener(view: View) {
         btnSQL.setOnClickListener {
             startActivity(SQLActivity::class.java)
+        }
+        btnCloud.setOnClickListener {
+            startActivity(CloudActivity::class.java)
         }
     }
 

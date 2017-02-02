@@ -11,4 +11,10 @@
         android:layout_height="wrap_content"
         android:text="SQL" />
 
+    <Button
+        android:id="@+id/btnCloud"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cloud" />
+
 </LinearLayout>

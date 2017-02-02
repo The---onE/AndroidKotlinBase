@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Data.Cloud.CloudActivity">
+
+    <include layout="@layout/tool_bar" />
+
+    <EditText
+        android:id="@+id/editCloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="请输入内容"/>
+
+    <Button
+        android:id="@+id/btnCloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add"/>
+
+    <ListView
+        android:id="@+id/listCloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+</LinearLayout>

@@ -32,14 +32,18 @@
     <string name="save_success">保存成功</string>
     <string name="save_failure">保存失败</string>
 
+    <string name="loading">加载中……</string>
+    <string name="success">成功</string>
+    <string name="failure">加载失败</string>
+    <string name="no_data">无相关数据</string>
+    <string name="network_error">网络连接失败</string>
+
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">天</string>
     <string name="hour">小时</string>
     <string name="minute">分钟</string>
     <string name="second">秒</string>
-
-    <string name="network_error">网络连接失败</string>
 
     <string name="login">登录</string>
     <string name="logout">注销</string>
@@ -69,6 +73,7 @@
 
     <string name="logout_success">注销成功</string>
 
-    <string name="not_loggedin">请重新登录</string>
+    <string name="not_loggedin">请进行登录</string>
     <string name="cannot_check_login">请先进行登录</string>
+    <string name="not_related_user">没有权限进行操作</string>
 </resources>

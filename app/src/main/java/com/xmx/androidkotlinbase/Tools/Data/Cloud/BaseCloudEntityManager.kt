@@ -3,6 +3,7 @@ package com.xmx.androidkotlinbase.Tools.Data.Cloud
 import android.content.Context
 import android.widget.Toast
 import com.avos.avoscloud.*
+import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.Tools.Data.DataConstants
 import com.xmx.androidkotlinbase.Tools.User.UserConstants
 import com.xmx.androidkotlinbase.Tools.User.UserData
@@ -13,7 +14,7 @@ import java.util.*
  * Created by The_onE on 2017/2/1.
  * LeanCloud数据库管理基类，提供常用的增删改查功能
  */
-class BaseCloudEntityManager<Entity : ICloudEntity> {
+abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
 
     // 子类构造函数中初始化下列变量！
     protected var tableName: String? = null // 表(Class)名
@@ -23,6 +24,19 @@ class BaseCloudEntityManager<Entity : ICloudEntity> {
     // 检查管理器是否已初始化
     protected fun checkDatabase(): Boolean {
         return tableName != null && entityTemplate != null
+    }
+
+    // 默认的错误处理
+    fun defaultError(context: Context): (Int) -> Unit {
+        return {
+            e ->
+            when (e) {
+                DataConstants.NOT_INIT -> Toast.makeText(context, R.string.failure, Toast.LENGTH_SHORT).show()
+                DataConstants.NOT_LOGGED_IN -> Toast.makeText(context, R.string.not_loggedin, Toast.LENGTH_SHORT).show()
+                DataConstants.CHECK_LOGIN_ERROR -> Toast.makeText(context, R.string.cannot_check_login, Toast.LENGTH_SHORT).show()
+                DataConstants.NOT_RELATED_USER -> Toast.makeText(context, R.string.not_related_user, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     // 查询全部数据
