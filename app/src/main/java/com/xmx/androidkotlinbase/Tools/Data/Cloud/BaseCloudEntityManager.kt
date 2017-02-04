@@ -113,8 +113,8 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         val query = AVQuery<AVObject>(tableName)
         // 添加查询条件
         if (conditions != null) {
-            for (key in conditions.keys) {
-                query.whereEqualTo(key, conditions[key])
+            for ((k, v) in conditions) {
+                query.whereEqualTo(k, v)
             }
         }
         // 添加排序
@@ -163,8 +163,8 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                     }
                     // 添加查询条件
                     if (conditions != null) {
-                        for (key in conditions.keys) {
-                            query.whereEqualTo(key, conditions[key])
+                        for ((k, v) in conditions) {
+                            query.whereEqualTo(k, v)
                         }
                     }
                     // 添加排序
@@ -362,8 +362,8 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                                 }
                                 // 更新数据
                                 if (update != null) {
-                                    for (key in update.keys) {
-                                        obj.put(key, update[key])
+                                    for ((k, v) in update) {
+                                        obj.put(k, v)
                                     }
                                     obj.saveInBackground(object : SaveCallback() {
                                         override fun done(e: AVException?) {

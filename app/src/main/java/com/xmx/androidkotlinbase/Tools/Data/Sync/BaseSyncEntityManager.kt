@@ -197,15 +197,12 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
                 switchAccount(user.objectId!!)
                 val strings = ArrayList<String>()
                 // 生成本地数据库更新内容
-                for (key in update.keys) {
-                    val value = update[key]
+                for ((k, v) in update) {
                     val string: String
-                    if (value is Date) {
-                        string = key + " = " + value.time
-                    } else if (value is String) {
-                        string = "$key = '$value'"
-                    } else {
-                        string = key + " = " + value.toString()
+                    when (v) {
+                        is Date ->string = "$k = ${v.time}"
+                        is String -> string = "$k = '$v'"
+                        else -> string = "$k = ${v.toString()}"
                     }
                     strings.add(string)
                 }
