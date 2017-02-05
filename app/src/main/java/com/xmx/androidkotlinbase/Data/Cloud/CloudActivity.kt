@@ -85,7 +85,7 @@ class CloudActivity : BaseTempActivity() {
             // 添加数据
             CloudEntityManager.instance().insertToCloud(entity,
                     success = {
-                        id, user ->
+                        user, objectId ->
                         showToast(R.string.add_success)
                         // 刷新列表
                         updateList()

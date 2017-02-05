@@ -9,7 +9,7 @@ import com.xmx.androidkotlinbase.Tools.Data.Cloud.BaseCloudEntityManager
 class CloudEntityManager private constructor() : BaseCloudEntityManager<Cloud>() {
 
     init {
-        tableName = "KCloudTest" // 表名
+        tableName = "CloudTest" // 表名
         entityTemplate = Cloud() // 实体模版
         userField = "User" // 用户字段
     }

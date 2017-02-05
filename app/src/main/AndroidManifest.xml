@@ -42,6 +42,9 @@
             android:name=".Data.Cloud.CloudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".Data.Sync.SyncActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".User.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

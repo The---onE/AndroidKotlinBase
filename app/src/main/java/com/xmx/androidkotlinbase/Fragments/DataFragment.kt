@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.xmx.androidkotlinbase.Data.Cloud.CloudActivity
 import com.xmx.androidkotlinbase.Data.SQL.SQLActivity
+import com.xmx.androidkotlinbase.Data.Sync.SyncActivity
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.Tools.FragmentBase.BaseFragment
 import kotlinx.android.synthetic.main.fragment_data.*
@@ -28,6 +29,9 @@ class DataFragment : BaseFragment() {
         }
         btnCloud.setOnClickListener {
             startActivity(CloudActivity::class.java)
+        }
+        btnSync.setOnClickListener {
+            startActivity(SyncActivity::class.java)
         }
     }
 

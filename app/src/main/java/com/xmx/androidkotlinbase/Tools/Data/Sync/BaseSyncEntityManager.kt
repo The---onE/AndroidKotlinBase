@@ -25,14 +25,14 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
     protected var userId: String? = null
 
     // 特化SQLite数据库管理
-    protected inner class SQLManager : BaseSQLEntityManager<Entity>() {
+    inner class SQLManager : BaseSQLEntityManager<Entity>() {
         fun syncInit(tableName: String, entityTemplate: Entity) {
             this.tableName = tableName
             this.entityTemplate = entityTemplate
         }
     }
 
-    protected inner class CloudManager : BaseCloudEntityManager<Entity>() {
+    inner class CloudManager : BaseCloudEntityManager<Entity>() {
         fun syncInit(tableName: String, entityTemplate: Entity, userField: String?) {
             this.tableName = tableName
             this.entityTemplate = entityTemplate
@@ -41,8 +41,8 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
     }
 
     // 使用数据库管理器查询数据
-    protected var sqlManager = SQLManager()
-    protected var cloudManager = CloudManager()
+    var sqlManager = SQLManager()
+    var cloudManager = CloudManager()
 
     // 子类构造函数中调用syncInit方法初始化下列变量！
     protected var tableName: String? = null
@@ -90,7 +90,7 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
     }
 
     // 将云端数据同步至数据库
-    fun syncFromCloud(conditions: Map<String, Any>,
+    fun syncFromCloud(conditions: Map<String, Any>?,
                       success: (UserData, List<Entity>) -> Unit,
                       error: (Int) -> Unit,
                       syncError: (Exception) -> Unit) {
