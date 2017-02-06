@@ -8,6 +8,7 @@ import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.Tools.ActivityBase.BaseTempActivity
 import com.xmx.androidkotlinbase.Tools.User.UserConstants
 import com.xmx.androidkotlinbase.Tools.User.UserManager
+import com.xmx.androidkotlinbase.Tools.Utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseTempActivity() {
@@ -49,7 +50,7 @@ class LoginActivity : BaseTempActivity() {
                             e ->
                             // 网络错误，登录失败
                             showToast(R.string.network_error)
-                            filterException(e)
+                            ExceptionUtil.normalException(e, this)
                             btnLogin.isEnabled = true
                         }
                 )

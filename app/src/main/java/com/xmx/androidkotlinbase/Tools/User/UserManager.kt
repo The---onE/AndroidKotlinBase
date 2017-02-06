@@ -71,7 +71,7 @@ class UserManager private constructor() : IUserManager {
                 val digest = md.digest()
                 return String.format("%064x", java.math.BigInteger(1, digest))
             } catch (e: Exception) {
-                ExceptionUtil.filterException(e)
+                ExceptionUtil.fatalError(e)
             }
             return ""
         }
@@ -150,7 +150,7 @@ class UserManager private constructor() : IUserManager {
         post.saveInBackground(object : SaveCallback() {
             override fun done(e: AVException?) {
                 e?.apply {
-                    ExceptionUtil.filterException(this)
+                    ExceptionUtil.normalException(this, mContext)
                 }
             }
         })
@@ -223,9 +223,9 @@ class UserManager private constructor() : IUserManager {
             val query = AVQuery<AVObject>(Constants.USER_DATA_TABLE)
             query.whereEqualTo("username", username)
             query.findInBackground(object : FindCallback<AVObject>() {
-                override fun done(list: List<AVObject>, e: AVException?) {
+                override fun done(list: List<AVObject>?, e: AVException?) {
                     if (e == null) {
-                        if (list.isNotEmpty()) {
+                        if (list!!.isNotEmpty()) {
                             // 获取当前用户数据
                             val user = list[0]
                             val data = UserData.convert(user)
@@ -346,9 +346,9 @@ class UserManager private constructor() : IUserManager {
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>, e: AVException?) {
+            override fun done(avObjects: List<AVObject>?, e: AVException?) {
                 if (e == null) {
-                    if (avObjects.isNotEmpty()) {
+                    if (avObjects!!.isNotEmpty()) {
                         // 获取该用户名的用户信息
                         val user = avObjects[0]
                         val rightPassword = user.getString("password")
@@ -423,9 +423,9 @@ class UserManager private constructor() : IUserManager {
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(list: List<AVObject>, e: AVException?) {
+            override fun done(list: List<AVObject>?, e: AVException?) {
                 if (e == null) {
-                    if (list.isNotEmpty()) {
+                    if (list!!.isNotEmpty()) {
                         // 获取该用户名的用户数据
                         val user = list[0]
                         val data = UserData.convert(user)
@@ -486,9 +486,9 @@ class UserManager private constructor() : IUserManager {
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", getUsername())
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(list: List<AVObject>, e: AVException?) {
+            override fun done(list: List<AVObject>?, e: AVException?) {
                 if (e == null) {
-                    if (list.isNotEmpty()) {
+                    if (list!!.isNotEmpty()) {
                         // 获取该用户名的用户数据
                         val user = list[0]
                         val data = UserData.convert(user)

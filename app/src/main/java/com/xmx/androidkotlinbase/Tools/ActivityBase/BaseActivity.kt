@@ -70,23 +70,6 @@ abstract class BaseActivity : AppCompatActivity() {
         onViewCreated()
     }
 
-    // 异常处理
-    protected fun filterException(e: Exception): Boolean {
-        if (Constants.EXCEPTION_DEBUG) {
-            // Debug模式
-            // 打印异常堆栈跟踪
-            e.printStackTrace()
-            // 显示错误信息
-            showToast(e.message)
-            // 记录错误日志
-//            OperationLogEntityManager.getInstance().addLog(e.message)
-            return false
-        } else {
-            // 非Debug模式
-            return true
-        }
-    }
-
     // 显示提示信息
     protected fun showToast(str: String?) {
         val s = str ?: ""

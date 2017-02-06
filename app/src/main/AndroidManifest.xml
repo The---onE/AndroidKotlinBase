@@ -45,6 +45,12 @@
             android:name=".Data.Sync.SyncActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".Log.ExceptionTestActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Log.OperationLogActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".User.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

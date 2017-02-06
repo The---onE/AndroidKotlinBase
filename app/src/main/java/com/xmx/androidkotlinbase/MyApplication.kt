@@ -5,7 +5,6 @@ import com.avos.avoscloud.AVOSCloud
 import com.xmx.androidkotlinbase.Tools.CrashHandler
 import com.xmx.androidkotlinbase.Tools.User.UserManager
 import java.util.*
-import kotlin.properties.Delegates
 
 /**
  * Created by The_onE on 2017/1/16.
@@ -21,10 +20,12 @@ class MyApplication : android.app.Application() {
 
     // 运行中的Activity容器
     private val activityList = LinkedList<Activity>()
+
     // 添加Activity到容器中
     fun addActivity(activity: Activity) {
         activityList.add(activity)
     }
+
     // 退出程序，遍历所有Activity并finish
     fun exit() {
         for (activity in activityList) {
@@ -39,10 +40,8 @@ class MyApplication : android.app.Application() {
         instance = this
 
         // 注册异常处理器
-        if (Constants.EXCEPTION_DEBUG) {
-            val crashHandler = CrashHandler.instance()
-            crashHandler.init(this)
-        }
+        val crashHandler = CrashHandler.instance()
+        crashHandler.init(this)
 
         // 初始化LeanCloud
         AVOSCloud.initialize(this, Constants.APP_ID, Constants.APP_KEY)

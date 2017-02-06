@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.xmx.androidkotlinbase.Activities.TempActivity
+import com.xmx.androidkotlinbase.Log.ExceptionTestActivity
+import com.xmx.androidkotlinbase.Log.OperationLogActivity
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.Tools.FragmentBase.BaseFragment
 import com.xmx.androidkotlinbase.Tools.Utils.VibratorUtil
@@ -45,6 +47,16 @@ class HomeFragment : BaseFragment() {
         // 取消震动
         btnCancelVibrate.setOnClickListener {
             VibratorUtil.instance().cancel(context)
+        }
+
+        // 查看日志
+        btnShowOperationLog.setOnClickListener {
+            startActivity(OperationLogActivity::class.java)
+        }
+
+        // 异常模拟
+        btnExceptionTest.setOnClickListener {
+            startActivity(ExceptionTestActivity::class.java)
         }
     }
 

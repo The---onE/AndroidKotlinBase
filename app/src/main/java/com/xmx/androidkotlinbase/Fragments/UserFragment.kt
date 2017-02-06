@@ -13,6 +13,7 @@ import com.xmx.androidkotlinbase.Tools.FragmentBase.BaseFragment
 import com.xmx.androidkotlinbase.Tools.User.UserConstants
 import com.xmx.androidkotlinbase.Tools.User.UserData
 import com.xmx.androidkotlinbase.Tools.User.UserManager
+import com.xmx.androidkotlinbase.Tools.Utils.ExceptionUtil
 import com.xmx.androidkotlinbase.User.LoginActivity
 import com.xmx.androidkotlinbase.User.RegisterActivity
 import kotlinx.android.synthetic.main.fragment_user.*
@@ -102,7 +103,7 @@ class UserFragment : BaseFragment() {
                 cloudError = {
                     e ->
                     showToast(R.string.network_error)
-                    filterException(e)
+                    ExceptionUtil.normalException(e, context)
                 }
         )
     }
@@ -117,7 +118,7 @@ class UserFragment : BaseFragment() {
                     cloudError = {
                         e ->
                         showToast(R.string.network_error)
-                        filterException(e)
+                        ExceptionUtil.normalException(e, context)
                     }
             )
         }

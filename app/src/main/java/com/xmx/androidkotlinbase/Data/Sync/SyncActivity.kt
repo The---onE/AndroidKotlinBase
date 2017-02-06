@@ -43,11 +43,8 @@ class SyncActivity : BaseTempActivity() {
                             syncAdapter?.updateList(SyncManager.instance().data!!)
                         },
                         error = SyncEntityManager.instance().defaultError(this),
-                        syncError = {
-                            e ->
-                            showToast(R.string.sync_failure)
-                            filterException(e)
-                        })
+                        syncError = SyncEntityManager.instance().defaultSyncError(this)
+                )
             }
             builder.setPositiveButton("更新") { dialogInterface, i ->
                 val update = HashMap<String, Any>()
@@ -62,11 +59,8 @@ class SyncActivity : BaseTempActivity() {
                             syncAdapter?.updateList(SyncManager.instance().data!!)
                         },
                         error = SyncEntityManager.instance().defaultError(this),
-                        syncError = {
-                            e ->
-                            showToast(R.string.sync_failure)
-                            filterException(e)
-                        })
+                        syncError = SyncEntityManager.instance().defaultSyncError(this)
+                )
             }
             builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
             builder.show()
@@ -89,11 +83,8 @@ class SyncActivity : BaseTempActivity() {
                         syncAdapter?.updateList(SyncManager.instance().data!!)
                     },
                     error = SyncEntityManager.instance().defaultError(this),
-                    syncError = {
-                        e ->
-                        showToast(R.string.sync_failure)
-                        filterException(e)
-                    })
+                    syncError = SyncEntityManager.instance().defaultSyncError(this)
+            )
             editSync.setText("")
         }
     }
@@ -108,10 +99,7 @@ class SyncActivity : BaseTempActivity() {
                     showToast(R.string.sync_success)
                 },
                 error = SyncEntityManager.instance().defaultError(this),
-                syncError = {
-                    e ->
-                    showToast(R.string.sync_failure)
-                    filterException(e)
-                })
+                syncError = SyncEntityManager.instance().defaultSyncError(this)
+        )
     }
 }

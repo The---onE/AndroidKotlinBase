@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Looper
 import android.widget.Toast
 import com.xmx.androidkotlinbase.MyApplication
+import com.xmx.androidkotlinbase.Tools.OperationLog.OperationLogEntityManager
 
 /**
  * Created by The_onE on 2017/1/16.
@@ -60,7 +61,7 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
         ex.printStackTrace()
 
         // 记录错误日志
-//        OperationLogEntityManager.getInstance().addLog("" + ex)
+        OperationLogEntityManager.instance().addLog("" + ex)
 
         // 在新线程中显示错误信息
         object : Thread() {

@@ -35,4 +35,16 @@
         android:layout_height="wrap_content"
         android:text="取消震动" />
 
+    <Button
+        android:id="@+id/btnShowOperationLog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="查看日志" />
+
+    <Button
+        android:id="@+id/btnExceptionTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="异常模拟" />
+
 </LinearLayout>

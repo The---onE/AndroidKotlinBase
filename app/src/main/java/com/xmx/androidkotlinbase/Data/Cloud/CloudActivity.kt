@@ -47,11 +47,8 @@ class CloudActivity : BaseTempActivity() {
                             updateList()
                         },
                         error = CloudEntityManager.instance().defaultError(this),
-                        cloudError = {
-                            e ->
-                            showToast(R.string.sync_failure)
-                            filterException(e)
-                        })
+                        cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                )
             }
             builder.setPositiveButton("更新") { dialogInterface, i ->
                 val update = HashMap<String, Any>()
@@ -65,11 +62,8 @@ class CloudActivity : BaseTempActivity() {
                             updateList()
                         },
                         error = CloudEntityManager.instance().defaultError(this),
-                        cloudError = {
-                            e ->
-                            showToast(R.string.sync_failure)
-                            filterException(e)
-                        })
+                        cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                )
             }
             builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
             builder.show()
@@ -91,11 +85,8 @@ class CloudActivity : BaseTempActivity() {
                         updateList()
                     },
                     error = CloudEntityManager.instance().defaultError(this),
-                    cloudError = {
-                        e ->
-                        showToast(R.string.sync_failure)
-                        filterException(e)
-                    })
+                    cloudError = CloudEntityManager.instance().defaultCloudError(this)
+            )
             editCloud.setText("")
         }
         // 只查询自己的数据
@@ -128,11 +119,8 @@ class CloudActivity : BaseTempActivity() {
                         cloudAdapter?.updateList(clouds)
                     },
                     error = CloudEntityManager.instance().defaultError(this),
-                    cloudError = {
-                        e ->
-                        showToast(R.string.sync_failure)
-                        filterException(e)
-                    })
+                    cloudError = CloudEntityManager.instance().defaultCloudError(this)
+            )
         } else {
             // 查询全部数据
             CloudEntityManager.instance().selectByCondition(null,
@@ -143,12 +131,8 @@ class CloudActivity : BaseTempActivity() {
                         cloudAdapter?.updateList(clouds)
                     },
                     error = CloudEntityManager.instance().defaultError(this),
-                    cloudError = {
-                        e ->
-                        showToast(R.string.sync_failure)
-                        filterException(e)
-                    })
+                    cloudError = CloudEntityManager.instance().defaultCloudError(this)
+            )
         }
     }
-
 }

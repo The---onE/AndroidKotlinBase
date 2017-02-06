@@ -8,6 +8,7 @@ import com.xmx.androidkotlinbase.Tools.Data.DataConstants
 import com.xmx.androidkotlinbase.Tools.User.UserConstants
 import com.xmx.androidkotlinbase.Tools.User.UserData
 import com.xmx.androidkotlinbase.Tools.User.UserManager
+import com.xmx.androidkotlinbase.Tools.Utils.ExceptionUtil
 import java.util.*
 
 /**
@@ -39,6 +40,15 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
     }
 
+    // 默认的网络错误处理
+    fun defaultCloudError(context: Context): (Exception) -> Unit {
+        return {
+            e ->
+            Toast.makeText(context, R.string.sync_failure, Toast.LENGTH_SHORT).show()
+            ExceptionUtil.normalException(e, context)
+        }
+    }
+
     // 查询全部数据
     fun selectAll(success: (List<Entity>) -> Unit,
                   error: (Int) -> Unit,
@@ -50,10 +60,10 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         // 查询表中全部数据
         val query = AVQuery<AVObject>(tableName)
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>, e: AVException?) {
+            override fun done(avObjects: List<AVObject>?, e: AVException?) {
                 if (e == null) {
                     // 将查询的数据转化为实体
-                    val entities = avObjects.mapTo(ArrayList<Entity>()) {
+                    val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
                         val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
                         entity as Entity
                     }
@@ -85,10 +95,10 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 查询表中全部数据并排序
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>, e: AVException?) {
+            override fun done(avObjects: List<AVObject>?, e: AVException?) {
                 if (e == null) {
                     // 将查询的数据转化为实体
-                    val entities = avObjects.mapTo(ArrayList<Entity>()) {
+                    val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
                         val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
                         entity as Entity
                     }
@@ -127,10 +137,10 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 查询表中符合条件的数据并排序
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>, e: AVException?) {
+            override fun done(avObjects: List<AVObject>?, e: AVException?) {
                 if (e == null) {
                     // 将查询的数据转化为实体
-                    val entities = avObjects.mapTo(ArrayList<Entity>()) {
+                    val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
                         val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
                         entity as Entity
                     }
@@ -177,10 +187,10 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                     }
                     // 查询表中符合条件的数据并排序
                     query.findInBackground(object : FindCallback<AVObject>() {
-                        override fun done(avObjects: List<AVObject>, e: AVException?) {
+                        override fun done(avObjects: List<AVObject>?, e: AVException?) {
                             if (e == null) {
                                 // 将查询的数据转化为实体
-                                val entities = avObjects.mapTo(ArrayList<Entity>()) {
+                                val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
                                     val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
                                     entity as Entity
                                 }
@@ -294,17 +304,17 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
                     query.getInBackground(objectId, object : GetCallback<AVObject>() {
-                        override fun done(obj: AVObject, e: AVException?) {
+                        override fun done(obj: AVObject?, e: AVException?) {
                             if (e == null) {
                                 // 如果该数据不是与当前用户关联数据则不能删除
                                 if (userField != null) {
-                                    if (obj.getString(userField) != user.objectId) {
+                                    if (obj!!.getString(userField) != user.objectId) {
                                         error(DataConstants.NOT_RELATED_USER)
                                         return
                                     }
                                 }
                                 // 删除数据
-                                obj.deleteInBackground(object : DeleteCallback() {
+                                obj!!.deleteInBackground(object : DeleteCallback() {
                                     override fun done(e: AVException?) {
                                         if (e == null) {
                                             success(user)
@@ -351,11 +361,11 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
                     query.getInBackground(objectId, object : GetCallback<AVObject>() {
-                        override fun done(obj: AVObject, e: AVException?) {
+                        override fun done(obj: AVObject?, e: AVException?) {
                             if (e == null) {
                                 // 如果该数据不是与当前用户关联数据则不能删除
                                 if (userField != null) {
-                                    if (obj.getString(userField) != user.objectId) {
+                                    if (obj!!.getString(userField) != user.objectId) {
                                         error(DataConstants.NOT_RELATED_USER)
                                         return
                                     }
@@ -363,9 +373,9 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                                 // 更新数据
                                 if (update != null) {
                                     for ((k, v) in update) {
-                                        obj.put(k, v)
+                                        obj!!.put(k, v)
                                     }
-                                    obj.saveInBackground(object : SaveCallback() {
+                                    obj!!.saveInBackground(object : SaveCallback() {
                                         override fun done(e: AVException?) {
                                             if (e == null) {
                                                 success(user)

@@ -10,6 +10,7 @@ import com.xmx.androidkotlinbase.Tools.Data.Cloud.BaseCloudEntityManager
 import com.xmx.androidkotlinbase.Tools.Data.DataConstants
 import com.xmx.androidkotlinbase.Tools.Data.SQL.BaseSQLEntityManager
 import com.xmx.androidkotlinbase.Tools.User.UserData
+import com.xmx.androidkotlinbase.Tools.Utils.ExceptionUtil
 
 import java.util.ArrayList
 import java.util.Date
@@ -76,6 +77,15 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
                 DataConstants.CHECK_LOGIN_ERROR -> Toast.makeText(context, R.string.cannot_check_login, Toast.LENGTH_SHORT).show()
                 DataConstants.NOT_RELATED_USER -> Toast.makeText(context, R.string.not_related_user, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    // 默认的网络错误处理
+    fun defaultSyncError(context: Context): (Exception) -> Unit {
+        return {
+            e ->
+            Toast.makeText(context, R.string.sync_failure, Toast.LENGTH_SHORT).show()
+            ExceptionUtil.normalException(e, context)
         }
     }
 

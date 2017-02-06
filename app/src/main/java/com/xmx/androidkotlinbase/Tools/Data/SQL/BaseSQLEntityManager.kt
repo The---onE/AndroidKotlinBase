@@ -167,7 +167,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                 // 插入失败，处理异常
                 error = {
                     e ->
-                    ExceptionUtil.filterException(e)
+                    ExceptionUtil.fatalError(e)
                 }
         )
     }
@@ -208,7 +208,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                 // 删除失败，处理异常
                 error = {
                     e ->
-                    ExceptionUtil.filterException(e)
+                    ExceptionUtil.fatalError(e)
                 }
         )
     }
