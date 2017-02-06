@@ -44,7 +44,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
     fun defaultCloudError(context: Context): (Exception) -> Unit {
         return {
             e ->
-            Toast.makeText(context, R.string.sync_failure, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
             ExceptionUtil.normalException(e, context)
         }
     }
