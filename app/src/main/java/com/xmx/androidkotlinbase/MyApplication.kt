@@ -1,6 +1,7 @@
 package com.xmx.androidkotlinbase
 
 import android.app.Activity
+import android.app.Service
 import com.avos.avoscloud.AVOSCloud
 import com.xmx.androidkotlinbase.Tools.CrashHandler
 import com.xmx.androidkotlinbase.Tools.User.UserManager
@@ -20,17 +21,23 @@ class MyApplication : android.app.Application() {
 
     // 运行中的Activity容器
     private val activityList = LinkedList<Activity>()
+    // 运行中的Service容器
+    private val serviceList = LinkedList<Service>()
 
     // 添加Activity到容器中
     fun addActivity(activity: Activity) {
         activityList.add(activity)
     }
 
+    // 添加Service到容器中
+    fun addService(service: Service) {
+        serviceList.add(service)
+    }
+
     // 退出程序，遍历所有Activity并finish
     fun exit() {
-        for (activity in activityList) {
-            activity.finish()
-        }
+        activityList.forEach { it.finish() }
+        serviceList.forEach { it.stopSelf() }
         System.exit(0)
     }
 

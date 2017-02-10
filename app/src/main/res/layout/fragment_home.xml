@@ -6,10 +6,16 @@
     tools:context="com.xmx.androidkotlinbase.Fragments.HomeFragment">
 
     <Button
-        android:id="@+id/btnTempActivity"
+        android:id="@+id/btnStartService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="打开临时Activity" />
+        android:text="运行服务" />
+
+    <Button
+        android:id="@+id/btnStopService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="停止服务" />
 
     <Button
         android:id="@+id/btnVibrateOnce"
