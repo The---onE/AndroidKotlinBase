@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".core.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Splash.SplashActivity"
+            android:name="com.xmx.androidkotlinbase.core.activity.SplashActivity"
             android:theme="@style/AppTheme.SplashBackground">
 
             <intent-filter>
@@ -30,35 +30,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".core.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.TempActivity"
+            android:name="com.xmx.androidkotlinbase.model.data.sql.SQLActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Data.SQL.SQLActivity"
+            android:name="com.xmx.androidkotlinbase.model.data.cloud.CloudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Data.Cloud.CloudActivity"
+            android:name="com.xmx.androidkotlinbase.model.data.sync.SyncActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Data.Sync.SyncActivity"
+            android:name="com.xmx.androidkotlinbase.model.log.ExceptionTestActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Log.ExceptionTestActivity"
+            android:name="com.xmx.androidkotlinbase.model.log.OperationLogActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Log.OperationLogActivity"
+            android:name=".model.user.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".User.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".User.RegisterActivity"
+            android:name=".model.user.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".Services.MainService"
+            android:name="com.xmx.androidkotlinbase.model.service.MainService"
             android:enabled="true"
             android:exported="true" />
     </application>
