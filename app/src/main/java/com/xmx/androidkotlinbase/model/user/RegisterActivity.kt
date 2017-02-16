@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
 import com.xmx.androidkotlinbase.common.user.UserConstants
-import com.xmx.androidkotlinbase.common.user.UserManager
+import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_register.*
 
@@ -43,7 +43,7 @@ class RegisterActivity : BaseTempActivity() {
 
             // 处理注册
             btnRegister.isEnabled = false
-            UserManager.instance().register(username, password, nickname,
+            userManager.register(username, password, nickname,
                     success = {
                         // 注册成功
                         showToast(R.string.register_success)

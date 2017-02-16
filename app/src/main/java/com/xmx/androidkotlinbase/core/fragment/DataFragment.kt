@@ -15,11 +15,11 @@ import kotlinx.android.synthetic.main.fragment_data.*
  * Created by The_onE on 2017/1/18.
  */
 class DataFragment : BaseFragment() {
-    override fun getContentView(inflater: LayoutInflater?, container: ViewGroup?): View {
-        return inflater!!.inflate(R.layout.fragment_data, container, false);
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        return inflater.inflate(R.layout.fragment_data, container, false);
     }
 
-    override fun initView(view: View) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
     }
 

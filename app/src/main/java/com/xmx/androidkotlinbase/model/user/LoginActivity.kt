@@ -7,7 +7,7 @@ import android.os.Bundle
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
 import com.xmx.androidkotlinbase.common.user.UserConstants
-import com.xmx.androidkotlinbase.common.user.UserManager
+import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -30,7 +30,7 @@ class LoginActivity : BaseTempActivity() {
             } else {
                 // 处理登录
                 btnLogin.isEnabled = false
-                UserManager.instance().login(username, password,
+                userManager.login(username, password,
                         success = {
                             // 登录成功
                             showToast(R.string.login_success)

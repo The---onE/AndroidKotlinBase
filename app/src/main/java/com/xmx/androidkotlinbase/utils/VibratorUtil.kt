@@ -8,34 +8,44 @@ import android.os.Vibrator
  * 震动控制器
  */
 
-class VibratorUtil {
-    // 单例模式
-    companion object {
-        private var instance: VibratorUtil? = null
-        @Synchronized fun instance(): VibratorUtil {
-            if (null == instance) {
-                instance = VibratorUtil()
-            }
-            return instance!!
-        }
+object VibratorUtil {
+    /**
+     * 获取系统震动器
+     * @param[context] 当前上下文
+     * @return 系统震动器
+     */
+    private fun getVibrator(context: Context) : Vibrator {
+        return context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     }
 
-    // 震动一定时间
+    /**
+     * 震动一定时间
+     * @param[context] 当前上下文
+     * @param[time] 震动时间
+     */
     fun vibrate(context: Context, time: Long) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getVibrator(context)
         vibrator.vibrate(time)
     }
 
-    // 持续震动
+    /**
+     * 持续震动
+     * @param[context] 当前上下文
+     */
     fun vibrate(context: Context) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getVibrator(context)
         vibrator.vibrate(longArrayOf(0, 10000), 0)
     }
 
-    // 交替震动
-    // repeatTimes 表示震动次数，0则不断重复
+    /**
+     * 交替震动，先震动，后暂停，不断反复
+     * @param[context] 当前上下文
+     * @param[vibrateTime] 震动时间
+     * @param[pauseTime] 暂停时间
+     * @param[repeatTimes] 重复次数，0则不断重复
+     */
     fun vibrate(context: Context, vibrateTime: Long, pauseTime: Long, repeatTimes: Int) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getVibrator(context)
         if (repeatTimes <= 0) {
             // 不断重复
             vibrator.vibrate(longArrayOf(pauseTime, vibrateTime), 0)
@@ -56,17 +66,23 @@ class VibratorUtil {
         }
     }
 
-    // 官方震动
-    // pattern 表示震动序列(P, V, P, V, ...)
-    // repeat 表示从指定的下标开始重复震动，-1则不重复
+    /**
+     * 官方震动
+     * @param[context] 当前上下文
+     * @param[pattern] 震动序列(P, V, P, V, ...)
+     * @param[repeat] 从指定的下标开始重复震动，-1则不重复
+     */
     fun vibrate(context: Context, pattern: LongArray, repeat: Int) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getVibrator(context)
         vibrator.vibrate(pattern, repeat)
     }
 
-    // 取消震动
+    /**
+     * 取消震动
+     * @param[context] 当前上下文
+     */
     fun cancel(context: Context) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getVibrator(context)
         vibrator.cancel()
     }
 }

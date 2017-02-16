@@ -12,7 +12,7 @@ import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
-import com.xmx.androidkotlinbase.common.user.UserManager
+import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import com.xmx.androidkotlinbase.model.user.LoginActivity
 import com.xmx.androidkotlinbase.model.user.RegisterActivity
@@ -27,11 +27,11 @@ class UserFragment : BaseFragment() {
     // 是否已成功登录
     var loginFlag = false
 
-    override fun getContentView(inflater: LayoutInflater?, container: ViewGroup?): View {
-        return inflater!!.inflate(R.layout.fragment_user, container, false);
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
-    override fun initView(view: View) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
     }
 
@@ -48,7 +48,7 @@ class UserFragment : BaseFragment() {
         }
         // 注销
         btnLogout.setOnClickListener {
-            UserManager.instance().logout {
+            userManager.logout {
                 showToast(R.string.logout_success)
                 loginFlag = false
                 tvStatus.text = "当前状态：未登陆"
@@ -97,7 +97,7 @@ class UserFragment : BaseFragment() {
 
     override fun processLogic(view: View, savedInstanceState: Bundle?) {
         // 自动登录，首次进入时进行
-        UserManager.instance().autoLogin(
+        userManager.autoLogin(
                 success = loginSuccess,
                 error = loginError,
                 cloudError = {
@@ -112,7 +112,7 @@ class UserFragment : BaseFragment() {
         super.onResume()
         // 登录成功后，校验登录获取用户数据
         if (loginFlag) {
-            UserManager.instance().checkLogin(
+            userManager.checkLogin(
                     success = loginSuccess,
                     error = loginError,
                     cloudError = {

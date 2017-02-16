@@ -7,12 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.model.log.ExceptionTestActivity
 import com.xmx.androidkotlinbase.model.log.OperationLogActivity
-import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.model.service.MainService
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
-import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
+import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
 import com.xmx.androidkotlinbase.utils.VibratorUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -20,11 +21,11 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * Created by The_onE on 2017/1/18.
  */
 class HomeFragment : BaseFragment() {
-    override fun getContentView(inflater: LayoutInflater?, container: ViewGroup?): View {
-        return inflater!!.inflate(R.layout.fragment_home, container, false);
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    override fun initView(view: View) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
     }
 
@@ -33,7 +34,7 @@ class HomeFragment : BaseFragment() {
         btnStartService.setOnClickListener {
             val service = Intent(context, MainService::class.java)
             context.startService(service)
-            OperationLogEntityManager.instance().addLog("开启服务")
+            operationLogEntityManager.addLog("开启服务")
             showToast("已开启服务")
         }
 
@@ -68,22 +69,22 @@ class HomeFragment : BaseFragment() {
 
         // 震动一秒
         btnVibrateOnce.setOnClickListener {
-            VibratorUtil.instance().vibrate(context, 1000)
+            VibratorUtil.vibrate(context, 1000)
         }
 
         // 持续震动
         btnVibrateForever.setOnClickListener {
-            VibratorUtil.instance().vibrate(context)
+            VibratorUtil.vibrate(context)
         }
 
         // 节奏震动
         btnVibrateRhythm.setOnClickListener {
-            VibratorUtil.instance().vibrate(context, 500, 250, 3)
+            VibratorUtil.vibrate(context, 500, 250, 3)
         }
 
         // 取消震动
         btnCancelVibrate.setOnClickListener {
-            VibratorUtil.instance().cancel(context)
+            VibratorUtil.cancel(context)
         }
 
         // 查看日志

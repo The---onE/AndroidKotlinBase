@@ -19,9 +19,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tool_bar.*
 import java.util.*
 
+/**
+ * Created by The_onE on 2017/2/15.
+ * 主Activity，利用Fragment展示所有程序内容
+ */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    // 初始化View
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
 
@@ -53,11 +56,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         tabLayout.setupWithViewPager(viewPager)
     }
 
-    // 声明事件监听
     override fun setListener() {
     }
 
-    // 处理业务逻辑
     override fun processLogic(savedInstanceState: Bundle?) {
     }
 
@@ -65,11 +66,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private var mExitTime: Long = 0 // 上次按键的时间
 
     override fun onBackPressed() {
-//        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START)
-//            return
-//        }
+        // 如果侧边栏已打开，则关闭
+        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
+            return
+        }
         // 如果是第一次按键或距离上次按键时间过长，则重新计时
         if (System.currentTimeMillis() - mExitTime > CoreConstants.LONGEST_EXIT_TIME) {
             showToast(R.string.confirm_exit)
@@ -81,15 +83,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     // 侧滑菜单项点击事件
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
-        val id = item.itemId
-
-        when (id) {
+        // 显示选择的选项卡
+        when (item.itemId) {
             R.id.nav_home -> viewPager.currentItem = 0
             R.id.nav_data -> viewPager.currentItem = 1
             R.id.nav_user -> viewPager.currentItem = 2
         }
-
+        // 关闭侧边栏
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }

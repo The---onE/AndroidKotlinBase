@@ -1,7 +1,6 @@
 package com.xmx.androidkotlinbase.common.user
 
 import com.avos.avoscloud.AVObject
-import org.json.JSONArray
 
 /**
  * Created by The_onE on 2017/1/22.
@@ -13,8 +12,12 @@ class UserData {
     var nickname: String? = null // 昵称
     var subscribing: List<*>? = null // 消息推送所订阅频道列表
 
-    // 将LeanCloud对象转化为实体
     companion object {
+        /**
+         * 将LeanCloud对象转化为实体
+         * @param[o] 云端用户数据LeanCloud对象
+         * @return 转化后的实体
+         */
         fun convert(o: AVObject): UserData {
             val data = UserData()
             data.objectId = o.objectId

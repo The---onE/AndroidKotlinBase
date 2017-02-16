@@ -17,75 +17,83 @@ import com.avos.avoscloud.LogInCallback
 
 /**
  * Created by The_onE on 2016/1/10.
- * 用户管理器
+ * 用户管理器，单例对象
  */
-class UserManager private constructor() : IUserManager {
-    companion object {
-        // 单例模式
-        private var instance: UserManager? = null
+object userManager : IUserManager {
+    /**
+     * 设置当前上下文，在Application中调用
+     */
+    fun init(context: Context) {
+        mContext = context
+        mSP = context.getSharedPreferences(UserConstants.USER_SHARED_PREFERENCE, Context.MODE_PRIVATE)
+    }
 
-        @Synchronized fun instance(): UserManager {
-            if (null == instance) {
-                instance = UserManager()
-            }
-            return instance!!
-        }
-
-        // 默认的登录事件
-        fun defaultLogin(user: UserData): Unit {
-            // 关注消息推送中用户订阅的频道
+    /**
+     * 默认的登录事件
+     * @param[user] 用户数据
+     */
+    fun defaultLogin(user: UserData) {
+        // 关注消息推送中用户订阅的频道
 //        val subscribing = user.getList("subscribing")
 //        if (subscribing != null) {
 //            for (sub in subscribing) {
-//                PushService.subscribe(mContext, UserManager.getSHA(sub), ReceiveMessageActivity::class.java)
+//                PushService.subscribe(mContext, userManager.getSHA(sub), ReceiveMessageActivity::class.java)
 //            }
 //            AVInstallation.getCurrentInstallation().saveInBackground()
 //        }
-        }
+    }
 
-        // 默认的注销事件
-        fun defaultLogout(user: UserData): Unit {
-            //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
+    /**
+     * 默认的注销事件
+     * @param[user] 用户数据
+     */
+    fun defaultLogout(user: UserData) {
+        //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
 
-            // 取消关注消息推送中用户订阅的频道
+        // 取消关注消息推送中用户订阅的频道
 //        val subscribing = user.getList("subscribing")
 //        if (subscribing != null) {
 //            for (sub in subscribing) {
-//                PushService.unsubscribe(mContext, UserManager.getSHA(sub))
+//                PushService.unsubscribe(mContext, userManager.getSHA(sub))
 //            }
 //            AVInstallation.getCurrentInstallation().saveInBackground()
 //        }
-        }
+    }
 
-        // 生成数字ID
-        fun getId(user: AVObject): Long {
-            val id = user.objectId
-            return Math.abs(id.hashCode()).toLong()
+    /**
+     * 字符串SHA加密
+     * @param[s] 要加密的字符串
+     * @return 经哈希加密的字符串
+     */
+    fun getSHA(s: String): String {
+        try {
+            val md = MessageDigest.getInstance("SHA-256")
+            md.update(s.toByteArray(charset("UTF-8")))
+            val digest = md.digest()
+            return String.format("%064x", java.math.BigInteger(1, digest))
+        } catch (e: Exception) {
+            ExceptionUtil.fatalError(e)
         }
+        return ""
+    }
 
-        // 字符串SHA加密
-        fun getSHA(s: String): String {
-            try {
-                val md = MessageDigest.getInstance("SHA-256")
-                md.update(s.toByteArray(charset("UTF-8")))
-                val digest = md.digest()
-                return String.format("%064x", java.math.BigInteger(1, digest))
-            } catch (e: Exception) {
-                ExceptionUtil.fatalError(e)
-            }
-            return ""
-        }
+    /**
+     * 生成随机校验码
+     * @return 随机校验码
+     */
+    fun makeChecksum(): String {
+        val checksum = Random().nextInt()
+        return "$checksum"
+    }
 
-        // 生成随机校验码
-        fun makeChecksum(): String {
-            val checksum = Random().nextInt()
-            return "$checksum"
-        }
-
-        // 生成用于AVUser的密码
-        fun makeAVPassword(username: String, seed: String): String {
-            return getSHA("$username$seed")
-        }
+    /**
+     * 生成用于登录AVUser的密码
+     * @param[username] 用户名
+     * @param[seed] 用于生成密码的种子
+     * @return 用于登录AVUser的密码
+     */
+    fun makeAVPassword(username: String, seed: String): String {
+        return getSHA("$username$seed")
     }
 
     private var mContext: Context? = null
@@ -95,42 +103,51 @@ class UserManager private constructor() : IUserManager {
     // 是否已登录(注册、登录或自动登录)
     private var loginFlag = false
 
-    fun setContext(context: Context) {
-        mContext = context
-        mSP = context.getSharedPreferences(CoreConstants.USER_SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    }
-
-    // 获取设备存储的校验码
+    /**
+     * 获取设备存储的校验码
+     * @return 设备存储的校验码
+     */
     fun getChecksum(): String {
         return mSP?.getString("checksum", "") ?: ""
     }
 
-    // 获取设备存储的用户名
+    /**
+     * 获取设备存储的用户名
+     * @return 设备存储的用户名
+     */
     fun getUsername(): String {
         return mSP?.getString("username", "") ?: ""
     }
 
-    // 判断是否已登录
+    /**
+     * 判断是否已登录
+     * @return 是否已登录
+     */
     fun isLoggedIn(): Boolean {
         return mSP?.getBoolean("loggedin", false) ?: false
     }
 
-    // 登录成功后的处理
-    private fun loginProc(user: UserData, un: String, cs: String, nn: String,
+    /**
+     * 登录成功后的处理
+     * @param[user] 用户数据
+     * @param[cs] 生成的校验码
+     * @param[proc] 自定义处理
+     */
+    private fun loginProc(user: UserData, cs: String,
                           proc: ((UserData) -> Unit)? = null) {
         loginFlag = true
         // 将用户信息保存到设备
         val editor = mSP?.edit()
         if (editor != null) {
             editor.putBoolean("loggedin", true)
-            editor.putString("username", un)
+            editor.putString("username", user.username)
             editor.putString("checksum", cs)
-            editor.putString("nickname", nn)
+            editor.putString("nickname", user.nickname)
             editor.apply()
         }
 
         // 将登录信息保存到云端日志
-        saveLog(un)
+        saveLog(user.username!!)
 
         // 自定义处理
         if (proc != null) {
@@ -140,9 +157,12 @@ class UserManager private constructor() : IUserManager {
         }
     }
 
-    // 在云端保存登录日志
+    /**
+     * 在云端保存登录日志
+     * @param[username] 登录的用户名
+     */
     private fun saveLog(username: String) {
-        val post = AVObject(CoreConstants.LOGIN_LOG_TABLE)
+        val post = AVObject(UserConstants.LOGIN_LOG_TABLE)
         post.put("username", username)
         post.put("status", 0)
         post.put("timestamp", System.currentTimeMillis() / 1000)
@@ -156,7 +176,11 @@ class UserManager private constructor() : IUserManager {
         })
     }
 
-    // 注销后的处理
+    /**
+     * 注销后的处理
+     * @param[user] 用户数据
+     * @param[proc] 自定义处理
+     */
     private fun logoutProc(user: UserData,
                            proc: ((UserData) -> Unit)? = null) {
         loginFlag = false
@@ -178,7 +202,13 @@ class UserManager private constructor() : IUserManager {
         }
     }
 
-    // 注册AVUser
+    /**
+     * 注册AVUser
+     * @param[username] 用户名
+     * @param[seed] 用于生成密码的随机种子
+     * @param[success] 注册成功的处理
+     * @param[error] 注册失败的处理
+     */
     private fun registerAVUser(username: String, seed: String,
                                success: () -> Unit,
                                error: (Exception) -> Unit) {
@@ -198,7 +228,13 @@ class UserManager private constructor() : IUserManager {
         })
     }
 
-    // 登录AVUser
+    /**
+     * 登录AVUser
+     * @param[username] 用户名
+     * @param[seed] 用于生成密码的随机种子
+     * @param[success] 登录成功的处理
+     * @param[error] 登录失败的处理
+     */
     private fun loginAVUser(username: String, seed: String,
                             success: () -> Unit,
                             error: (Exception) -> Unit) {
@@ -220,7 +256,7 @@ class UserManager private constructor() : IUserManager {
         if (isLoggedIn()) {
             // 根据用户名查找当前登录的用户数据
             val username = getUsername()
-            val query = AVQuery<AVObject>(CoreConstants.USER_DATA_TABLE)
+            val query = AVQuery<AVObject>(UserConstants.USER_DATA_TABLE)
             query.whereEqualTo("username", username)
             query.findInBackground(object : FindCallback<AVObject>() {
                 override fun done(list: List<AVObject>?, e: AVException?) {
@@ -237,7 +273,7 @@ class UserManager private constructor() : IUserManager {
                             /*List<String> subscribing = user.getList("subscribing");
                             if (subscribing != null) {
                                 for (String sub : subscribing) {
-                                    PushService.unsubscribe(mContext, UserManager.getSHA(sub));
+                                    PushService.unsubscribe(mContext, userManager.getSHA(sub));
                                 }
                                 AVInstallation.getCurrentInstallation().saveInBackground();
                             }*/
@@ -257,7 +293,7 @@ class UserManager private constructor() : IUserManager {
                           success: () -> Unit,
                           error: (Int) -> Unit,
                           cloudError: (Exception) -> Unit) {
-        val query = AVQuery<AVObject>(CoreConstants.USER_INFO_TABLE)
+        val query = AVQuery<AVObject>(UserConstants.USER_INFO_TABLE)
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
         query.countInBackground(object : CountCallback() {
@@ -268,7 +304,7 @@ class UserManager private constructor() : IUserManager {
                         error(UserConstants.USERNAME_EXIST)
                     } else {
                         // 该用户名可用
-                        val query2 = AVQuery<AVObject>(CoreConstants.USER_DATA_TABLE)
+                        val query2 = AVQuery<AVObject>(UserConstants.USER_DATA_TABLE)
                         // 获取是否有该昵称的用户
                         query2.whereEqualTo("nickname", nickname)
                         query2.countInBackground(object : CountCallback() {
@@ -280,19 +316,19 @@ class UserManager private constructor() : IUserManager {
                                     } else {
                                         // 可以注册
                                         // 添加用户信息
-                                        val post = AVObject(CoreConstants.USER_INFO_TABLE)
+                                        val post = AVObject(UserConstants.USER_INFO_TABLE)
                                         post.put("username", username)
-                                        post.put("password", UserManager.getSHA(password))
+                                        post.put("password", userManager.getSHA(password))
                                         post.put("status", 0)
                                         post.put("timestamp", System.currentTimeMillis() / 1000)
                                         // 添加用户数据
-                                        val data = AVObject(CoreConstants.USER_DATA_TABLE)
+                                        val data = AVObject(UserConstants.USER_DATA_TABLE)
                                         data.put("username", username)
                                         data.put("nickname", nickname)
-                                        val checksum = UserManager.makeChecksum()
-                                        data.put("checksumA", UserManager.getSHA(checksum))
+                                        val checksum = userManager.makeChecksum()
+                                        data.put("checksumA", userManager.getSHA(checksum))
                                         // 用于登录AVUser的字符串
-                                        val seed = UserManager.makeChecksum()
+                                        val seed = userManager.makeChecksum()
                                         data.put("checksumAV", seed)
                                         // 用户信息与数据关联
                                         post.put("data", data)
@@ -311,7 +347,7 @@ class UserManager private constructor() : IUserManager {
                                                             success = {
                                                                 // 以注册用户进行登录
                                                                 val d = UserData.convert(data)
-                                                                loginProc(d, username, checksum, nickname)
+                                                                loginProc(d, checksum)
                                                                 success()
                                                             },
                                                             error = {
@@ -342,7 +378,7 @@ class UserManager private constructor() : IUserManager {
                        success: (UserData) -> Unit,
                        error: (Int) -> Unit,
                        cloudError: (Exception) -> Unit) {
-        val query = AVQuery<AVObject>(CoreConstants.USER_INFO_TABLE)
+        val query = AVQuery<AVObject>(UserConstants.USER_INFO_TABLE)
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
         query.findInBackground(object : FindCallback<AVObject>() {
@@ -375,8 +411,7 @@ class UserManager private constructor() : IUserManager {
                                                                     success = {
                                                                         // 处理用户登录
                                                                         val d = UserData.convert(data)
-                                                                        loginProc(d, username,
-                                                                                newChecksum, nickname)
+                                                                        loginProc(d, newChecksum)
                                                                         success(d)
                                                                     },
                                                                     error = {
@@ -419,7 +454,7 @@ class UserManager private constructor() : IUserManager {
             error(UserConstants.NOT_LOGGED_IN)
             return
         }
-        val query = AVQuery<AVObject>(CoreConstants.USER_DATA_TABLE)
+        val query = AVQuery<AVObject>(UserConstants.USER_DATA_TABLE)
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", username)
         query.findInBackground(object : FindCallback<AVObject>() {
@@ -446,7 +481,7 @@ class UserManager private constructor() : IUserManager {
                                         loginAVUser(username, seed,
                                                 success = {
                                                     // 处理用户登录
-                                                    loginProc(data, username, newChecksum, nickname)
+                                                    loginProc(data, newChecksum)
                                                     success(data)
                                                 },
                                                 error = {
@@ -482,7 +517,7 @@ class UserManager private constructor() : IUserManager {
         if (!loginFlag) {
             error(UserConstants.CANNOT_CHECK_LOGIN)
         }
-        val query = AVQuery<AVObject>(CoreConstants.USER_DATA_TABLE)
+        val query = AVQuery<AVObject>(UserConstants.USER_DATA_TABLE)
         // 获取是否有该用户名的用户
         query.whereEqualTo("username", getUsername())
         query.findInBackground(object : FindCallback<AVObject>() {

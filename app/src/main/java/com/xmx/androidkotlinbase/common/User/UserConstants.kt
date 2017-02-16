@@ -2,9 +2,15 @@ package com.xmx.androidkotlinbase.common.user
 
 /**
  * Created by The_onE on 2016/7/3.
- * 登录信息错误码
+ * 登录相关常量及错误码
  */
 object UserConstants {
+    val USER_INFO_TABLE = "UserInfo" // 云端用户信息表名
+    val USER_DATA_TABLE = "UserData" // 云端用户数据表名
+    val LOGIN_LOG_TABLE = "LoginLog" // 云端用户日志表名
+
+    val USER_SHARED_PREFERENCE = "USER" // SharedPreference用户表名
+
     val USERNAME_EXIST = -1 // 用户名已存在
     val NICKNAME_EXIST = -2 // 昵称已存在
     val PASSWORD_ERROR = -3 // 密码错误

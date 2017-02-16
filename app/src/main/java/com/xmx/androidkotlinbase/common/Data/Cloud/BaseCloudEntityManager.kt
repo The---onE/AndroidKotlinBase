@@ -1,14 +1,10 @@
 package com.xmx.androidkotlinbase.common.data.cloud
 
-import android.content.Context
-import android.widget.Toast
 import com.avos.avoscloud.*
-import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.common.data.DataConstants
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
-import com.xmx.androidkotlinbase.common.user.UserManager
-import com.xmx.androidkotlinbase.utils.ExceptionUtil
+import com.xmx.androidkotlinbase.common.user.userManager
 import java.util.*
 
 /**
@@ -22,34 +18,20 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
     protected var entityTemplate: Entity? = null // 空模版，不需要数据
     protected var userField: String? = null // 用户字段，保存当前登录用户的ObjectId，为空时不保存用户字段
 
-    // 检查管理器是否已初始化
+    /**
+     * 检查管理器是否已初始化
+     * @return 管理器是否已初始化
+     */
     protected fun checkDatabase(): Boolean {
         return tableName != null && entityTemplate != null
     }
 
-    // 默认的错误处理
-    fun defaultError(context: Context): (Int) -> Unit {
-        return {
-            e ->
-            when (e) {
-                DataConstants.NOT_INIT -> Toast.makeText(context, R.string.failure, Toast.LENGTH_SHORT).show()
-                DataConstants.NOT_LOGGED_IN -> Toast.makeText(context, R.string.not_loggedin, Toast.LENGTH_SHORT).show()
-                DataConstants.CHECK_LOGIN_ERROR -> Toast.makeText(context, R.string.cannot_check_login, Toast.LENGTH_SHORT).show()
-                DataConstants.NOT_RELATED_USER -> Toast.makeText(context, R.string.not_related_user, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    // 默认的网络错误处理
-    fun defaultCloudError(context: Context): (Exception) -> Unit {
-        return {
-            e ->
-            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-            ExceptionUtil.normalException(e, context)
-        }
-    }
-
-    // 查询全部数据
+    /**
+     * 查询全部数据
+     * @param[success] 查询成功的回调，获取数据
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun selectAll(success: (List<Entity>) -> Unit,
                   error: (Int) -> Unit,
                   cloudError: (Exception) -> Unit) {
@@ -75,7 +57,14 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         })
     }
 
-    // 查询全部数据并排序, ascFlag为true升序，为false降序
+    /**
+     * 查询全部数据并排序
+     * @param[order] 排序字段
+     * @param[ascFlag] true为升序，false为降序
+     * @param[success] 查询成功的回调，获取数据
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun selectAll(order: String?, ascFlag: Boolean,
                   success: (List<Entity>) -> Unit,
                   error: (Int) -> Unit,
@@ -110,7 +99,15 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         })
     }
 
-    // 按条件查询数据并排序, ascFlag为true升序，为false降序
+    /**
+     * 按条件查询数据并排序
+     * @param[conditions] 查询条件，等值查询
+     * @param[order] 排序字段
+     * @param[ascFlag] true为升序，false为降序
+     * @param[success] 查询成功的回调，获取数据
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun selectByCondition(conditions: Map<String, Any>?,
                           order: String?, ascFlag: Boolean,
                           success: (List<Entity>) -> Unit,
@@ -152,7 +149,15 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         })
     }
 
-    // 在登录状态下按条件查询当前用户相关数据并排序, ascFlag为true升序，为false降序
+    /**
+     * 在【登录状态下】按条件查询当前用户相关数据并排序
+     * @param[conditions] 查询条件，等值查询
+     * @param[order] 排序字段
+     * @param[ascFlag] true为升序，false为降序
+     * @param[success] 查询成功的回调，获取数据和【当前用户数据】
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun selectByCondition(conditions: Map<String, Any>?,
                           order: String?, ascFlag: Boolean,
                           success: (UserData, List<Entity>) -> Unit,
@@ -163,7 +168,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        UserManager.instance().checkLogin(
+        userManager.checkLogin(
                 success = {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
@@ -218,7 +223,13 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                 })
     }
 
-    // 插入数据
+    /**
+     * 插入数据
+     * @param[entity] 要插入的数据实体
+     * @param[success] 插入成功的回调，获取插入数据ID
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun insertToCloud(entity: Entity,
                       success: (String) -> Unit, // 返回插入数据ID
                       error: (Int) -> Unit,
@@ -241,7 +252,13 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         })
     }
 
-    // 在登录状态下插入数据，该数据与当前用户关联
+    /**
+     * 在【登录状态下】插入数据，该数据与当前用户关联
+     * @param[entity] 要插入的数据实体
+     * @param[success] 插入成功的回调，获取插入数据ID和【当前用户数据】
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun insertToCloud(entity: Entity,
                       success: (UserData, String) -> Unit, // 返回当前用户和插入数据ID
                       error: (Int) -> Unit,
@@ -251,7 +268,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        UserManager.instance().checkLogin(
+        userManager.checkLogin(
                 success = {
                     user ->
                     val obj = entity.getContent(tableName!!)
@@ -289,7 +306,13 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         )
     }
 
-    // 在登录状态下删除数据，只能删除当前用户相关数据
+    /**
+     * 在【登录状态下】删除数据，只能删除当前用户相关数据
+     * @param[objectId] 要删除的数据ID
+     * @param[success] 删除成功的回调，获取【当前用户数据】
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun deleteFromCloud(objectId: String,
                         success: (UserData) -> Unit,
                         error: (Int) -> Unit,
@@ -299,7 +322,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        UserManager.instance().checkLogin(
+        userManager.checkLogin(
                 success = {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
@@ -346,7 +369,14 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                 })
     }
 
-    // 在登录状态下更新数据，只能修改当前用户相关数据
+    /**
+     * 在【登录状态下】更改数据，只能修改当前用户相关数据
+     * @param[objectId] 要更改的数据ID
+     * @param[update] 要更改的字段及对应值
+     * @param[success] 更改成功的回调，获取【当前用户数据】
+     * @param[error] 出现错误的回调，一般是用户相关的错误
+     * @param[cloudError] 出现网络错误的回调，一般是未连接到网络或初始化错误
+     */
     fun updateToCloud(objectId: String, update: Map<String, Any>?,
                       success: (UserData) -> Unit,
                       error: (Int) -> Unit,
@@ -356,7 +386,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        UserManager.instance().checkLogin(
+        userManager.checkLogin(
                 success = {
                     user ->
                     val query = AVQuery<AVObject>(tableName)

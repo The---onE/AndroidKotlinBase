@@ -12,12 +12,29 @@ import kotlinx.android.synthetic.main.tool_bar.*
  * AndroidManifest.xml中对应的Activity需添加 android:theme="@style/AppTheme.NoActionBar"
  */
 abstract class BaseTempActivity : BaseActivity() {
-    // 手势识别
-    private var mGestureDetector: GestureDetector? = null
 
-    // 自定义手势识别
+    // 手势识别，在Activity创建后创建
+    private val mGestureDetector: GestureDetector by lazy {
+        GestureDetector(this,
+                // 添加右滑关闭功能
+                object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onFling(e1: MotionEvent, e2: MotionEvent,
+                                         velocityX: Float, velocityY: Float): Boolean {
+                        if (velocityX > Math.abs(velocityY)) {
+                            onBackPressed()
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY)
+                    }
+                })
+    }
+
+    /**
+     * 触摸时添加对手势的识别
+     * @param[event] 触摸事件
+     * @return true:事件已处理完成，不向下传递 false:事件未处理完成，向下传递
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return mGestureDetector?.onTouchEvent(event) ?: false
+        return mGestureDetector.onTouchEvent(event)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,17 +46,5 @@ abstract class BaseTempActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // 工具栏添加返回按钮
         toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        mGestureDetector = GestureDetector(this,
-                // 添加右滑关闭功能
-                object : GestureDetector.SimpleOnGestureListener() {
-                    override fun onFling(e1: MotionEvent, e2: MotionEvent,
-                                         velocityX: Float, velocityY: Float): Boolean {
-                        if (velocityX > Math.abs(velocityY)) {
-                            onBackPressed()
-                        }
-                        return super.onFling(e1, e2, velocityX, velocityY)
-                    }
-                })
     }
 }

@@ -7,19 +7,9 @@ import java.util.Date
 
 /**
  * Created by The_onE on 2016/9/4.
- * 操作日志实体管理器
+ * 操作日志实体管理器，单例对象
  */
-class OperationLogEntityManager private constructor() : BaseSQLEntityManager<OperationLog>() {
-    // 单例模式
-    companion object {
-        private var instance: OperationLogEntityManager? = null
-        @Synchronized fun instance(): OperationLogEntityManager {
-            if (null == instance) {
-                instance = OperationLogEntityManager()
-            }
-            return instance!!
-        }
-    }
+object operationLogEntityManager : BaseSQLEntityManager<OperationLog>() {
 
     init {
         tableName = "OperationLog" // 表名
@@ -28,7 +18,10 @@ class OperationLogEntityManager private constructor() : BaseSQLEntityManager<Ope
         openDatabase()
     }
 
-    // 添加日志
+    /**
+     * 添加日志
+     * @param[operation] 记录的操作内容
+     */
     fun addLog(operation: String) {
         // 创建操作日志实体
         val entity = OperationLog()
