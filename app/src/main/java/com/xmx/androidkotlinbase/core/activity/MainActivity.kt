@@ -15,6 +15,7 @@ import com.xmx.androidkotlinbase.core.fragment.DataFragment
 import com.xmx.androidkotlinbase.core.fragment.UserFragment
 import com.xmx.androidkotlinbase.base.activity.BaseActivity
 import com.xmx.androidkotlinbase.core.HomePagerAdapter
+import com.xmx.androidkotlinbase.core.fragment.WebFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tool_bar.*
 import java.util.*
@@ -43,12 +44,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         fragments.add(HomeFragment())
         fragments.add(DataFragment())
         fragments.add(UserFragment())
+        fragments.add(WebFragment())
 
         // 各标签页标题
         val titles = ArrayList<String>()
         titles.add("首页")
         titles.add("数据")
         titles.add("用户")
+        titles.add("网页")
 
         // 设置ViewPager中的标签页
         viewPager.adapter = HomePagerAdapter(supportFragmentManager, fragments, titles)
@@ -88,6 +91,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_home -> viewPager.currentItem = 0
             R.id.nav_data -> viewPager.currentItem = 1
             R.id.nav_user -> viewPager.currentItem = 2
+            R.id.nav_web -> viewPager.currentItem = 3
         }
         // 关闭侧边栏
         drawer_layout.closeDrawer(GravityCompat.START)
