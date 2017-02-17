@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
  * Created by The_onE on 2017/1/18.
+ * 测试各零散组件是否运行正常，演示其使用方法
  */
 class HomeFragment : BaseFragment() {
     override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {

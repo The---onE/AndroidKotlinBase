@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_user.*
 
 /**
  * Created by The_onE on 2017/1/18.
- * 测试用户管理器
+ * 测试用户管理组件是否运行正常，演示其使用方法
  */
 class UserFragment : BaseFragment() {
 

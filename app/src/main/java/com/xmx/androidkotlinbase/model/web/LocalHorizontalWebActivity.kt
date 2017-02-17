@@ -9,9 +9,9 @@ import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
 import kotlinx.android.synthetic.main.activity_local_horizontal_web.*
 
-
 /**
- * A simple [Fragment] subclass.
+ * Created by The_onE on 2017/2/17.
+ * 测试横向本地网页，打开assets/horizontal.html页
  */
 class LocalHorizontalWebActivity : BaseTempActivity() {
 
@@ -37,12 +37,12 @@ class LocalHorizontalWebActivity : BaseTempActivity() {
         webBrowser.settings.setSupportZoom(true);
         // 设置出现缩放工具
         webBrowser.settings.builtInZoomControls = true;
-        //设置可在大视野范围内上下左右拖动，并且可以任意比例缩放
+        // 设置可在大视野范围内上下左右拖动，并且可以任意比例缩放
         webBrowser.settings.useWideViewPort = true;
-        //设置默认加载的可视范围是大视野范围
+        // 设置默认加载的可视范围是大视野范围
         webBrowser.settings.loadWithOverviewMode = true;
 
-        // 打开网络网页
+        // 打开本地网页
         webBrowser.loadUrl("file:///android_asset/horizontal.html")
     }
 }

@@ -11,6 +11,10 @@ import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_login.*
 
+/**
+ * Created by The_onE on 2016/1/10.
+ * 登录页
+ */
 class LoginActivity : BaseTempActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -70,6 +74,7 @@ class LoginActivity : BaseTempActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        // 若从注册页注册成功返回
         if (requestCode == UserConstants.REGISTER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 setResult(RESULT_OK, Intent())

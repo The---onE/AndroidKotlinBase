@@ -9,24 +9,13 @@ import com.xmx.androidkotlinbase.utils.ExceptionUtil
 
 /**
  * Created by The_onE on 2016/3/27.
- * 测试SQLite数据库与LeanCloud数据库同步实体管理器
+ * 测试SQLite数据库与LeanCloud数据库同步实体管理器，单例对象
  */
-class SyncEntityManager private constructor() : BaseSyncEntityManager<Sync>() {
+object syncEntityManager : BaseSyncEntityManager<Sync>() {
 
     init {
         // 初始化表名、模版、用户字段
         syncInit("SyncTest", Sync(), "User")
-    }
-
-    // 单例模式
-    companion object {
-        private var instance: SyncEntityManager? = null
-        @Synchronized fun instance(): SyncEntityManager {
-            if (null == instance) {
-                instance = SyncEntityManager()
-            }
-            return instance!!
-        }
     }
 
     /**

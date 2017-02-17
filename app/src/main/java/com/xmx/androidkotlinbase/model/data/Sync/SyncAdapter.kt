@@ -22,7 +22,6 @@ class SyncAdapter(context: Context, data: List<Sync>) : BaseEntityAdapter<Sync>(
         internal var time: TextView? = null
     }
 
-
     // 将数据填充到列表项中
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView

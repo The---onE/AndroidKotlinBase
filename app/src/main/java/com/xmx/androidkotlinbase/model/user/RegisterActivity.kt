@@ -10,6 +10,10 @@ import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_register.*
 
+/**
+ * Created by The_onE on 2016/1/10.
+ * 注册页
+ */
 class RegisterActivity : BaseTempActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_register)
@@ -32,7 +36,7 @@ class RegisterActivity : BaseTempActivity() {
                 showToast(R.string.username_empty)
                 return@setOnClickListener
             }
-            if (password == "") {
+            if (password.isBlank()) {
                 showToast(R.string.password_empty)
                 return@setOnClickListener
             }

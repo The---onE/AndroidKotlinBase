@@ -48,7 +48,7 @@ object userManager : IUserManager {
      * @param[user] 用户数据
      */
     fun defaultLogout(user: UserData) {
-        //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
+        //syncEntityManager.getInstance().getSQLManager().clearDatabase();
 
         // 取消关注消息推送中用户订阅的频道
 //        val subscribing = user.getList("subscribing")

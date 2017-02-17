@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_data.*
 
 /**
  * Created by The_onE on 2017/1/18.
+ * 测试数据相关组件是否运行正常，演示其使用方法
  */
 class DataFragment : BaseFragment() {
     override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
@@ -24,12 +25,15 @@ class DataFragment : BaseFragment() {
     }
 
     override fun setListener(view: View) {
+        // 打开SQLite数据管理页
         btnSQL.setOnClickListener {
             startActivity(SQLActivity::class.java)
         }
+        // 打开LeanCloud数据管理页
         btnCloud.setOnClickListener {
             startActivity(CloudActivity::class.java)
         }
+        // 打开SQLite与LeanCloud同步数据管理页
         btnSync.setOnClickListener {
             startActivity(SyncActivity::class.java)
         }

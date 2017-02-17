@@ -14,7 +14,8 @@ import java.util.Date
 import java.util.HashMap
 
 /**
- * A simple [Fragment] subclass.
+ * Created by The_onE on 2016/3/27.
+ * 测试LeanCloud数据管理页
  */
 class CloudActivity : BaseTempActivity() {
     var selfFlag = false // 是否只显示自己相关的数据
@@ -39,30 +40,30 @@ class CloudActivity : BaseTempActivity() {
             builder.setTitle("提示")
             builder.setNegativeButton("删除") { dialogInterface, i ->
                 // 删除数据
-                CloudEntityManager.instance().deleteFromCloud(cloud!!.cloudId!!,
+                cloudEntityManager.deleteFromCloud(cloud!!.cloudId!!,
                         success = {
                             user ->
                             showToast(R.string.delete_success)
                             // 刷新列表
                             updateList()
                         },
-                        error = CloudEntityManager.instance().defaultError(this),
-                        cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                        error = cloudEntityManager.defaultError(this),
+                        cloudError = cloudEntityManager.defaultCloudError(this)
                 )
             }
             builder.setPositiveButton("更新") { dialogInterface, i ->
                 val update = HashMap<String, Any>()
                 update.put("Time", Date())
                 // 更新数据
-                CloudEntityManager.instance().updateToCloud(cloud!!.cloudId!!, update,
+                cloudEntityManager.updateToCloud(cloud!!.cloudId!!, update,
                         success = {
                             user ->
                             showToast(R.string.update_success)
                             // 刷新列表
                             updateList()
                         },
-                        error = CloudEntityManager.instance().defaultError(this),
-                        cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                        error = cloudEntityManager.defaultError(this),
+                        cloudError = cloudEntityManager.defaultCloudError(this)
                 )
             }
             builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
@@ -77,15 +78,15 @@ class CloudActivity : BaseTempActivity() {
             entity.data = data
             entity.time = Date()
             // 添加数据
-            CloudEntityManager.instance().insertToCloud(entity,
+            cloudEntityManager.insertToCloud(entity,
                     success = {
                         user, objectId ->
                         showToast(R.string.add_success)
                         // 刷新列表
                         updateList()
                     },
-                    error = CloudEntityManager.instance().defaultError(this),
-                    cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                    error = cloudEntityManager.defaultError(this),
+                    cloudError = cloudEntityManager.defaultCloudError(this)
             )
             editCloud.setText("")
         }
@@ -106,32 +107,34 @@ class CloudActivity : BaseTempActivity() {
         updateList()
     }
 
-    // 查询数据并更新至列表中
+    /**
+     * 查询数据并更新至列表中
+     */
     private fun updateList() {
         // 查询数据
         if (selfFlag) {
             // 查询自己的数据
-            CloudEntityManager.instance().selectByCondition(null,
+            cloudEntityManager.selectByCondition(null,
                     "Time", false,
                     success = {
                         // 添加用户参数，查询用户数据
                         user, clouds ->
                         cloudAdapter?.updateList(clouds)
                     },
-                    error = CloudEntityManager.instance().defaultError(this),
-                    cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                    error = cloudEntityManager.defaultError(this),
+                    cloudError = cloudEntityManager.defaultCloudError(this)
             )
         } else {
             // 查询全部数据
-            CloudEntityManager.instance().selectByCondition(null,
+            cloudEntityManager.selectByCondition(null,
                     "Time", false,
                     success = {
                         // 不添加用户参数，查询全部数据
                         clouds ->
                         cloudAdapter?.updateList(clouds)
                     },
-                    error = CloudEntityManager.instance().defaultError(this),
-                    cloudError = CloudEntityManager.instance().defaultCloudError(this)
+                    error = cloudEntityManager.defaultError(this),
+                    cloudError = cloudEntityManager.defaultCloudError(this)
             )
         }
     }

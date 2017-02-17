@@ -13,7 +13,8 @@ import java.util.ArrayList
 import java.util.Date
 
 /**
- * A simple [Fragment] subclass.
+ * Created by The_onE on 2016/3/27.
+ * 测试SQLite数据管理页
  */
 class SQLActivity : BaseTempActivity() {
 
@@ -38,21 +39,21 @@ class SQLActivity : BaseTempActivity() {
             builder.setTitle("提示")
             builder.setNegativeButton("删除") { dialogInterface, i ->
                 // 删除数据
-                SQLEntityManager.instance().deleteById(sql.id)
+                sqlEntityManager.deleteById(sql.id)
                 // 刷新列表
-                SQLManager.instance().updateData()
-                val data = SQLManager.instance().data
+                sqlManager.updateData()
+                val data = sqlManager.data
                 data?.let {
                     sqlAdapter?.updateList(data)
                 }
             }
             builder.setPositiveButton("更新") { dialogInterface, i ->
                 // 更新数据
-                SQLEntityManager.instance().updateData(sql.id,
+                sqlEntityManager.updateData(sql.id,
                         "Time = " + Date().time)
                 // 刷新列表
-                SQLManager.instance().updateData()
-                val data = SQLManager.instance().data
+                sqlManager.updateData()
+                val data = sqlManager.data
                 data?.let {
                     sqlAdapter?.updateList(data)
                 }
@@ -69,12 +70,12 @@ class SQLActivity : BaseTempActivity() {
             entity.data = data
             entity.time = Date()
             // 添加数据
-            SQLEntityManager.instance().insertData(entity)
+            sqlEntityManager.insertData(entity)
             editSQL.setText("")
             showToast(R.string.add_success)
             // 刷新列表
-            SQLManager.instance().updateData()
-            val d = SQLManager.instance().data
+            sqlManager.updateData()
+            val d = sqlManager.data
             d?.let {
                 sqlAdapter?.updateList(d)
             }
@@ -83,8 +84,8 @@ class SQLActivity : BaseTempActivity() {
 
     override fun processLogic(savedInstanceState: Bundle?) {
         // 读取数据并显示在列表中
-        SQLManager.instance().updateData()
-        val data = SQLManager.instance().data
+        sqlManager.updateData()
+        val data = sqlManager.data
         data?.let {
             sqlAdapter?.updateList(data)
         }
@@ -93,8 +94,8 @@ class SQLActivity : BaseTempActivity() {
     override fun onResume() {
         super.onResume()
         // Activity重新显示时刷新列表
-        SQLManager.instance().updateData()
-        val data = SQLManager.instance().data
+        sqlManager.updateData()
+        val data = sqlManager.data
         data?.let {
             sqlAdapter?.updateList(data)
         }

@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_exception_test.*
 
 /**
  * Created by The_onE on 2016/10/3.
+ * 异常模拟页，测试对常见异常的处理
  */
 class ExceptionTestActivity : BaseTempActivity() {
     override fun initView(savedInstanceState: Bundle?) {
@@ -15,8 +16,9 @@ class ExceptionTestActivity : BaseTempActivity() {
     }
 
     override fun setListener() {
+        // 测试除0异常
         btnDivideByZero.setOnClickListener(View.OnClickListener { val e = 1 / 0 })
-
+        // 测试空指针异常
         btnNullPointer.setOnClickListener(View.OnClickListener {
             val e: String? = null
             e!!.contains("e")

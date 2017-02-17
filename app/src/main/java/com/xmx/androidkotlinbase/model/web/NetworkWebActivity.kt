@@ -9,9 +9,9 @@ import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
 import kotlinx.android.synthetic.main.activity_network_web.*
 
-
 /**
- * A simple [Fragment] subclass.
+ * Created by The_onE on 2017/2/17.
+ * 测试网络网页，打开http://www.bing.com(必应主页)
  */
 class NetworkWebActivity : BaseTempActivity() {
 

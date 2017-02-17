@@ -11,6 +11,7 @@ import java.util.*
 
 /**
  * Created by xmx on 2016/6/1.
+ * 测试SQLite与LeanCloud数据同步管理页面
  */
 class SyncActivity : BaseTempActivity() {
     // 数据列表适配器
@@ -19,7 +20,7 @@ class SyncActivity : BaseTempActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_sync)
 
-        SyncManager.instance().updateData()
+        syncManager.updateData()
         syncAdapter = SyncAdapter(this, ArrayList<Sync>())
         listSync.adapter = syncAdapter
     }
@@ -34,32 +35,32 @@ class SyncActivity : BaseTempActivity() {
             builder.setTitle("提示")
             builder.setNegativeButton("删除") { dialogInterface, i ->
                 // 删除数据
-                SyncEntityManager.instance().deleteData(sync.cloudId,
+                syncEntityManager.deleteData(sync.cloudId,
                         success = {
                             user ->
                             showToast(R.string.delete_success)
                             // 刷新列表
-                            SyncManager.instance().updateData()
-                            syncAdapter?.updateList(SyncManager.instance().data!!)
+                            syncManager.updateData()
+                            syncAdapter?.updateList(syncManager.data!!)
                         },
-                        error = SyncEntityManager.instance().defaultError(this),
-                        syncError = SyncEntityManager.instance().defaultSyncError(this)
+                        error = syncEntityManager.defaultError(this),
+                        syncError = syncEntityManager.defaultSyncError(this)
                 )
             }
             builder.setPositiveButton("更新") { dialogInterface, i ->
                 val update = HashMap<String, Any>()
                 update.put("Time", Date())
                 // 更新数据
-                SyncEntityManager.instance().updateData(sync.cloudId, update,
+                syncEntityManager.updateData(sync.cloudId, update,
                         success = {
                             user ->
                             showToast(R.string.update_success)
                             // 刷新列表
-                            SyncManager.instance().updateData()
-                            syncAdapter?.updateList(SyncManager.instance().data!!)
+                            syncManager.updateData()
+                            syncAdapter?.updateList(syncManager.data!!)
                         },
-                        error = SyncEntityManager.instance().defaultError(this),
-                        syncError = SyncEntityManager.instance().defaultSyncError(this)
+                        error = syncEntityManager.defaultError(this),
+                        syncError = syncEntityManager.defaultSyncError(this)
                 )
             }
             builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
@@ -74,16 +75,16 @@ class SyncActivity : BaseTempActivity() {
             entity.data = data
             entity.time = Date()
             // 添加数据
-            SyncEntityManager.instance().insertData(entity,
+            syncEntityManager.insertData(entity,
                     success = {
                         user, objectId ->
                         showToast(R.string.add_success)
                         // 刷新列表
-                        SyncManager.instance().updateData()
-                        syncAdapter?.updateList(SyncManager.instance().data!!)
+                        syncManager.updateData()
+                        syncAdapter?.updateList(syncManager.data!!)
                     },
-                    error = SyncEntityManager.instance().defaultError(this),
-                    syncError = SyncEntityManager.instance().defaultSyncError(this)
+                    error = syncEntityManager.defaultError(this),
+                    syncError = syncEntityManager.defaultSyncError(this)
             )
             editSync.setText("")
         }
@@ -91,15 +92,15 @@ class SyncActivity : BaseTempActivity() {
 
     override fun processLogic(savedInstanceState: Bundle?) {
         // 加载数据
-        SyncEntityManager.instance().syncFromCloud(null,
+        syncEntityManager.syncFromCloud(null,
                 success = {
                     user, entities ->
-                    SyncManager.instance().updateData()
-                    syncAdapter?.updateList(SyncManager.instance().data!!)
+                    syncManager.updateData()
+                    syncAdapter?.updateList(syncManager.data!!)
                     showToast(R.string.sync_success)
                 },
-                error = SyncEntityManager.instance().defaultError(this),
-                syncError = SyncEntityManager.instance().defaultSyncError(this)
+                error = syncEntityManager.defaultError(this),
+                syncError = syncEntityManager.defaultSyncError(this)
         )
     }
 }

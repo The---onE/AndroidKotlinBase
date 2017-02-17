@@ -17,7 +17,8 @@ import org.greenrobot.eventbus.Subscribe
 import java.util.ArrayList
 
 /**
- * A simple [Fragment] subclass.
+ * Created by The_onE on 2016/10/3.
+ * 查看日志页，显示所有本应用的操作日志
  */
 class OperationLogActivity : BaseTempActivity() {
 
@@ -31,6 +32,7 @@ class OperationLogActivity : BaseTempActivity() {
     }
 
     override fun setListener() {
+        // 清空日志
         btnClearLog.setOnClickListener(View.OnClickListener {
             operationLogEntityManager.clearDatabase()
             operationLogManager.updateData()
@@ -45,7 +47,10 @@ class OperationLogActivity : BaseTempActivity() {
         EventBus.getDefault().register(this)
     }
 
-    // 订阅操作日志变动事件
+    /**
+     * 订阅操作日志变动事件
+     * @param[event] 操作日志变动事件
+     */
     @Subscribe
     fun onEvent(event: LogChangeEvent) {
         operationLogManager.updateData()
