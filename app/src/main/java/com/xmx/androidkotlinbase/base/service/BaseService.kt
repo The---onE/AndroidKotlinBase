@@ -5,11 +5,10 @@ import android.app.Service
 import android.content.Intent
 import android.support.annotation.IdRes
 import android.support.v4.app.NotificationCompat
-import android.util.Log
-import android.widget.Toast
 
 import com.xmx.androidkotlinbase.core.MyApplication
 import com.xmx.androidkotlinbase.R
+import com.xmx.androidkotlinbase.utils.StringUtil
 
 /**
  * Created by The_onE on 2016/7/1.
@@ -74,8 +73,7 @@ abstract class BaseService : Service() {
      * @param[str] 要显示的字符串信息
      */
     protected fun showToast(str: String?) {
-        val s = str ?: ""
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
+        StringUtil.showToast(this, str)
     }
 
     /**
@@ -83,7 +81,7 @@ abstract class BaseService : Service() {
      * @param[resId] 要显示的字符串在strings文件中的ID
      */
     protected fun showToast(@IdRes resId: Int) {
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+        StringUtil.showToast(this, resId)
     }
 
     /**
@@ -92,7 +90,7 @@ abstract class BaseService : Service() {
      * @param[msg] 日志信息
      */
     protected fun showLog(tag: String, msg: String) {
-        Log.e(tag, msg)
+        StringUtil.showLog(tag, msg)
     }
 
     /**
@@ -101,7 +99,7 @@ abstract class BaseService : Service() {
      * @param[i] 数字作为日志信息
      */
     protected fun showLog(tag: String, i: Int) {
-        Log.e(tag, "$i")
+        StringUtil.showLog(tag, i)
     }
 
     /**

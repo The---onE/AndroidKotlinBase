@@ -25,13 +25,11 @@ class LocalHorizontalWebActivity : BaseTempActivity() {
     override fun processLogic(savedInstanceState: Bundle?) {
         // 允许JS执行
         webBrowser.settings.javaScriptEnabled = true
-        // 设置不打开系统浏览器，直接在WebView中显示
-        webBrowser.setWebViewClient(object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                view.loadUrl(url)
-                return super.shouldOverrideUrlLoading(view, url)
-            }
-        })
+
+        // 设置自定义浏览器属性(对不同协议的URL分别处理)
+        webBrowser.setWebViewClient(MyWebViewClient())
+        // 设置自定义页面事件处理(alert,prompt等页面事件)
+        webBrowser.setWebChromeClient(MyWebChromeClient(this))
 
         // 设置可以支持缩放
         webBrowser.settings.setSupportZoom(true);
