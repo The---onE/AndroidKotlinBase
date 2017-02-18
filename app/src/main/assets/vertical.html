@@ -5,6 +5,58 @@
     <title>本地网页</title>
   </head>
   <body>
-    <img src="vertical.png" style="width:100%" onclick="alert('test')" />
+    <img src="vertical.png" usemap="#map" style="width:100%"/>
+		<map name="Map" id="map">
+      <area alt="" title="" href="javascript:alert('测试1')" shape="rect" coords="455,16,740,76" />
+      <area alt="" title="" href="javascript:alert('测试2')" shape="rect" coords="619,130,741,171" />
+    </map>
+    <script type="text/javascript">
+      document.body.onload = function() {
+        var windowWidth = document.documentElement.clientWidth; // 窗口宽度
+        var windowHeight = document.documentElement.clientHeight; // 窗口高度
+
+        var imgs = document.getElementsByTagName("img");
+        var len = imgs.length;
+        for (var i = 0; i < len; ++i) {
+          var img = imgs[i]; // img标签
+          var mapId = img.getAttribute('usemap');
+          if (mapId) {
+            var imgWidth = img.width; // img控件宽度
+            var imgHeight = img.height; // img控件高度
+            var picWidth = img.naturalWidth; // 图片原始宽度
+            var picHeight = img.naturalHeight; // 图片原始高度
+
+            var map = document.getElementById(mapId.slice(1)); // 图片控件对应的map
+            var element = map.childNodes; // text, area, text, ..., area, text
+            var itemNumber = element.length / 2; // map中热点个数
+            // 处理每个热点
+            for (var j = 0; j < itemNumber - 1; j++) {
+              var item = 2 * j + 1;
+              var oldCoords = element[item].coords; // 原热点位置
+
+              //获取每个坐标点
+              var each = oldCoords.split(',');
+              var eaLen = each.length;
+              for (var k = 0; k < eaLen; k++) {
+                // 按当前比例缩放坐标点
+                each[k] = Math.round(parseInt(each[k]) * imgWidth / picWidth).toString();//x坐标
+                k++;
+                each[k] = Math.round(parseInt(each[k]) * imgHeight / picHeight).toString();//y坐标
+              }
+              //生成新的坐标点
+              var newPosition = '';
+              for (var k = 0; k < eaLen; k++) {
+                newPosition += each[k];
+                if (k < each.length - 1) {
+                  newPosition += ",";
+                }
+              }
+              // 设置新坐标点
+              element[item].setAttribute("coords", newPosition);
+            }
+          }
+        }
+      };
+    </script>
   </body>
 </html>
