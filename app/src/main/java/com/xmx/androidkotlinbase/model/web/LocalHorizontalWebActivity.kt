@@ -1,9 +1,12 @@
 package com.xmx.androidkotlinbase.model.web
 
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
+import com.xmx.androidkotlinbase.common.web.BaseWebChromeClient
+import com.xmx.androidkotlinbase.common.web.BaseWebViewClient
 import kotlinx.android.synthetic.main.activity_local_horizontal_web.*
 
 /**
@@ -24,9 +27,20 @@ class LocalHorizontalWebActivity : BaseTempActivity() {
         webBrowser.settings.javaScriptEnabled = true
 
         // 设置自定义浏览器属性(对不同协议的URL分别处理)
-        webBrowser.setWebViewClient(MyWebViewClient())
+        webBrowser.setWebViewClient(BaseWebViewClient())
         // 设置自定义页面事件处理(alert,prompt等页面事件)
-        webBrowser.setWebChromeClient(MyWebChromeClient(this))
+        webBrowser.setWebChromeClient(object : BaseWebChromeClient() {
+            override fun onAlert(message: String) {
+                val builder = AlertDialog.Builder(this@LocalHorizontalWebActivity)
+                builder.setMessage(message)
+                        .setTitle("提示")
+                        .setPositiveButton("确定", {
+                            dialogInterface, i ->
+                            dialogInterface.dismiss()
+                        })
+                        .show()
+            }
+        })
 
         // 设置可以支持缩放
         webBrowser.settings.setSupportZoom(true)
