@@ -6,7 +6,7 @@
   </head>
   <body>
     <img src="vertical.png" usemap="#map" style="width:100%"/>
-		<map name="Map" id="map">
+    <map name="Map" id="map">
       <area alt="" title="" href="javascript:alert('测试1')" shape="rect" coords="455,16,740,76" />
       <area alt="" title="" href="javascript:alert('测试2')" shape="rect" coords="619,130,741,171" />
     </map>
@@ -48,12 +48,17 @@
               for (var k = 0; k < eaLen; k++) {
                 newPosition += each[k];
                 if (k < each.length - 1) {
-                  newPosition += ",";
+                  newPosition += ',';
                 }
               }
               // 设置新坐标点
-              element[item].setAttribute("coords", newPosition);
+              element[item].setAttribute('coords', newPosition);
             }
+            var whole = document.createElement('area');
+            whole.setAttribute('shape', 'rect');
+            var coords = '0,0,' + imgWidth + ',' + imgHeight;
+            whole.setAttribute('coords', coords);
+            map.appendChild(whole);
           }
         }
       };

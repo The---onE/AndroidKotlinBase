@@ -1,9 +1,6 @@
 package com.xmx.androidkotlinbase.model.web
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.webkit.WebViewClient
-import android.webkit.WebView
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
@@ -32,13 +29,15 @@ class LocalHorizontalWebActivity : BaseTempActivity() {
         webBrowser.setWebChromeClient(MyWebChromeClient(this))
 
         // 设置可以支持缩放
-        webBrowser.settings.setSupportZoom(true);
+        webBrowser.settings.setSupportZoom(true)
         // 设置出现缩放工具
-        webBrowser.settings.builtInZoomControls = true;
+        webBrowser.settings.builtInZoomControls = true
+        //不显示缩放按钮
+        webBrowser.settings.displayZoomControls = false
         // 设置可在大视野范围内上下左右拖动，并且可以任意比例缩放
-        webBrowser.settings.useWideViewPort = true;
+        webBrowser.settings.useWideViewPort = true
         // 设置默认加载的可视范围是大视野范围
-        webBrowser.settings.loadWithOverviewMode = true;
+        webBrowser.settings.loadWithOverviewMode = true
 
         // 打开本地网页
         webBrowser.loadUrl("file:///android_asset/horizontal.html")
