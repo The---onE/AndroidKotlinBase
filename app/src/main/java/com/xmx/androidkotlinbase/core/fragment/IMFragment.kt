@@ -13,10 +13,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
-import com.xmx.androidkotlinbase.common.im.Callback.CreateConversationCallback
-import com.xmx.androidkotlinbase.common.im.Callback.GetTextChatLogCallback
-import com.xmx.androidkotlinbase.common.im.Callback.JoinConversationCallback
-import com.xmx.androidkotlinbase.common.im.Callback.SendMessageCallback
 import com.xmx.androidkotlinbase.common.im.IMMessageHandlerManager
 import com.xmx.androidkotlinbase.common.im.imClientManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
@@ -77,74 +73,71 @@ class IMFragment : BaseFragment() {
         }
 
         btnJoinConversation.setOnClickListener {
-            imClientManager.createConversation("test", object : CreateConversationCallback() {
-                override fun success(conversation: AVIMConversation) {
-                    showToast("创建对话成功")
-                    imClientManager.joinConversation(conversation, object : JoinConversationCallback() {
-                        override fun success(conversation: AVIMConversation) {
-                            showToast("加入对话成功")
-                            updateList()
-                        }
-
-                        override fun failure(e: Exception) {
-                            showToast("加入对话失败")
-                            ExceptionUtil.normalException(e, context)
-                        }
-
-                        override fun clientError() {
-                            showToast("IM客户端未打开")
-                        }
-                    })
-                }
-
-                override fun failure(e: Exception) {
-                    showToast("创建对话失败")
-                    ExceptionUtil.normalException(e, context)
-                }
-
-                override fun exist(conversation: AVIMConversation) {
-                    showToast("对话已存在")
-                    imClientManager.joinConversation(conversation, object : JoinConversationCallback() {
-                        override fun success(conversation: AVIMConversation) {
-                            showToast("加入对话成功")
-                            updateList()
-                        }
-
-                        override fun failure(e: Exception) {
-                            showToast("加入对话失败")
-                            ExceptionUtil.normalException(e, context)
-                        }
-
-                        override fun clientError() {
-                            showToast("IM客户端未打开")
-                        }
-                    })
-                }
-
-                override fun clientError() {
-                    showToast("IM客户端未打开")
-                }
-            })
+            imClientManager.createConversation("test",
+                    success = {
+                        conversation ->
+                        showToast("创建对话成功")
+                        imClientManager.joinConversation(conversation,
+                                success = {
+                                    showToast("加入对话成功")
+                                    updateList()
+                                },
+                                failure = {
+                                    e ->
+                                    showToast("加入对话失败")
+                                    ExceptionUtil.normalException(e, context)
+                                },
+                                clientError = {
+                                    showToast("IM客户端未打开")
+                                }
+                        )
+                    },
+                    exist = {
+                        conversation ->
+                        showToast("对话已存在")
+                        imClientManager.joinConversation(conversation,
+                                success = {
+                                    showToast("加入对话成功")
+                                    updateList()
+                                },
+                                failure = {
+                                    e ->
+                                    showToast("加入对话失败")
+                                    ExceptionUtil.normalException(e, context)
+                                },
+                                clientError = {
+                                    showToast("IM客户端未打开")
+                                }
+                        )
+                    },
+                    failure = {
+                        e ->
+                        showToast("创建对话失败")
+                        ExceptionUtil.normalException(e, context)
+                    },
+                    clientError = {
+                        showToast("IM客户端未打开")
+                    }
+            )
         }
 
         btnSendMessage.setOnClickListener {
             val data = editIM.text.toString()
             editIM.setText("")
-            imClientManager.sendText(data, object : SendMessageCallback() {
-                override fun success() {
-                    showToast("发送成功")
-                    updateList()
-                }
-
-                override fun failure(e: Exception) {
-                    showToast("发送失败")
-                    ExceptionUtil.normalException(e, context)
-                }
-
-                override fun conversationError() {
-                    showToast("对话未建立")
-                }
-            })
+            imClientManager.sendText(data,
+                    success = {
+                        showToast("发送成功")
+                        updateList()
+                    },
+                    failure = {
+                        e ->
+                        showToast("发送失败")
+                        ExceptionUtil.normalException(e, context)
+                    },
+                    conversationError = {
+                        showToast("对话未建立")
+                    }
+            )
         }
     }
 
@@ -161,20 +154,20 @@ class IMFragment : BaseFragment() {
     }
 
     fun updateList() {
-        imClientManager.getTextChatLog(object : GetTextChatLogCallback() {
-            override fun success(messages: List<AVIMTextMessage>) {
-                imAdapter?.updateList(messages)
-            }
-
-            override fun failure(e: Exception) {
-                showToast("获取聊天记录失败")
-                ExceptionUtil.normalException(e, context)
-            }
-
-            override fun conversationError() {
-                showToast("对话未建立")
-            }
-        })
+        imClientManager.getTextChatLog(
+                success = {
+                    messages ->
+                    imAdapter?.updateList(messages)
+                },
+                failure = {
+                    e ->
+                    showToast("获取聊天记录失败")
+                    ExceptionUtil.normalException(e, context)
+                },
+                conversationError = {
+                    showToast("对话未建立")
+                }
+        )
     }
 
 }

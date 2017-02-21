@@ -10,7 +10,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage
-import com.xmx.androidkotlinbase.common.im.Callback.*
 
 import java.util.ArrayList
 
@@ -50,7 +49,11 @@ object imClientManager {
     }
 
     //创建对话，若同名对话已存在不创建，回调函数中返回对应对话
-    fun createConversation(name: String, callback: CreateConversationCallback) {
+    fun createConversation(name: String,
+                           success: (AVIMConversation) -> Unit,
+                           exist: (AVIMConversation) -> Unit,
+                           failure: (Exception) -> Unit,
+                           clientError: () -> Unit) {
         if (checkClient()) {
             val query = client!!.query
             query.whereEqualTo("name", name)
@@ -59,31 +62,35 @@ object imClientManager {
                     if (e == null) {
                         if (convs != null && !convs.isEmpty()) {
                             val conversation = convs[0]
-                            callback.exist(conversation)
+                            exist(conversation)
                         } else {
                             client!!.createConversation(ArrayList<String>(), name, null,
                                     object : AVIMConversationCreatedCallback() {
                                         override fun done(avimConversation: AVIMConversation, e: AVIMException?) {
                                             if (e == null) {
-                                                callback.success(avimConversation)
+                                                success(avimConversation)
                                             } else {
-                                                callback.failure(e)
+                                                failure(e)
                                             }
                                         }
                                     })
                         }
                     } else {
-                        callback.failure(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.clientError()
+            clientError()
         }
     }
 
     //查找对话，回调函数中返回找到的对话
-    fun findConversation(name: String, callback: FindConversationCallback) {
+    fun findConversation(name: String,
+                         found: (AVIMConversation) -> Unit,
+                         notFound: () -> Unit,
+                         failure: (Exception) -> Unit,
+                         clientError: () -> Unit) {
         if (checkClient()) {
             val query = client!!.query
             query.whereEqualTo("name", name)
@@ -91,140 +98,151 @@ object imClientManager {
                 override fun done(convs: List<AVIMConversation>?, e: AVIMException?) {
                     if (e == null) {
                         if (convs != null && !convs.isEmpty()) {
-                            callback.found(convs[0])
+                            found(convs[0])
                         } else {
-                            callback.notFound()
+                            notFound()
                         }
                     } else {
-                        callback.error(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.clientError()
+            clientError()
         }
     }
 
     //加入对话，在创建或查找到对话后调用
-    fun joinConversation(conversation: AVIMConversation, callback: JoinConversationCallback) {
+    fun joinConversation(conversation: AVIMConversation,
+                         success: (AVIMConversation) -> Unit,
+                         failure: (Exception) -> Unit,
+                         clientError: () -> Unit) {
         if (checkClient()) {
             if (!conversation.members.contains(username)) {
                 conversation.join(object : AVIMConversationCallback() {
                     override fun done(e: AVIMException?) {
                         if (e == null) {
                             currentConversation = conversation
-                            callback.success(conversation)
+                            success(conversation)
                         } else {
-                            callback.failure(e)
+                            failure(e)
                         }
                     }
                 })
             } else {
                 currentConversation = conversation
-                callback.success(conversation)
+                success(conversation)
             }
         } else {
-            callback.clientError()
+            clientError()
         }
     }
 
     //退出对话,在创建或查找到对话后调用
     fun quitConversation(conversation: AVIMConversation?,
-                         callback: QuitConversationCallback) {
+                         success: (AVIMConversation) -> Unit,
+                         failure: (Exception) -> Unit,
+                         clientError: () -> Unit) {
         if (checkClient() && conversation != null) {
             conversation.quit(object : AVIMConversationCallback() {
                 override fun done(e: AVIMException?) {
                     if (e == null) {
-                        callback.success(conversation)
+                        success(conversation)
                         currentConversation = null
                     } else {
-                        callback.failure(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.clientError()
+            clientError()
         }
     }
 
     //退出对话，退出最近加入的对话
-    fun quitConversation(callback: QuitConversationCallback) {
+    fun quitConversation(success: (AVIMConversation) -> Unit,
+                         failure: (Exception) -> Unit,
+                         clientError: () -> Unit) {
         if (checkClient() && currentConversation != null) {
             currentConversation!!.quit(object : AVIMConversationCallback() {
                 override fun done(e: AVIMException?) {
                     if (e == null) {
-                        callback.success(currentConversation)
+                        success(currentConversation!!)
                         currentConversation = null
                     } else {
-                        callback.failure(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.clientError()
+            clientError()
         }
     }
 
     //发送文本，发送到最近加入的对话中
-    fun sendText(text: String, callback: SendMessageCallback) {
+    fun sendText(text: String,
+                 success: () -> Unit,
+                 failure: (Exception) -> Unit,
+                 conversationError: () -> Unit) {
         if (checkClient() && currentConversation != null) {
             val message = AVIMTextMessage()
             message.text = text
             currentConversation!!.sendMessage(message, object : AVIMConversationCallback() {
                 override fun done(e: AVIMException?) {
                     if (e == null) {
-                        callback.success()
+                        success()
                     } else {
-                        callback.failure(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.conversationError()
+            conversationError()
         }
     }
 
     //发送文本，发送到对应的对话中
     fun sendText(conversation: AVIMConversation?,
-                 text: String, callback: SendMessageCallback) {
+                 text: String,
+                 success: () -> Unit,
+                 failure: (Exception) -> Unit,
+                 conversationError: () -> Unit) {
         if (checkClient() && conversation != null) {
             val message = AVIMTextMessage()
             message.text = text
             conversation.sendMessage(message, object : AVIMConversationCallback() {
                 override fun done(e: AVIMException?) {
                     if (e == null) {
-                        callback.success()
+                        success()
                     } else {
-                        callback.failure(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.conversationError()
+            conversationError()
         }
     }
 
     //获取最近加入的对话的文本聊天记录
-    fun getTextChatLog(callback: GetTextChatLogCallback) {
+    fun getTextChatLog(success: (List<AVIMTextMessage>) -> Unit,
+                       failure: (Exception) -> Unit,
+                       conversationError: () -> Unit) {
         if (checkClient() && currentConversation != null) {
             currentConversation!!.queryMessages(object : AVIMMessagesQueryCallback() {
                 override fun done(messages: List<AVIMMessage>, e: AVIMException?) {
                     if (e == null) {
-                        val ms = ArrayList<AVIMTextMessage>()
-                        for (i in messages.indices.reversed()) {
-                            val message = messages[i]
-                            if (message is AVIMTextMessage) {
-                                ms.add(message)
-                            }
-                        }
-                        callback.success(ms)
+                        val ms = messages.indices.reversed()
+                                .map { messages[it] }
+                                .filterIsInstance<AVIMTextMessage>()
+                        success(ms)
                     } else {
-                        callback.failure(e)
+                        failure(e)
                     }
                 }
             })
         } else {
-            callback.conversationError()
+            conversationError()
         }
     }
 }

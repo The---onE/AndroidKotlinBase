@@ -19,7 +19,7 @@ public class IMMessageHandlerManager {
         return imMessageHandlerManager;
     }
 
-    List<TextMessageHandler> textMessageHandlers = new ArrayList<>();
+    private List<TextMessageHandler> textMessageHandlers = new ArrayList<>();
 
     //添加文本消息处理器
     public void addTextMessageHandler(TextMessageHandler handler) {
