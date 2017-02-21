@@ -47,7 +47,7 @@ class IMFragment : BaseFragment() {
     val loginError = {
         e: Int ->
         when (e) {
-//            UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
+            UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
             UserConstants.USERNAME_ERROR -> showToast(R.string.username_error)
             UserConstants.CHECKSUM_ERROR -> showToast(R.string.not_loggedin)
             UserConstants.CANNOT_CHECK_LOGIN -> showToast(R.string.cannot_check_login)

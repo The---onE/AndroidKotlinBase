@@ -88,7 +88,7 @@ class UserFragment : BaseFragment() {
     val loginError = {
         e: Int ->
         when (e) {
-//            UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
+            UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
             UserConstants.USERNAME_ERROR -> showToast(R.string.username_error)
             UserConstants.CHECKSUM_ERROR -> showToast(R.string.not_loggedin)
             UserConstants.CANNOT_CHECK_LOGIN -> showToast(R.string.cannot_check_login)
@@ -96,8 +96,8 @@ class UserFragment : BaseFragment() {
     }
 
     override fun processLogic(view: View, savedInstanceState: Bundle?) {
-        // 自动登录，首次进入时进行
-        userManager.autoLogin(
+        // 在SplashActivity中自动登录，在此校验登录
+        userManager.checkLogin(
                 success = loginSuccess,
                 error = loginError,
                 cloudError = {
