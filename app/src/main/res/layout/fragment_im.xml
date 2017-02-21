@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".core.fragment.IMFragment">
+
+    <Button
+        android:id="@+id/btnOpenClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开IM客户端" />
+
+    <Button
+        android:id="@+id/btnJoinConversation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="加入对话" />
+
+    <EditText
+        android:id="@+id/editIM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="请输入内容" />
+
+    <Button
+        android:id="@+id/btnSendMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发送内容" />
+
+    <ListView
+        android:id="@+id/listIM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+</LinearLayout>

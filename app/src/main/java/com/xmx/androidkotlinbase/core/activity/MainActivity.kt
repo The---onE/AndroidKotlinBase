@@ -10,12 +10,9 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.R
-import com.xmx.androidkotlinbase.core.fragment.HomeFragment
-import com.xmx.androidkotlinbase.core.fragment.DataFragment
-import com.xmx.androidkotlinbase.core.fragment.UserFragment
 import com.xmx.androidkotlinbase.base.activity.BaseActivity
 import com.xmx.androidkotlinbase.core.HomePagerAdapter
-import com.xmx.androidkotlinbase.core.fragment.WebFragment
+import com.xmx.androidkotlinbase.core.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tool_bar.*
 import java.util.*
@@ -45,6 +42,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         fragments.add(DataFragment())
         fragments.add(UserFragment())
         fragments.add(WebFragment())
+        fragments.add(IMFragment())
 
         // 各标签页标题
         val titles = ArrayList<String>()
@@ -52,6 +50,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         titles.add("数据")
         titles.add("用户")
         titles.add("网页")
+        titles.add("IM")
 
         // 设置ViewPager中的标签页
         viewPager.adapter = HomePagerAdapter(supportFragmentManager, fragments, titles)
@@ -63,6 +62,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {
+    }
+
+    // 侧滑菜单项点击事件
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // 显示选择的选项卡
+        when (item.itemId) {
+            R.id.nav_home -> viewPager.currentItem = 0
+            R.id.nav_data -> viewPager.currentItem = 1
+            R.id.nav_user -> viewPager.currentItem = 2
+            R.id.nav_web -> viewPager.currentItem = 3
+            R.id.nav_im -> viewPager.currentItem = 4
+        }
+        // 关闭侧边栏
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
     }
 
     // 点击返回键时添加二次确认
@@ -82,19 +96,5 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         } else {
             super.onBackPressed()
         }
-    }
-
-    // 侧滑菜单项点击事件
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // 显示选择的选项卡
-        when (item.itemId) {
-            R.id.nav_home -> viewPager.currentItem = 0
-            R.id.nav_data -> viewPager.currentItem = 1
-            R.id.nav_user -> viewPager.currentItem = 2
-            R.id.nav_web -> viewPager.currentItem = 3
-        }
-        // 关闭侧边栏
-        drawer_layout.closeDrawer(GravityCompat.START)
-        return true
     }
 }
