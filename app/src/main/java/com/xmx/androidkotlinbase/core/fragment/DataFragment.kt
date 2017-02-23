@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.xmx.androidkotlinbase.model.data.cloud.CloudActivity
-import com.xmx.androidkotlinbase.model.data.sql.SQLActivity
-import com.xmx.androidkotlinbase.model.data.sync.SyncActivity
+import com.xmx.androidkotlinbase.module.data.cloud.CloudActivity
+import com.xmx.androidkotlinbase.module.data.sql.SQLActivity
+import com.xmx.androidkotlinbase.module.data.sync.SyncActivity
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_data.*

@@ -17,19 +17,22 @@ import com.xmx.androidkotlinbase.common.im.IMMessageHandlerManager
 import com.xmx.androidkotlinbase.common.im.imClientManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.userManager
-import com.xmx.androidkotlinbase.model.IM.IMAdapter
-import com.xmx.androidkotlinbase.model.IM.IMTextMessageHandler
-import com.xmx.androidkotlinbase.model.IM.OnReceiveCallback
+import com.xmx.androidkotlinbase.module.im.IMAdapter
+import com.xmx.androidkotlinbase.module.im.IMTextMessageHandler
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.fragment_im.*
 
 import java.util.ArrayList
 
 /**
- * A simple [Fragment] subclass.
+ * Created by The_onE on 2017/2/20.
+ * 测试数据相关组件是否运行正常，演示其使用方法
  */
 class IMFragment : BaseFragment() {
-    private var imAdapter: IMAdapter? = null
+    // 消息记录适配器
+    private val imAdapter: IMAdapter by lazy {
+        IMAdapter(context, ArrayList<AVIMTextMessage>())
+    }
 
     override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
         return inflater.inflate(R.layout.fragment_im, container, false)
@@ -51,14 +54,18 @@ class IMFragment : BaseFragment() {
     }
 
     override fun setListener(view: View) {
+        // 打开IM客户端
         btnOpenClient.setOnClickListener {
+            // 校验登录，需先登录才能使用
             userManager.checkLogin(
                     success = {
                         user ->
                         showToast("IM客户端打开中……")
+                        // 打开IM客户端
                         imClientManager.openClient(user.username!!,
                                 object : AVIMClientCallback() {
-                                    override fun done(avimClient: AVIMClient?, e: AVIMException?) {
+                                    override fun done(imClient: AVIMClient?, e: AVIMException?) {
+                                        // 客户端打开成功
                                         showToast("IM客户端打开成功")
                                     }
                                 })
@@ -71,70 +78,92 @@ class IMFragment : BaseFragment() {
                     }
             )
         }
-
+        // 加入测试对话
         btnJoinConversation.setOnClickListener {
+            // 创建名为"test"的对话
             imClientManager.createConversation("test",
                     success = {
                         conversation ->
+                        // 创建成功
                         showToast("创建对话成功")
+                        // 加入创建的对话
                         imClientManager.joinConversation(conversation,
                                 success = {
+                                    // 加入成功
                                     showToast("加入对话成功")
+                                    // 读取并显示消息记录
                                     updateList()
                                 },
                                 failure = {
                                     e ->
+                                    // 加入失败
                                     showToast("加入对话失败")
                                     ExceptionUtil.normalException(e, context)
                                 },
                                 clientError = {
+                                    // 客户端尚未打开
                                     showToast("IM客户端未打开")
                                 }
                         )
                     },
                     exist = {
                         conversation ->
+                        // 对话已存在
                         showToast("对话已存在")
+                        // 加入已存在的对话
                         imClientManager.joinConversation(conversation,
                                 success = {
+                                    // 加入成功
                                     showToast("加入对话成功")
+                                    // 读取并显示消息记录
                                     updateList()
                                 },
                                 failure = {
                                     e ->
+                                    // 加入失败
                                     showToast("加入对话失败")
                                     ExceptionUtil.normalException(e, context)
                                 },
                                 clientError = {
+                                    // 客户端尚未打开
                                     showToast("IM客户端未打开")
                                 }
                         )
                     },
                     failure = {
                         e ->
+                        // 创建对话失败
                         showToast("创建对话失败")
                         ExceptionUtil.normalException(e, context)
                     },
                     clientError = {
+                        // 客户端尚未打开
                         showToast("IM客户端未打开")
                     }
             )
         }
-
+        // 发送消息
         btnSendMessage.setOnClickListener {
+            // 读取要发送的消息
             val data = editIM.text.toString()
-            editIM.setText("")
+            // 发送消息
             imClientManager.sendText(data,
                     success = {
+                        // 发送成功
                         showToast("发送成功")
+                        // 清空文本框
+                        editIM.setText("")
+                        // 更新消息记录列表
                         updateList()
                     },
                     failure = {
                         e ->
+                        // 发送失败
                         showToast("发送失败")
                         ExceptionUtil.normalException(e, context)
                     },
                     conversationError = {
+                        // 尚未加入对话
                         showToast("对话未建立")
                     }
             )
@@ -142,29 +171,38 @@ class IMFragment : BaseFragment() {
     }
 
     override fun processLogic(view: View, savedInstanceState: Bundle?) {
-        imAdapter = IMAdapter(context, ArrayList<AVIMTextMessage>())
+        // 设置消息记录列表适配器
         listIM.adapter = imAdapter
-
-        val handler = IMTextMessageHandler(context, object : OnReceiveCallback() {
-            override fun receive(text: String, from: String, time: Long, conversation: AVIMConversation, client: AVIMClient) {
-                updateList()
-            }
-        })
+        // 创建自定义文本消息处理器
+        val handler = IMTextMessageHandler(context,
+                onReceive = {
+                    text, from, time, conversation, client ->
+                    updateList()
+                })
+        // 添加自定义文本消息处理器
         IMMessageHandlerManager.getInstance().addTextMessageHandler(handler)
     }
 
+    /**
+     * 读取并更新消息记录列表
+     */
     fun updateList() {
+        // 读取消息记录
         imClientManager.getTextChatLog(
                 success = {
                     messages ->
-                    imAdapter?.updateList(messages)
+                    // 读取成功
+                    // 更新消息记录列表
+                    imAdapter.updateList(messages)
                 },
                 failure = {
                     e ->
+                    // 获取失败
                     showToast("获取聊天记录失败")
                     ExceptionUtil.normalException(e, context)
                 },
                 conversationError = {
+                    // 尚未加入对话
                     showToast("对话未建立")
                 }
         )

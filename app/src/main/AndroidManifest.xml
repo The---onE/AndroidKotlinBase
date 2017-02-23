@@ -33,38 +33,38 @@
             android:name=".core.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.xmx.androidkotlinbase.model.data.sql.SQLActivity"
+            android:name="com.xmx.androidkotlinbase.module.data.sql.SQLActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.xmx.androidkotlinbase.model.data.cloud.CloudActivity"
+            android:name="com.xmx.androidkotlinbase.module.data.cloud.CloudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.xmx.androidkotlinbase.model.data.sync.SyncActivity"
+            android:name="com.xmx.androidkotlinbase.module.data.sync.SyncActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.xmx.androidkotlinbase.model.log.ExceptionTestActivity"
+            android:name="com.xmx.androidkotlinbase.module.log.ExceptionTestActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.xmx.androidkotlinbase.model.log.OperationLogActivity"
+            android:name="com.xmx.androidkotlinbase.module.log.OperationLogActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".model.user.LoginActivity"
+            android:name=".module.user.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".model.user.RegisterActivity"
+            android:name=".module.user.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".model.web.NetworkWebActivity"
+            android:name=".module.web.NetworkWebActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".model.web.LocalVerticalWebActivity"
+            android:name=".module.web.LocalVerticalWebActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".model.web.LocalHorizontalWebActivity"
+            android:name=".module.web.LocalHorizontalWebActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name="com.xmx.androidkotlinbase.model.service.MainService"
+            android:name="com.xmx.androidkotlinbase.module.service.MainService"
             android:enabled="true"
             android:exported="true" />
 

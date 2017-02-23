@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.xmx.androidkotlinbase.R
-import com.xmx.androidkotlinbase.model.log.ExceptionTestActivity
-import com.xmx.androidkotlinbase.model.log.OperationLogActivity
-import com.xmx.androidkotlinbase.model.service.MainService
+import com.xmx.androidkotlinbase.module.log.ExceptionTestActivity
+import com.xmx.androidkotlinbase.module.log.OperationLogActivity
+import com.xmx.androidkotlinbase.module.service.MainService
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
 import com.xmx.androidkotlinbase.utils.VibratorUtil

@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
-import com.xmx.androidkotlinbase.model.web.LocalHorizontalWebActivity
-import com.xmx.androidkotlinbase.model.web.LocalVerticalWebActivity
-import com.xmx.androidkotlinbase.model.web.NetworkWebActivity
+import com.xmx.androidkotlinbase.module.web.LocalHorizontalWebActivity
+import com.xmx.androidkotlinbase.module.web.LocalVerticalWebActivity
+import com.xmx.androidkotlinbase.module.web.NetworkWebActivity
 import kotlinx.android.synthetic.main.fragment_web.*
 
 /**

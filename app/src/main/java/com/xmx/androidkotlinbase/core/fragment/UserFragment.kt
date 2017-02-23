@@ -14,8 +14,8 @@ import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
 import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
-import com.xmx.androidkotlinbase.model.user.LoginActivity
-import com.xmx.androidkotlinbase.model.user.RegisterActivity
+import com.xmx.androidkotlinbase.module.user.LoginActivity
+import com.xmx.androidkotlinbase.module.user.RegisterActivity
 import kotlinx.android.synthetic.main.fragment_user.*
 
 /**
