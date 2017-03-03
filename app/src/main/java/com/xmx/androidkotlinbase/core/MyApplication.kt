@@ -1,8 +1,8 @@
 package com.xmx.androidkotlinbase.core
 
 import android.app.Activity
-import android.app.Application
 import android.app.Service
+import android.support.multidex.MultiDexApplication
 import com.avos.avoscloud.AVOSCloud
 
 import com.xmx.androidkotlinbase.common.user.userManager
@@ -13,7 +13,7 @@ import java.util.*
  * 自定义Application，应用唯一实例
  * 单例类，初始化各插件，管理各组件
  */
-class MyApplication : Application() {
+class MyApplication : MultiDexApplication() {
     // 单例模式
     companion object {
         private var ins: MyApplication? = null
