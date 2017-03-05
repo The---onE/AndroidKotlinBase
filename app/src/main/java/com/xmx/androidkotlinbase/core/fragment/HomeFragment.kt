@@ -53,7 +53,7 @@ class HomeFragment : BaseFragment() {
                 // 查询前台服务
                 if (it.foreground) {
                     // 根据包名查询服务，当前应用创建的进程没有应用包名
-                    if (it.service.shortClassName == ".model.service.MainService") {
+                    if (it.service.shortClassName == ".module.service.MainService") {
                         // 关闭服务
                         val intent = Intent()
                         intent.component = it.service
