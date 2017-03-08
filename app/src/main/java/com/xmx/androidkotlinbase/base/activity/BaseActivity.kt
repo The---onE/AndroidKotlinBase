@@ -1,8 +1,14 @@
 package com.xmx.androidkotlinbase.base.activity
 
+import android.app.AppOpsManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
@@ -142,5 +148,42 @@ abstract class BaseActivity : AppCompatActivity() {
             i++
         }
         startActivity(intent)
+    }
+
+    /**
+     * 检查系统是否授予权限
+     * @param[permission] 需要的权限 Manifest.permission.权限名
+     * @param[requestId] 请求ID
+     */
+    fun checkLocalPhonePermission(permission: String, requestId: Int) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            // 是否已授权
+            val permissionFlag = ActivityCompat.checkSelfPermission(this, permission)
+            if (permissionFlag != PackageManager.PERMISSION_GRANTED) {
+                // 若未授权则请求授权
+                ActivityCompat.requestPermissions(this, arrayOf<String>(permission), requestId)
+                return
+            }
+        }
+    }
+
+    /**
+     * 检查定制系统(小米)是否授予权限
+     * @param[opsPermission] 定制系统权限名 AppOpsManager.权限名
+     * @param[permission] 需要的权限 Manifest.permission.权限名
+     * @param[requestId] 请求ID
+     */
+    fun checkOpsPermission(opsPermission: String, permission: String, requestId: Int) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            val appOpsManager = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            // 是否已授权
+            val permissionFlag = appOpsManager
+                    .checkOp(opsPermission, Binder.getCallingUid(), packageName)
+            if (permissionFlag != AppOpsManager.MODE_ALLOWED) {
+                // 若未授权则请求授权
+                ActivityCompat.requestPermissions(this, arrayOf<String>(permission), requestId)
+                return
+            }
+        }
     }
 }

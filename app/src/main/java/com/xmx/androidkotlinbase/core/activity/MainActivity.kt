@@ -1,12 +1,14 @@
 package com.xmx.androidkotlinbase.core.activity
 
+import android.Manifest
+import android.app.AppOpsManager
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.R
@@ -22,6 +24,8 @@ import java.util.*
  * 主Activity，利用Fragment展示所有程序内容
  */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private val WRITE_SD_REQUEST = 1
 
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
@@ -62,6 +66,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {
+        checkLocalPhonePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_SD_REQUEST)
+        checkOpsPermission(AppOpsManager.OPSTR_WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_SD_REQUEST)
     }
 
     // 侧滑菜单项点击事件
@@ -95,6 +102,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             mExitTime = System.currentTimeMillis()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            WRITE_SD_REQUEST -> {
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showToast("您拒绝了读写手机存储的权限，某些功能会导致程序出错，请手动允许该权限！")
+                }
+            }
         }
     }
 }
