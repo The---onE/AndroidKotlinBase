@@ -47,6 +47,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         fragments.add(UserFragment())
         fragments.add(WebFragment())
         fragments.add(IMFragment())
+        fragments.add(NotificationFragment())
 
         // 各标签页标题
         val titles = ArrayList<String>()
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         titles.add("用户")
         titles.add("网页")
         titles.add("IM")
+        titles.add("通知")
 
         // 设置ViewPager中的标签页
         viewPager.adapter = HomePagerAdapter(supportFragmentManager, fragments, titles)
@@ -80,6 +82,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_user -> viewPager.currentItem = 2
             R.id.nav_web -> viewPager.currentItem = 3
             R.id.nav_im -> viewPager.currentItem = 4
+            R.id.nav_notification -> viewPager.currentItem = 5
         }
         // 关闭侧边栏
         drawer_layout.closeDrawer(GravityCompat.START)
