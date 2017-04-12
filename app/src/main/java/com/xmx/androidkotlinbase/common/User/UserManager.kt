@@ -107,7 +107,7 @@ object userManager : IUserManager {
      * 获取设备存储的校验码
      * @return 设备存储的校验码
      */
-    fun getChecksum(): String {
+    private fun getChecksum(): String {
         return mSP?.getString("checksum", "") ?: ""
     }
 
@@ -115,8 +115,16 @@ object userManager : IUserManager {
      * 获取设备存储的用户名
      * @return 设备存储的用户名
      */
-    fun getUsername(): String {
+    private fun getUsername(): String {
         return mSP?.getString("username", "") ?: ""
+    }
+
+    /**
+     * 判断是否登录成功过
+     * @return 是否登录成功过
+     */
+    private fun checkLoggedIn(): Boolean {
+        return mSP?.getBoolean("loggedin", false) ?: false
     }
 
     /**
@@ -124,7 +132,7 @@ object userManager : IUserManager {
      * @return 是否已登录
      */
     fun isLoggedIn(): Boolean {
-        return mSP?.getBoolean("loggedin", false) ?: false
+        return loginFlag
     }
 
     /**
@@ -449,7 +457,7 @@ object userManager : IUserManager {
                            cloudError: (Exception) -> Unit) {
         val username = getUsername()
         // 用户未登陆过
-        if (!isLoggedIn() || username.isEmpty()) {
+        if (!checkLoggedIn() || username.isEmpty()) {
             // 用户未登录
             error(UserConstants.NOT_LOGGED_IN)
             return

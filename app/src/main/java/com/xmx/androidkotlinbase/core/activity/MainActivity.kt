@@ -1,7 +1,10 @@
 package com.xmx.androidkotlinbase.core.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.AppOpsManager
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -9,13 +12,22 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.view.MenuItem
+import android.view.View
+import com.avos.avoscloud.AVException
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseActivity
+import com.xmx.androidkotlinbase.common.user.UserConstants
+import com.xmx.androidkotlinbase.common.user.UserData
+import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.core.HomePagerAdapter
 import com.xmx.androidkotlinbase.core.fragment.*
+import com.xmx.androidkotlinbase.module.user.LoginActivity
+import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.tool_bar.*
 import java.util.*
 
@@ -26,6 +38,10 @@ import java.util.*
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val WRITE_SD_REQUEST = 1
+    // 侧滑菜单登录菜单项
+    var loginItem: MenuItem? = null
+    // 是否已成功登录
+    var loginFlag = false
 
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
@@ -44,7 +60,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val fragments = ArrayList<Fragment>()
         fragments.add(HomeFragment())
         fragments.add(DataFragment())
-        fragments.add(UserFragment())
         fragments.add(WebFragment())
         fragments.add(IMFragment())
         fragments.add(NotificationFragment())
@@ -53,7 +68,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val titles = ArrayList<String>()
         titles.add("首页")
         titles.add("数据")
-        titles.add("用户")
         titles.add("网页")
         titles.add("IM")
         titles.add("通知")
@@ -67,10 +81,69 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun setListener() {
     }
 
+    // 登录成功的处理
+    val loginSuccess = {
+        data: UserData ->
+        loginItem?.title = "${data.nickname} 点击注销"
+        loginFlag = true
+    }
+
+    // 登录失败的处理
+    val loginError = {
+        e: Int ->
+        when (e) {
+            UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
+            UserConstants.USERNAME_ERROR -> showToast(R.string.username_error)
+            UserConstants.CHECKSUM_ERROR -> showToast(R.string.not_loggedin)
+            UserConstants.CANNOT_CHECK_LOGIN -> showToast(R.string.cannot_check_login)
+        }
+    }
+
     override fun processLogic(savedInstanceState: Bundle?) {
         checkLocalPhonePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_SD_REQUEST)
         checkOpsPermission(AppOpsManager.OPSTR_WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_SD_REQUEST)
+
+        // 设置侧滑菜单
+        val menu = nav_view.menu
+        loginItem = menu.findItem(R.id.nav_user)
+        // 在SplashActivity中自动登录，在此校验登录
+        userManager.checkLogin(
+                success = loginSuccess,
+                error = loginError,
+                cloudError = {
+                    e ->
+                    showToast(R.string.network_error)
+                    ExceptionUtil.normalException(e, baseContext)
+                }
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 登录成功后，校验登录获取用户数据
+        if (loginFlag) {
+            userManager.checkLogin(
+                    success = loginSuccess,
+                    error = loginError,
+                    cloudError = {
+                        e ->
+                        showToast(R.string.network_error)
+                        ExceptionUtil.normalException(e, baseContext)
+                    }
+            )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // 在登录页登录成功或注册页注册成功
+        if (requestCode == UserConstants.LOGIN_REQUEST_CODE
+                || requestCode == UserConstants.REGISTER_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                loginFlag = true
+            }
+        }
     }
 
     // 侧滑菜单项点击事件
@@ -79,10 +152,31 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (item.itemId) {
             R.id.nav_home -> viewPager.currentItem = 0
             R.id.nav_data -> viewPager.currentItem = 1
-            R.id.nav_user -> viewPager.currentItem = 2
-            R.id.nav_web -> viewPager.currentItem = 3
-            R.id.nav_im -> viewPager.currentItem = 4
-            R.id.nav_notification -> viewPager.currentItem = 5
+            R.id.nav_web -> viewPager.currentItem = 2
+            R.id.nav_im -> viewPager.currentItem = 3
+            R.id.nav_notification -> viewPager.currentItem = 4
+            R.id.nav_user -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                if (userManager.isLoggedIn()) {
+                    // 注销
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("确定要注销吗？")
+                    builder.setTitle("提示")
+                    builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
+                    builder.setPositiveButton("确定") { dialogInterface, i ->
+                        // 确认注销
+                        userManager.logout {
+                            //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
+                        }
+                        loginItem?.title = "登录"
+                        startActivityForResult(intent, UserConstants.LOGIN_REQUEST_CODE)
+                    }
+                    builder.show()
+                } else {
+                    // 登录
+                    startActivityForResult(intent, UserConstants.LOGIN_REQUEST_CODE)
+                }
+            }
         }
         // 关闭侧边栏
         drawer_layout.closeDrawer(GravityCompat.START)
