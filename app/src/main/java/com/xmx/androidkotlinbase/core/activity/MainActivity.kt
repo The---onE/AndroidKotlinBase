@@ -119,22 +119,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-        // 登录成功后，校验登录获取用户数据
-        if (loginFlag) {
-            userManager.checkLogin(
-                    success = loginSuccess,
-                    error = loginError,
-                    cloudError = {
-                        e ->
-                        showToast(R.string.network_error)
-                        ExceptionUtil.normalException(e, baseContext)
-                    }
-            )
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // 在登录页登录成功或注册页注册成功
@@ -168,8 +152,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         userManager.logout {
                             //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
                         }
+                        showToast("注销成功")
                         loginItem?.title = "登录"
-                        startActivityForResult(intent, UserConstants.LOGIN_REQUEST_CODE)
+//                            startActivityForResult(intent, UserConstants.LOGIN_REQUEST_CODE);
                     }
                     builder.show()
                 } else {
