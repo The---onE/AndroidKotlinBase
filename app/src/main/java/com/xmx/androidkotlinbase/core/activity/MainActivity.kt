@@ -19,6 +19,7 @@ import com.avos.avoscloud.AVException
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseActivity
+import com.xmx.androidkotlinbase.common.user.LoginEvent
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
 import com.xmx.androidkotlinbase.common.user.userManager
@@ -29,6 +30,8 @@ import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.tool_bar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.*
 
 /**
@@ -76,6 +79,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         viewPager.adapter = HomePagerAdapter(supportFragmentManager, fragments, titles)
         // 设置标签页底部选项卡
         tabLayout.setupWithViewPager(viewPager)
+
+        EventBus.getDefault().register(this)
     }
 
     override fun setListener() {
@@ -205,5 +210,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
             }
         }
+    }
+
+    /**
+     * 订阅登录成功事件，在SplashActivity自动登录成功时触发
+     * @param[event] 操作日志变动事件
+     */
+    @Subscribe
+    fun onEvent(event: LoginEvent) {
+        userManager.checkLogin(
+                success = loginSuccess,
+                error = loginError,
+                cloudError = {
+                    e ->
+                    showToast(R.string.network_error)
+                    ExceptionUtil.normalException(e, baseContext)
+                })
     }
 }

@@ -3,6 +3,7 @@ package com.xmx.androidkotlinbase.core.activity
 import android.os.Bundle
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseSplashActivity
+import com.xmx.androidkotlinbase.common.user.LoginEvent
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
 import com.xmx.androidkotlinbase.common.user.userManager
@@ -10,6 +11,7 @@ import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import com.xmx.androidkotlinbase.utils.Timer
 import kotlinx.android.synthetic.main.activity_splash.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by The_onE on 2017/2/15.
@@ -42,6 +44,7 @@ class SplashActivity : BaseSplashActivity() {
         userManager.autoLogin(
                 success = {
                     data: UserData ->
+                    EventBus.getDefault().post(LoginEvent())
                 },
                 error = {
                     e: Int ->
