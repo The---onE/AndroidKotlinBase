@@ -114,16 +114,19 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         loginItem = menu.findItem(R.id.nav_user)
         // 在SplashActivity中自动登录，在此校验登录
         if (userManager.isLoggedIn()) {
-            userManager.checkLogin(
-                    success = loginSuccess,
-                    error = loginError,
-                    cloudError = {
-                        e ->
-                        showToast(R.string.network_error)
-                        ExceptionUtil.normalException(e, baseContext)
-                    }
-            )
+            checkLogin()
         }
+    }
+
+    fun checkLogin() {
+        userManager.checkLogin(
+                success = loginSuccess,
+                error = loginError,
+                cloudError = {
+                    e ->
+                    showToast(R.string.network_error)
+                    ExceptionUtil.normalException(e, baseContext)
+                })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -132,14 +135,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (requestCode == UserConstants.LOGIN_REQUEST_CODE
                 || requestCode == UserConstants.REGISTER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                userManager.checkLogin(
-                        success = loginSuccess,
-                        error = loginError,
-                        cloudError = {
-                            e ->
-                            showToast(R.string.network_error)
-                            ExceptionUtil.normalException(e, baseContext)
-                        })
+                checkLogin()
             }
         }
     }
@@ -218,13 +214,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     @Subscribe
     fun onEvent(event: LoginEvent) {
-        userManager.checkLogin(
-                success = loginSuccess,
-                error = loginError,
-                cloudError = {
-                    e ->
-                    showToast(R.string.network_error)
-                    ExceptionUtil.normalException(e, baseContext)
-                })
+        checkLogin()
     }
 }
