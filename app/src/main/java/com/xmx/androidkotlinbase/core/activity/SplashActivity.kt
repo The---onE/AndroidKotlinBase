@@ -3,10 +3,7 @@ package com.xmx.androidkotlinbase.core.activity
 import android.os.Bundle
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseSplashActivity
-import com.xmx.androidkotlinbase.common.user.LoginEvent
-import com.xmx.androidkotlinbase.common.user.UserConstants
-import com.xmx.androidkotlinbase.common.user.UserData
-import com.xmx.androidkotlinbase.common.user.userManager
+import com.xmx.androidkotlinbase.common.user.*
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import com.xmx.androidkotlinbase.utils.Timer
@@ -18,6 +15,9 @@ import org.greenrobot.eventbus.EventBus
  * 应用启动页，一定时间后自动或点击按钮跳转至主Activity
  */
 class SplashActivity : BaseSplashActivity() {
+
+    private var um: IUserManager = userManager // 用户管理器
+
     // 定时器，一定时间后跳转主Activity
     val timer: Timer by lazy {
         Timer {
@@ -41,7 +41,7 @@ class SplashActivity : BaseSplashActivity() {
         // 设置定时器在一定时间后跳转
         timer.start(CoreConstants.SPLASH_TIME, once = true)
         // 自动登录
-        userManager.autoLogin(
+        um.autoLogin(
                 success = {
                     data: UserData ->
                     EventBus.getDefault().post(LoginEvent())

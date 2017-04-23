@@ -11,6 +11,13 @@ import com.avos.avoscloud.AVException
  * 在登录或自动登录成功后才可校验登录获取数据，用于确认是否在其他设备登录或登录过期
  */
 interface IUserManager {
+
+    /**
+     * 判断是否已登录
+     * @return 是否已登录
+     */
+    fun isLoggedIn(): Boolean
+
     /**
      * 注销接口
      * @param[proc] 注销成功的处理，返回注销用户数据

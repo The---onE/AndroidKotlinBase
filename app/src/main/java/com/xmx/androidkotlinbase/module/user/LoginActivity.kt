@@ -6,6 +6,7 @@ import android.os.Bundle
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
+import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
@@ -16,6 +17,8 @@ import kotlinx.android.synthetic.main.activity_login.*
  * 登录页
  */
 class LoginActivity : BaseTempActivity() {
+
+    private var um: IUserManager = userManager // 用户管理器
 
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_login)
@@ -34,7 +37,7 @@ class LoginActivity : BaseTempActivity() {
             } else {
                 // 处理登录
                 btnLogin.isEnabled = false
-                userManager.login(username, password,
+                um.login(username, password,
                         success = {
                             // 登录成功
                             showToast(R.string.login_success)

@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
+import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
 import com.xmx.androidkotlinbase.common.user.userManager
@@ -23,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_user.*
  * 测试用户管理组件是否运行正常，演示其使用方法
  */
 class UserFragment : BaseFragment() {
+
+    private var um: IUserManager = userManager // 用户管理器
 
     // 是否已成功登录
     var loginFlag = false
@@ -48,7 +51,7 @@ class UserFragment : BaseFragment() {
         }
         // 注销
         btnLogout.setOnClickListener {
-            userManager.logout {
+            um.logout {
                 showToast(R.string.logout_success)
                 loginFlag = false
                 tvStatus.text = "当前状态：未登陆"
@@ -97,7 +100,7 @@ class UserFragment : BaseFragment() {
 
     override fun processLogic(view: View, savedInstanceState: Bundle?) {
         // 在SplashActivity中自动登录，在此校验登录
-        userManager.checkLogin(
+        um.checkLogin(
                 success = loginSuccess,
                 error = loginError,
                 cloudError = {
@@ -112,7 +115,7 @@ class UserFragment : BaseFragment() {
         super.onResume()
         // 登录成功后，校验登录获取用户数据
         if (loginFlag) {
-            userManager.checkLogin(
+            um.checkLogin(
                     success = loginSuccess,
                     error = loginError,
                     cloudError = {

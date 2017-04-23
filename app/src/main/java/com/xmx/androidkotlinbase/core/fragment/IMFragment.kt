@@ -15,6 +15,7 @@ import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.im.IMMessageHandlerManager
 import com.xmx.androidkotlinbase.common.im.imClientManager
+import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.module.im.IMAdapter
@@ -29,6 +30,9 @@ import java.util.ArrayList
  * 测试数据相关组件是否运行正常，演示其使用方法
  */
 class IMFragment : BaseFragment() {
+
+    private var um: IUserManager = userManager // 用户管理器
+
     // 消息记录适配器
     private val imAdapter: IMAdapter by lazy {
         IMAdapter(context, ArrayList<AVIMTextMessage>())
@@ -57,7 +61,7 @@ class IMFragment : BaseFragment() {
         // 打开IM客户端
         btnOpenClient.setOnClickListener {
             // 校验登录，需先登录才能使用
-            userManager.checkLogin(
+            um.checkLogin(
                     success = {
                         user ->
                         showToast("IM客户端打开中……")

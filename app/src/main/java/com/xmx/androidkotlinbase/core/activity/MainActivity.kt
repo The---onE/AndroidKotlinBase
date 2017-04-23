@@ -19,10 +19,7 @@ import com.avos.avoscloud.AVException
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseActivity
-import com.xmx.androidkotlinbase.common.user.LoginEvent
-import com.xmx.androidkotlinbase.common.user.UserConstants
-import com.xmx.androidkotlinbase.common.user.UserData
-import com.xmx.androidkotlinbase.common.user.userManager
+import com.xmx.androidkotlinbase.common.user.*
 import com.xmx.androidkotlinbase.core.HomePagerAdapter
 import com.xmx.androidkotlinbase.core.fragment.*
 import com.xmx.androidkotlinbase.module.user.LoginActivity
@@ -39,6 +36,8 @@ import java.util.*
  * 主Activity，利用Fragment展示所有程序内容
  */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private var um: IUserManager = userManager // 用户管理器
 
     private val WRITE_SD_REQUEST = 1
     // 侧滑菜单登录菜单项
@@ -113,13 +112,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val menu = nav_view.menu
         loginItem = menu.findItem(R.id.nav_user)
         // 在SplashActivity中自动登录，在此校验登录
-        if (userManager.isLoggedIn()) {
+        if (um.isLoggedIn()) {
             checkLogin()
         }
     }
 
     fun checkLogin() {
-        userManager.checkLogin(
+        um.checkLogin(
                 success = loginSuccess,
                 error = loginError,
                 cloudError = {
@@ -151,7 +150,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_notification -> viewPager.currentItem = 4
             R.id.nav_user -> {
                 val intent = Intent(this, LoginActivity::class.java)
-                if (userManager.isLoggedIn()) {
+                if (um.isLoggedIn()) {
                     // 注销
                     val builder = AlertDialog.Builder(this)
                     builder.setMessage("确定要注销吗？")
@@ -159,7 +158,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
                     builder.setPositiveButton("确定") { dialogInterface, i ->
                         // 确认注销
-                        userManager.logout {
+                        um.logout {
                             //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
                         }
                         showToast("注销成功")

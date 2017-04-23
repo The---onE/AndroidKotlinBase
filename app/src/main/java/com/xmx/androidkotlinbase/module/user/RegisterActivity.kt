@@ -5,6 +5,7 @@ import android.os.Bundle
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
+import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.userManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
@@ -15,6 +16,9 @@ import kotlinx.android.synthetic.main.activity_register.*
  * 注册页
  */
 class RegisterActivity : BaseTempActivity() {
+
+    private var um: IUserManager = userManager // 用户管理器
+
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_register)
     }
@@ -47,7 +51,7 @@ class RegisterActivity : BaseTempActivity() {
 
             // 处理注册
             btnRegister.isEnabled = false
-            userManager.register(username, password, nickname,
+            um.register(username, password, nickname,
                     success = {
                         // 注册成功
                         showToast(R.string.register_success)

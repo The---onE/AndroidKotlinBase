@@ -131,7 +131,7 @@ object userManager : IUserManager {
      * 判断是否已登录
      * @return 是否已登录
      */
-    fun isLoggedIn(): Boolean {
+    override fun isLoggedIn(): Boolean {
         return loginFlag
     }
 

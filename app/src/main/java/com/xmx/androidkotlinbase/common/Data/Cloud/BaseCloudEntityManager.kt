@@ -2,6 +2,7 @@ package com.xmx.androidkotlinbase.common.data.cloud
 
 import com.avos.avoscloud.*
 import com.xmx.androidkotlinbase.common.data.DataConstants
+import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
 import com.xmx.androidkotlinbase.common.user.userManager
@@ -17,6 +18,8 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
     protected var tableName: String? = null // 表(Class)名
     protected var entityTemplate: Entity? = null // 空模版，不需要数据
     protected var userField: String? = null // 用户字段，保存当前登录用户的ObjectId，为空时不保存用户字段
+
+    private var um: IUserManager = userManager // 用户管理器
 
     /**
      * 检查管理器是否已初始化
@@ -168,7 +171,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        userManager.checkLogin(
+        um.checkLogin(
                 success = {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
@@ -268,7 +271,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        userManager.checkLogin(
+        um.checkLogin(
                 success = {
                     user ->
                     val obj = entity.getContent(tableName!!)
@@ -322,7 +325,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        userManager.checkLogin(
+        um.checkLogin(
                 success = {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
@@ -386,7 +389,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
             return
         }
         // 校验登录，获取用户数据
-        userManager.checkLogin(
+        um.checkLogin(
                 success = {
                     user ->
                     val query = AVQuery<AVObject>(tableName)
