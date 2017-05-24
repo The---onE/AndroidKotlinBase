@@ -53,4 +53,10 @@
         android:layout_height="wrap_content"
         android:text="异常模拟" />
 
+    <Button
+        android:id="@+id/btnDialogTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="弹出对话框" />
+
 </LinearLayout>

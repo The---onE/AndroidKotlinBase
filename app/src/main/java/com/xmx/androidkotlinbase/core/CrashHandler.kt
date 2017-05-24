@@ -2,6 +2,7 @@ package com.xmx.androidkotlinbase.core
 
 import android.content.Context
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import kotlin.system.exitProcess
 
@@ -90,7 +91,8 @@ object crashHandler : Thread.UncaughtExceptionHandler {
     private fun handleException(ex: Throwable): Boolean {
         if (CoreConstants.EXCEPTION_DEBUG) {
             // 打印异常堆栈跟踪
-            ex.printStackTrace()
+            Log.e("Error:", Log.getStackTraceString(ex))
+            // ex.printStackTrace()
         }
         // 记录错误日志
         operationLogEntityManager.addLog("$ex")

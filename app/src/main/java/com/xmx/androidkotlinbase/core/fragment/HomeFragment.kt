@@ -14,6 +14,7 @@ import com.xmx.androidkotlinbase.module.log.OperationLogActivity
 import com.xmx.androidkotlinbase.module.service.MainService
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
+import com.xmx.androidkotlinbase.module.dialog.TestDialog
 import com.xmx.androidkotlinbase.utils.VibratorUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -96,6 +97,13 @@ class HomeFragment : BaseFragment() {
         // 异常模拟
         btnExceptionTest.setOnClickListener {
             startActivity(ExceptionTestActivity::class.java)
+        }
+
+        // 弹出对话框
+        btnDialogTest.setOnClickListener {
+            var dialog = TestDialog();
+            dialog.initDialog(context)
+            dialog.show(activity.fragmentManager, "TEST")
         }
     }
 

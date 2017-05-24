@@ -1,6 +1,7 @@
 package com.xmx.androidkotlinbase.utils
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 
 import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
@@ -22,7 +23,8 @@ object ExceptionUtil {
         // 在调试状态显示错误信息
         if (CoreConstants.EXCEPTION_DEBUG) {
             // 打印异常堆栈跟踪
-            e.printStackTrace()
+            Log.e("Error:", Log.getStackTraceString(e))
+            // e.printStackTrace()
             // 显示错误信息
             Toast.makeText(context, "出现异常:${e.message}", Toast.LENGTH_SHORT).show()
         }
@@ -40,7 +42,8 @@ object ExceptionUtil {
         // 在调试状态显示错误信息
         if (CoreConstants.EXCEPTION_DEBUG) {
             // 打印异常堆栈跟踪
-            e.printStackTrace()
+            Log.e("Error:", Log.getStackTraceString(e))
+            // e.printStackTrace()
             // 显示错误信息
             Toast.makeText(context, "致命异常:${e.message}", Toast.LENGTH_SHORT).show()
         }
