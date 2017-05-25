@@ -2,6 +2,7 @@ package com.xmx.androidkotlinbase.module.service
 
 import android.content.Intent
 import android.os.IBinder
+import com.xmx.androidkotlinbase.R
 
 import com.xmx.androidkotlinbase.core.activity.MainActivity
 import com.xmx.androidkotlinbase.base.service.BaseService
@@ -38,7 +39,9 @@ class MainService : BaseService() {
     }
 
     override fun setForeground(intent: Intent) {
+        val title = intent.getStringExtra("title") ?: getString(R.string.app_name)
+        val content = intent.getStringExtra("content") ?: "正在运行"
         // 设置前台服务
-        showForeground(MainActivity::class.java, "正在运行")
+        showForeground(MainActivity::class.java, content, title)
     }
 }

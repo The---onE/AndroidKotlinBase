@@ -13,7 +13,9 @@ import android.widget.EditText
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
+import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
 import com.xmx.androidkotlinbase.common.notification.NotificationTempActivity
+import com.xmx.androidkotlinbase.module.service.MainService
 import com.xmx.androidkotlinbase.utils.NotificationUtils
 import kotlinx.android.synthetic.main.fragment_notification.*
 
@@ -67,6 +69,51 @@ class NotificationFragment : BaseFragment() {
             // 移除通知
             NotificationUtils.removeNotification(context, i)
             showToast("已移除通知")
+        }
+
+        // 运行服务
+        btnStartService.setOnClickListener {
+            val service = Intent(context, MainService::class.java)
+            val title = editTitle.text.toString()
+            if (title.isNotBlank()) {
+                service.putExtra("title", title)
+            }
+            val content = editContent.text.toString()
+            if (content.isNotBlank()) {
+                service.putExtra("content", content)
+            }
+            context.startService(service)
+            operationLogEntityManager.addLog("开启服务")
+            showToast("已开启服务")
+        }
+
+        // 停止服务
+        btnStopService.setOnClickListener {
+            // 获取系统服务管理器
+            val manager = activity.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            // 设置查询上限
+            val defaultNum = 1000
+            // 查询运行的服务
+            val runServiceList = manager
+                    .getRunningServices(defaultNum)
+            var flag = false
+            runServiceList.forEach {
+                // 查询前台服务
+                if (it.foreground) {
+                    // 根据包名查询服务，当前应用创建的进程没有应用包名
+                    if (it.service.shortClassName == ".module.service.MainService") {
+                        // 关闭服务
+                        val intent = Intent()
+                        intent.component = it.service
+                        context.stopService(intent)
+                        showToast("已关闭服务")
+                        flag = true
+                    }
+                }
+            }
+            if (!flag) {
+                showToast("服务未开启")
+            }
         }
     }
 
