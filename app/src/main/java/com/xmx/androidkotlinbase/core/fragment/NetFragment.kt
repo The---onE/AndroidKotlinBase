@@ -6,18 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
+import com.xmx.androidkotlinbase.module.net.GetRequestActivity
+import com.xmx.androidkotlinbase.module.net.JsonActivity
 import com.xmx.androidkotlinbase.module.web.LocalHorizontalWebActivity
 import com.xmx.androidkotlinbase.module.web.LocalVerticalWebActivity
 import com.xmx.androidkotlinbase.module.web.NetworkWebActivity
-import kotlinx.android.synthetic.main.fragment_web.*
+import kotlinx.android.synthetic.main.fragment_net.*
 
 /**
  * Created by The_onE on 2017/1/18.
  * 测试网页组件是否运行正常，演示其使用方法
  */
-class WebFragment : BaseFragment() {
+class NetFragment : BaseFragment() {
     override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.fragment_web, container, false);
+        return inflater.inflate(R.layout.fragment_net, container, false);
     }
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
@@ -36,6 +38,14 @@ class WebFragment : BaseFragment() {
         // 打开本地网页(横)
         btnLocalHorizontal.setOnClickListener {
             startActivity(LocalHorizontalWebActivity::class.java)
+        }
+        // Get请求
+        btnGet.setOnClickListener {
+            startActivity(GetRequestActivity::class.java)
+        }
+        // JSON解析
+        btnJson.setOnClickListener {
+            startActivity(JsonActivity::class.java)
         }
     }
 

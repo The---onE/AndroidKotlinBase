@@ -3,7 +3,6 @@ package com.xmx.androidkotlinbase.core.activity
 import android.Manifest
 import android.app.Activity
 import android.app.AppOpsManager
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -14,8 +13,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.view.MenuItem
-import android.view.View
-import com.avos.avoscloud.AVException
 import com.xmx.androidkotlinbase.core.CoreConstants
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseActivity
@@ -25,7 +22,6 @@ import com.xmx.androidkotlinbase.core.fragment.*
 import com.xmx.androidkotlinbase.module.user.LoginActivity
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.tool_bar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,7 +58,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val fragments = ArrayList<Fragment>()
         fragments.add(HomeFragment())
         fragments.add(DataFragment())
-        fragments.add(WebFragment())
+        fragments.add(NetFragment())
         fragments.add(IMFragment())
         fragments.add(NotificationFragment())
 
@@ -70,7 +66,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val titles = ArrayList<String>()
         titles.add("首页")
         titles.add("数据")
-        titles.add("网页")
+        titles.add("网络")
         titles.add("IM")
         titles.add("通知")
 
@@ -151,7 +147,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (item.itemId) {
             R.id.nav_home -> viewPager.currentItem = 0
             R.id.nav_data -> viewPager.currentItem = 1
-            R.id.nav_web -> viewPager.currentItem = 2
+            R.id.nav_net -> viewPager.currentItem = 2
             R.id.nav_im -> viewPager.currentItem = 3
             R.id.nav_notification -> viewPager.currentItem = 4
             R.id.nav_user -> {

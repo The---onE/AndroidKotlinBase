@@ -23,4 +23,16 @@
         android:layout_height="wrap_content"
         android:text="本地网页(横)" />
 
+    <Button
+        android:id="@+id/btnGet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GET请求"/>
+
+    <Button
+        android:id="@+id/btnJson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="JSON解析"/>
+
 </LinearLayout>

@@ -62,6 +62,12 @@
         <activity
             android:name=".module.web.LocalHorizontalWebActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".module.net.GetRequestActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".module.net.JsonActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name="com.xmx.androidkotlinbase.module.service.MainService"

@@ -4,12 +4,49 @@ import android.content.Context
 import android.support.annotation.IdRes
 import android.util.Log
 import android.widget.Toast
+import java.io.UnsupportedEncodingException
+import java.util.ArrayList
 
 /**
  * Created by The_onE on 2017/2/18.
  * 字符串处理类
  */
 object StringUtil {
+
+    /**
+     * 连接字符串
+     *
+     * @param items     待连接的字符串数组
+     * @param separator 分隔字符串
+     * @return 格式化后的文本
+     */
+    fun join(items: Array<String>, separator: String): String {
+        val sb = StringBuffer()
+        sb.append(items[0])
+        for (i in 1..items.size - 1) {
+            sb.append(separator)
+            sb.append(items[i])
+        }
+        return String(sb)
+    }
+
+    /**
+     * 连接字符串
+     *
+     * @param items     待连接的字符串列表
+     * @param separator 分隔字符串
+     * @return 格式化后的文本
+     */
+    fun join(items: List<String>, separator: String): String {
+        val sb = StringBuffer()
+        sb.append(items[0])
+        for (i in 1..items.size - 1) {
+            sb.append(separator)
+            sb.append(items[i])
+        }
+        return String(sb)
+    }
+
     /**
      * 显示提示信息
      * @param[context] 当前上下文
