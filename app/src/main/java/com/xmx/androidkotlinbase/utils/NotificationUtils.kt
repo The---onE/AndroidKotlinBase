@@ -11,8 +11,6 @@ import android.net.Uri
 import com.avos.avospush.notification.NotificationCompat
 import com.xmx.androidkotlinbase.R
 
-import java.util.LinkedList
-
 /**
  * Created by wli on 15/8/26.
  * 消息通知处理类

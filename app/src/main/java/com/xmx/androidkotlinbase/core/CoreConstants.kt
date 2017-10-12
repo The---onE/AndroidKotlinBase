@@ -10,7 +10,7 @@ object CoreConstants {
     val APP_ID = "vBb01A8F2LI63zJBqkQWiuWc-gzGzoHsz" // LeanCloud应用ID
     val APP_KEY = "tfMtJ1uRTmRre40QhxT46yVl" // LeanCloud应用KEY
 
-    val FILE_DIR = "/Framework" // 应用数据目录
+    private val FILE_DIR = "/Framework" // 应用数据目录
     val DATABASE_DIR = FILE_DIR + "/Database" // 数据库目录
     val DATABASE_FILE = DATABASE_DIR + "/database.db" // 数据库文件
 

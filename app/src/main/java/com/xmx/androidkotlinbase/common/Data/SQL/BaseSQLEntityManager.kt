@@ -18,7 +18,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
     // 管理数据库连接
     protected var database: SQLiteDatabase? = null
     // 数据变更时会更新版本
-    public var version = System.currentTimeMillis()
+    var version = System.currentTimeMillis()
         protected set
     // 是否已打开数据库
     protected var openFlag = false
@@ -43,10 +43,10 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
         if (flag) {
             // 若无给定文件则使用默认数据库文件，否则使用默认目录中的给定文件
             var sqlFile = android.os.Environment.getExternalStorageDirectory().toString()
-            if (filename == null) {
-                sqlFile += CoreConstants.DATABASE_FILE
+            sqlFile += if (filename == null) {
+                CoreConstants.DATABASE_FILE
             } else {
-                sqlFile += CoreConstants.DATABASE_DIR + "/" + filename + ".db"
+                CoreConstants.DATABASE_DIR + "/" + filename + ".db"
             }
 
             val file = File(sqlFile) // 数据库文件路径
@@ -73,14 +73,14 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
         if (!openSQLFile(filename)) {
             return false
         }
-        if (database != null && tableName != null && entityTemplate != null) {
+        openFlag = if (database != null && tableName != null && entityTemplate != null) {
             // 若不存在表则创建表
             val createSQL = "create table if not exists " +
                     "$tableName(${entityTemplate!!.tableFields()})"
             database!!.execSQL(createSQL)
-            openFlag = true
+            true
         } else {
-            openFlag = false
+            false
         }
         return openFlag
     }
@@ -96,9 +96,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
      * 检查数据库是否打开，若未打开则打开
      * @return 数据库是否已打开
      */
-    protected fun checkDatabase(): Boolean {
-        return openFlag || openDatabase()
-    }
+    protected fun checkDatabase(): Boolean = openFlag || openDatabase()
 
     /**
      * 清空数据表
@@ -186,8 +184,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                 // 在事务中插入数据，每插入一条进行回调
                 operation = {
                     var index = 0
-                    entities.forEach {
-                        entity ->
+                    entities.forEach { entity ->
                         database!!.insert(tableName, null, entity.getContent())
                         index++
                         proceeding?.let { proceeding(index) }
@@ -195,13 +192,11 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                     return@operationInTransaction index
                 },
                 // 插入成功
-                success = {
-                    total ->
+                success = { total ->
                     success(total)
                 },
                 // 插入失败，处理异常
-                error = {
-                    e ->
+                error = { e ->
                     ExceptionUtil.fatalError(e)
                 }
         )
@@ -237,8 +232,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                 // 在事务中删除数据，每删除一条进行回调
                 operation = {
                     var index = 0
-                    ids.forEach {
-                        id ->
+                    ids.forEach { id ->
                         database!!.delete(tableName, "ID = ?", arrayOf(id.toString()))
                         index++
                         proceeding?.let { proceeding(index) }
@@ -246,13 +240,11 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
                     return@operationInTransaction index
                 },
                 // 删除成功
-                success = {
-                    total ->
+                success = { total ->
                     success(total)
                 },
                 // 删除失败，处理异常
-                error = {
-                    e ->
+                error = { e ->
                     ExceptionUtil.fatalError(e)
                 }
         )
@@ -284,7 +276,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return
         }
         // 更新内容
-        var content: String = ""
+        var content = ""
         if (strings.isNotEmpty()) {
             content = strings.joinToString(prefix = "set ", separator = ", ")
         }
@@ -305,7 +297,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return
         }
         // 更新内容
-        var content: String = ""
+        var content = ""
         if (strings.isNotEmpty()) {
             content = strings.joinToString(prefix = "set ", separator = ", ")
         }
@@ -347,11 +339,11 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return null
         }
         // 将查询数据转化为实体并返回
-        if (cursor.moveToFirst()) {
+        return if (cursor.moveToFirst()) {
             val entity: ISQLEntity = entityTemplate!!.convertToEntity(cursor)
-            return entity as Entity
+            entity as Entity
         } else {
-            return null
+            null
         }
     }
 
@@ -381,11 +373,10 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return null
         }
         // 设置排序方式
-        val asc: String
-        if (ascFlag) {
-            asc = "asc"
+        val asc: String = if (ascFlag) {
+            "asc"
         } else {
-            asc = "desc"
+            "desc"
         }
         // 查询全部数据并转化为实体列表
         val cursor = database!!.rawQuery("select * from $tableName order by $order $asc", null)
@@ -458,16 +449,15 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return null
         }
         // 查询条件
-        var content: String = ""
+        var content = ""
         if (condition.isNotEmpty()) {
             content = condition.joinToString(prefix = "where ", separator = "and ")
         }
         // 设置排序方式
-        val asc: String
-        if (ascFlag) {
-            asc = "asc"
+        val asc: String = if (ascFlag) {
+            "asc"
         } else {
-            asc = "desc"
+            "desc"
         }
         // 查询第一条符合条件的数据并转化为实体
         val cursor = database!!.rawQuery("select * from $tableName $content order by $order $asc limit 1", null)
@@ -488,16 +478,15 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
             return null
         }
         // 查询条件
-        var content: String = ""
+        var content = ""
         if (condition.isNotEmpty()) {
             content = condition.joinToString(prefix = "where ", separator = "and ")
         }
         // 设置排序方式
-        val asc: String
-        if (ascFlag) {
-            asc = "asc"
+        val asc: String = if (ascFlag) {
+            "asc"
         } else {
-            asc = "desc"
+            "desc"
         }
         val cursor = database!!.rawQuery("select * from $tableName $content order by $order $asc", null)
         val entities = convertToEntities(cursor)

@@ -1,23 +1,21 @@
 package com.xmx.androidkotlinbase.core.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.avos.avoscloud.im.v2.AVIMClient
-import com.avos.avoscloud.im.v2.AVIMConversation
 import com.avos.avoscloud.im.v2.AVIMException
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.im.IMMessageHandlerManager
-import com.xmx.androidkotlinbase.common.im.imClientManager
+import com.xmx.androidkotlinbase.common.im.ImClientManager
 import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
-import com.xmx.androidkotlinbase.common.user.userManager
+import com.xmx.androidkotlinbase.common.user.UserManager
 import com.xmx.androidkotlinbase.module.im.IMAdapter
 import com.xmx.androidkotlinbase.module.im.IMTextMessageHandler
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
@@ -31,7 +29,7 @@ import java.util.ArrayList
  */
 class IMFragment : BaseFragment() {
 
-    private var um: IUserManager = userManager // 用户管理器
+    private var um: IUserManager = UserManager // 用户管理器
 
     // 消息记录适配器
     private val imAdapter: IMAdapter by lazy {
@@ -66,7 +64,7 @@ class IMFragment : BaseFragment() {
                         user ->
                         showToast("IM客户端打开中……")
                         // 打开IM客户端
-                        imClientManager.openClient(user.username!!,
+                        ImClientManager.openClient(user.username!!,
                                 object : AVIMClientCallback() {
                                     override fun done(imClient: AVIMClient?, e: AVIMException?) {
                                         // 客户端打开成功
@@ -85,13 +83,13 @@ class IMFragment : BaseFragment() {
         // 加入测试对话
         btnJoinConversation.setOnClickListener {
             // 创建名为"test"的对话
-            imClientManager.createConversation("test",
+            ImClientManager.createConversation("test",
                     success = {
                         conversation ->
                         // 创建成功
                         showToast("创建对话成功")
                         // 加入创建的对话
-                        imClientManager.joinConversation(conversation,
+                        ImClientManager.joinConversation(conversation,
                                 success = {
                                     // 加入成功
                                     showToast("加入对话成功")
@@ -115,7 +113,7 @@ class IMFragment : BaseFragment() {
                         // 对话已存在
                         showToast("对话已存在")
                         // 加入已存在的对话
-                        imClientManager.joinConversation(conversation,
+                        ImClientManager.joinConversation(conversation,
                                 success = {
                                     // 加入成功
                                     showToast("加入对话成功")
@@ -151,7 +149,7 @@ class IMFragment : BaseFragment() {
             // 读取要发送的消息
             val data = editIM.text.toString()
             // 发送消息
-            imClientManager.sendText(data,
+            ImClientManager.sendText(data,
                     success = {
                         // 发送成功
                         showToast("发送成功")
@@ -192,7 +190,7 @@ class IMFragment : BaseFragment() {
      */
     fun updateList() {
         // 读取消息记录
-        imClientManager.getTextChatLog(
+        ImClientManager.getTextChatLog(
                 success = {
                     messages ->
                     // 读取成功

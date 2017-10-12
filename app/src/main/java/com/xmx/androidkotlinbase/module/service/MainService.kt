@@ -6,7 +6,7 @@ import com.xmx.androidkotlinbase.R
 
 import com.xmx.androidkotlinbase.core.activity.MainActivity
 import com.xmx.androidkotlinbase.base.service.BaseService
-import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
+import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
 import com.xmx.androidkotlinbase.utils.Timer
 
 /**
@@ -23,7 +23,7 @@ class MainService : BaseService() {
     private var timer = Timer {
         val now = System.currentTimeMillis()
         showToast("服务已运行${now - time}毫秒")
-        operationLogEntityManager.addLog("服务已运行${now - time}毫秒")
+        OperationLogEntityManager.addLog("服务已运行${now - time}毫秒")
     }
 
     override fun processLogic(intent: Intent) {
@@ -34,7 +34,7 @@ class MainService : BaseService() {
     override fun onDestroy() {
         super.onDestroy()
         // 停止服务
-        operationLogEntityManager.addLog("服务停止")
+        OperationLogEntityManager.addLog("服务停止")
         timer.stop()
     }
 

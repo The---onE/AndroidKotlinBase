@@ -16,7 +16,7 @@ import java.util.Date
  */
 abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
     // 当前用户，打开相应的本地数据库文件
-    protected var userId: String? = null
+    private var userId: String? = null
 
     /**
      * 特化SQLite数据库管理
@@ -50,9 +50,9 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
     var cloudManager = CloudManager()
 
     // 子类构造函数中调用syncInit方法初始化下列变量！
-    protected var tableName: String? = null
-    protected var entityTemplate: Entity? = null //空模版，不需要数据
-    protected var userField: String? = null //用户字段，保存当前登录用户的ObjectId，为空时不保存用户字段
+    private var tableName: String? = null
+    private var entityTemplate: Entity? = null //空模版，不需要数据
+    private var userField: String? = null //用户字段，保存当前登录用户的ObjectId，为空时不保存用户字段
 
     /**
      * 初始化变量
@@ -72,9 +72,7 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
      * 检查管理器是否已初始化
      * @return 管理器是否已初始化
      */
-    protected fun checkDatabase(): Boolean {
-        return tableName != null && entityTemplate != null
-    }
+    protected fun checkDatabase(): Boolean = tableName != null && entityTemplate != null
 
     /**
      * 切换账户，打开对应用户的数据库文件
@@ -224,11 +222,10 @@ abstract class BaseSyncEntityManager<Entity : ISyncEntity> {
                 val strings = ArrayList<String>()
                 // 生成本地数据库更新内容
                 for ((k, v) in update) {
-                    val string: String
-                    when (v) {
-                        is Date ->string = "$k = ${v.time}"
-                        is String -> string = "$k = '$v'"
-                        else -> string = "$k = ${v.toString()}"
+                    val string: String = when (v) {
+                        is Date -> "$k = ${v.time}"
+                        is String -> "$k = '$v'"
+                        else -> "$k = $v"
                     }
                     strings.add(string)
                 }

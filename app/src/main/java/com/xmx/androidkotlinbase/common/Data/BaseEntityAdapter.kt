@@ -22,21 +22,16 @@ abstract class BaseEntityAdapter<Entity>(protected var mContext: Context,
     }
 
     // 数据条数
-    override fun getCount(): Int {
-        return mData.size
-    }
+    override fun getCount(): Int = mData.size
 
     // 获取数据项
-    override fun getItem(i: Int): Any? {
-        if (i < mData.size) {
-            return mData[i]
-        } else {
-            return null
-        }
-    }
+    override fun getItem(i: Int): Any? =
+            if (i < mData.size) {
+                mData[i]
+            } else {
+                null
+            }
 
     // 获取数据索引
-    override fun getItemId(i: Int): Long {
-        return i.toLong()
-    }
+    override fun getItemId(i: Int): Long = i.toLong()
 }

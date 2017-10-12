@@ -14,7 +14,7 @@ import com.xmx.androidkotlinbase.utils.StringUtil
  */
 
 abstract class BaseDialog : DialogFragment() {
-    protected var mContext: Context? = null
+    private var mContext: Context? = null
 
     /**
      * 初始化Dialog，可在子类中重载
@@ -24,9 +24,9 @@ abstract class BaseDialog : DialogFragment() {
         mContext = context
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getContentView(inflater, container)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? =
+            getContentView(inflater, container)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

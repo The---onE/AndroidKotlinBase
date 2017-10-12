@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.common.net
 
+import android.annotation.SuppressLint
 import android.os.AsyncTask
 
 import com.xmx.androidkotlinbase.utils.StringUtil
@@ -10,7 +11,6 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.Response
 
 /**
  * Created by The_onE on 2017/5/26.
@@ -31,6 +31,8 @@ object HttpManager {
         return url + "?" + StringUtil.join(list, "&")
     }
 
+    // TODO
+    @SuppressLint("StaticFieldLeak")
     operator fun get(url: String, params: Map<String, String>?,
                      success: (String) -> Unit,
                      fail: (Exception) -> Unit) {
@@ -73,13 +75,15 @@ object HttpManager {
         }.execute()
     }
 
+    // TODO
+    @SuppressLint("StaticFieldLeak")
     fun post(url: String, json: String,
              success: (String) -> Unit,
              fail: (Exception) -> Unit) {
         // 开启新线程
         object : AsyncTask<String, Exception, String>() {
             override fun doInBackground(vararg strings: String): String? {
-                try {
+                return try {
                     // 生成Post请求
                     val body = RequestBody.create(JSON, json)
                     val request = Request.Builder()
@@ -89,10 +93,10 @@ object HttpManager {
                     // 获取Post响应
                     val response = client.newCall(request).execute()
                     // 返回响应结果
-                    return response.body()!!.string()
+                    response.body()!!.string()
                 } catch (e: Exception) {
                     publishProgress(e)
-                    return null
+                    null
                 }
 
             }

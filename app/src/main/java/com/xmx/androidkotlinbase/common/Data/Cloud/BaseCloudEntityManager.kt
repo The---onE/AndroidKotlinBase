@@ -5,7 +5,7 @@ import com.xmx.androidkotlinbase.common.data.DataConstants
 import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
-import com.xmx.androidkotlinbase.common.user.userManager
+import com.xmx.androidkotlinbase.common.user.UserManager
 import java.util.*
 
 /**
@@ -19,15 +19,13 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
     protected var entityTemplate: Entity? = null // 空模版，不需要数据
     protected var userField: String? = null // 用户字段，保存当前登录用户的ObjectId，为空时不保存用户字段
 
-    private var um: IUserManager = userManager // 用户管理器
+    private var um: IUserManager = UserManager // 用户管理器
 
     /**
      * 检查管理器是否已初始化
      * @return 管理器是否已初始化
      */
-    protected fun checkDatabase(): Boolean {
-        return tableName != null && entityTemplate != null
-    }
+    protected fun checkDatabase(): Boolean = tableName != null && entityTemplate != null
 
     /**
      * 查询全部数据
@@ -45,17 +43,15 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         // 查询表中全部数据
         val query = AVQuery<AVObject>(tableName)
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>?, e: AVException?) {
-                if (e == null) {
-                    // 将查询的数据转化为实体
-                    val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
-                        val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
-                        entity as Entity
-                    }
-                    success(entities)
-                } else {
-                    cloudError(e)
+            override fun done(avObjects: List<AVObject>?, e: AVException?) = if (e == null) {
+                // 将查询的数据转化为实体
+                val entities = avObjects!!.mapTo(ArrayList()) {
+                    val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
+                    entity as Entity
                 }
+                success(entities)
+            } else {
+                cloudError(e)
             }
         })
     }
@@ -87,17 +83,15 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 查询表中全部数据并排序
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>?, e: AVException?) {
-                if (e == null) {
-                    // 将查询的数据转化为实体
-                    val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
-                        val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
-                        entity as Entity
-                    }
-                    success(entities)
-                } else {
-                    cloudError(e)
+            override fun done(avObjects: List<AVObject>?, e: AVException?) = if (e == null) {
+                // 将查询的数据转化为实体
+                val entities = avObjects!!.mapTo(ArrayList()) {
+                    val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
+                    entity as Entity
                 }
+                success(entities)
+            } else {
+                cloudError(e)
             }
         })
     }
@@ -137,17 +131,15 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 查询表中符合条件的数据并排序
         query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: List<AVObject>?, e: AVException?) {
-                if (e == null) {
-                    // 将查询的数据转化为实体
-                    val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
-                        val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
-                        entity as Entity
-                    }
-                    success(entities)
-                } else {
-                    cloudError(e)
+            override fun done(avObjects: List<AVObject>?, e: AVException?) = if (e == null) {
+                // 将查询的数据转化为实体
+                val entities = avObjects!!.mapTo(ArrayList()) {
+                    val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
+                    entity as Entity
                 }
+                success(entities)
+            } else {
+                cloudError(e)
             }
         })
     }
@@ -172,8 +164,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 校验登录，获取用户数据
         um.checkLogin(
-                success = {
-                    user ->
+                success = { user ->
                     val query = AVQuery<AVObject>(tableName)
                     // 只查询当前用户相关数据
                     if (userField != null) {
@@ -195,22 +186,20 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                     }
                     // 查询表中符合条件的数据并排序
                     query.findInBackground(object : FindCallback<AVObject>() {
-                        override fun done(avObjects: List<AVObject>?, e: AVException?) {
-                            if (e == null) {
-                                // 将查询的数据转化为实体
-                                val entities = avObjects!!.mapTo(ArrayList<Entity>()) {
-                                    val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
-                                    entity as Entity
+                        override fun done(avObjects: List<AVObject>?, e: AVException?) =
+                                if (e == null) {
+                                    // 将查询的数据转化为实体
+                                    val entities = avObjects!!.mapTo(ArrayList()) {
+                                        val entity: ICloudEntity = entityTemplate!!.convertToEntity(it)
+                                        entity as Entity
+                                    }
+                                    success(user, entities)
+                                } else {
+                                    cloudError(e)
                                 }
-                                success(user, entities)
-                            } else {
-                                cloudError(e)
-                            }
-                        }
                     })
                 },
-                error = {
-                    e ->
+                error = { e ->
                     when (e) {
                     // 若未登录则提示尚未登录
                         UserConstants.NOT_LOGGED_IN -> error(DataConstants.NOT_LOGGED_IN)
@@ -220,8 +209,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         UserConstants.CHECKSUM_ERROR -> error(DataConstants.CHECK_LOGIN_ERROR)
                     }
                 },
-                cloudError = {
-                    e ->
+                cloudError = { e ->
                     cloudError(e)
                 })
     }
@@ -272,8 +260,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 校验登录，获取用户数据
         um.checkLogin(
-                success = {
-                    user ->
+                success = { user ->
                     val obj = entity.getContent(tableName!!)
                     // 将数据与当前用户关联
                     if (userField != null) {
@@ -291,8 +278,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         }
                     })
                 },
-                error = {
-                    e ->
+                error = { e ->
                     when (e) {
                     // 若未登录则提示尚未登录
                         UserConstants.NOT_LOGGED_IN -> error(DataConstants.NOT_LOGGED_IN)
@@ -302,8 +288,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         UserConstants.CHECKSUM_ERROR -> error(DataConstants.CHECK_LOGIN_ERROR)
                     }
                 },
-                cloudError = {
-                    e ->
+                cloudError = { e ->
                     cloudError(e)
                 }
         )
@@ -326,8 +311,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 校验登录，获取用户数据
         um.checkLogin(
-                success = {
-                    user ->
+                success = { user ->
                     val query = AVQuery<AVObject>(tableName)
                     query.getInBackground(objectId, object : GetCallback<AVObject>() {
                         override fun done(obj: AVObject?, e: AVException?) {
@@ -355,8 +339,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         }
                     })
                 },
-                error = {
-                    e ->
+                error = { e ->
                     when (e) {
                     // 若未登录则提示尚未登录
                         UserConstants.NOT_LOGGED_IN -> error(DataConstants.NOT_LOGGED_IN)
@@ -366,8 +349,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         UserConstants.CHECKSUM_ERROR -> error(DataConstants.CHECK_LOGIN_ERROR)
                     }
                 },
-                cloudError = {
-                    e ->
+                cloudError = { e ->
                     cloudError(e)
                 })
     }
@@ -390,8 +372,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
         }
         // 校验登录，获取用户数据
         um.checkLogin(
-                success = {
-                    user ->
+                success = { user ->
                     val query = AVQuery<AVObject>(tableName)
                     query.getInBackground(objectId, object : GetCallback<AVObject>() {
                         override fun done(obj: AVObject?, e: AVException?) {
@@ -424,8 +405,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         }
                     })
                 },
-                error = {
-                    e ->
+                error = { e ->
                     when (e) {
                     // 若未登录则提示尚未登录
                         UserConstants.NOT_LOGGED_IN -> error(DataConstants.NOT_LOGGED_IN)
@@ -435,8 +415,7 @@ abstract class BaseCloudEntityManager<Entity : ICloudEntity> {
                         UserConstants.CHECKSUM_ERROR -> error(DataConstants.CHECK_LOGIN_ERROR)
                     }
                 },
-                cloudError = {
-                    e ->
+                cloudError = { e ->
                     cloudError(e)
                 }
         )

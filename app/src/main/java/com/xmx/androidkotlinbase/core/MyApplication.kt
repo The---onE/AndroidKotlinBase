@@ -5,7 +5,7 @@ import android.app.Service
 import android.support.multidex.MultiDexApplication
 import com.avos.avoscloud.AVOSCloud
 
-import com.xmx.androidkotlinbase.common.user.userManager
+import com.xmx.androidkotlinbase.common.user.UserManager
 import java.util.*
 
 /**
@@ -56,11 +56,11 @@ class MyApplication : MultiDexApplication() {
         ins = this
 
         // 注册异常处理器
-        crashHandler.init(this)
+        CrashHandler.init(this)
 
         // 初始化LeanCloud
         AVOSCloud.initialize(this, CoreConstants.APP_ID, CoreConstants.APP_KEY)
         // 初始化用户管理器
-        userManager.init(this)
+        UserManager.init(this)
     }
 }

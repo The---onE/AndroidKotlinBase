@@ -1,18 +1,21 @@
 package com.xmx.androidkotlinbase.core
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import kotlin.system.exitProcess
 
-import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
+import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
 
+// TODO
+@SuppressLint("StaticFieldLeak")
 /**
  * Created by The_onE on 2017/1/16.
  * 自定义异常处理器，单例对象
  */
-object crashHandler : Thread.UncaughtExceptionHandler {
+object CrashHandler : Thread.UncaughtExceptionHandler {
 
     private var mContext: Context? = null
     // 系统默认的UncaughtException处理类
@@ -95,7 +98,7 @@ object crashHandler : Thread.UncaughtExceptionHandler {
             // ex.printStackTrace()
         }
         // 记录错误日志
-        operationLogEntityManager.addLog("$ex")
+        OperationLogEntityManager.addLog("$ex")
         // 已进行处理
         return true
     }

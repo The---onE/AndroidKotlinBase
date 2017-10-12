@@ -161,7 +161,7 @@ abstract class BaseActivity : AppCompatActivity() {
             val permissionFlag = ActivityCompat.checkSelfPermission(this, permission)
             if (permissionFlag != PackageManager.PERMISSION_GRANTED) {
                 // 若未授权则请求授权
-                ActivityCompat.requestPermissions(this, arrayOf<String>(permission), requestId)
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestId)
                 return
             }
         }
@@ -181,7 +181,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     .checkOp(opsPermission, Binder.getCallingUid(), packageName)
             if (permissionFlag != AppOpsManager.MODE_ALLOWED) {
                 // 若未授权则请求授权
-                ActivityCompat.requestPermissions(this, arrayOf<String>(permission), requestId)
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestId)
                 return
             }
         }

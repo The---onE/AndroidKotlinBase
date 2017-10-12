@@ -13,7 +13,7 @@ import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.user.IUserManager
 import com.xmx.androidkotlinbase.common.user.UserConstants
 import com.xmx.androidkotlinbase.common.user.UserData
-import com.xmx.androidkotlinbase.common.user.userManager
+import com.xmx.androidkotlinbase.common.user.UserManager
 import com.xmx.androidkotlinbase.utils.ExceptionUtil
 import com.xmx.androidkotlinbase.module.user.LoginActivity
 import com.xmx.androidkotlinbase.module.user.RegisterActivity
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_user.*
  */
 class UserFragment : BaseFragment() {
 
-    private var um: IUserManager = userManager // 用户管理器
+    private var um: IUserManager = UserManager // 用户管理器
 
     // 是否已成功登录
     var loginFlag = false

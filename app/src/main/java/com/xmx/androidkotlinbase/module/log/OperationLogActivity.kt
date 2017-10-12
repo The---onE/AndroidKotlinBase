@@ -1,14 +1,13 @@
 package com.xmx.androidkotlinbase.module.log
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.View
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
 import com.xmx.androidkotlinbase.common.log.LogChangeEvent
 import com.xmx.androidkotlinbase.common.log.OperationLog
-import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
-import com.xmx.androidkotlinbase.common.log.operationLogManager
+import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
+import com.xmx.androidkotlinbase.common.log.OperationLogManager
 import kotlinx.android.synthetic.main.activity_operation_log.*
 
 import org.greenrobot.eventbus.EventBus
@@ -34,15 +33,15 @@ class OperationLogActivity : BaseTempActivity() {
     override fun setListener() {
         // 清空日志
         btnClearLog.setOnClickListener(View.OnClickListener {
-            operationLogEntityManager.clearDatabase()
-            operationLogManager.updateData()
-            operationLogAdapter?.updateList(operationLogManager.data!!)
+            OperationLogEntityManager.clearDatabase()
+            OperationLogManager.updateData()
+            operationLogAdapter?.updateList(OperationLogManager.data!!)
         })
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {
-        operationLogManager.updateData()
-        operationLogAdapter?.updateList(operationLogManager.data!!)
+        OperationLogManager.updateData()
+        operationLogAdapter?.updateList(OperationLogManager.data!!)
         // 订阅事件
         EventBus.getDefault().register(this)
     }
@@ -53,7 +52,7 @@ class OperationLogActivity : BaseTempActivity() {
      */
     @Subscribe
     fun onEvent(event: LogChangeEvent) {
-        operationLogManager.updateData()
-        operationLogAdapter?.updateList(operationLogManager.data!!)
+        OperationLogManager.updateData()
+        operationLogAdapter?.updateList(OperationLogManager.data!!)
     }
 }

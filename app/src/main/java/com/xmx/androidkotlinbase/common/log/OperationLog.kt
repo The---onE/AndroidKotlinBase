@@ -12,7 +12,7 @@ import java.util.Date
  * 操作日志实体，保存在SQLite数据库中
  */
 class OperationLog : ISQLEntity {
-    var mId: Long = -1
+    private var mId: Long = -1
     // 操作记录
     var mOperation: String? = null
     // 操作时间

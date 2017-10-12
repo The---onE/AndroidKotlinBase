@@ -14,9 +14,8 @@ object VibratorUtil {
      * @param[context] 当前上下文
      * @return 系统震动器
      */
-    private fun getVibrator(context: Context) : Vibrator {
-        return context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    }
+    private fun getVibrator(context: Context) : Vibrator =
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
     /**
      * 震动一定时间
@@ -51,7 +50,7 @@ object VibratorUtil {
             vibrator.vibrate(longArrayOf(pauseTime, vibrateTime), 0)
         } else {
             // 0, V, P, V, P, V, ...
-            val array = Array<Long>(repeatTimes * 2, {
+            val array = Array(repeatTimes * 2, {
                 i ->
                 when (i) {
                     0 -> 0

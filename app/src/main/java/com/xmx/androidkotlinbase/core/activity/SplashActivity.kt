@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class SplashActivity : BaseSplashActivity() {
 
-    private var um: IUserManager = userManager // 用户管理器
+    private var um: IUserManager = UserManager // 用户管理器
 
     // 定时器，一定时间后跳转主Activity
     val timer: Timer by lazy {

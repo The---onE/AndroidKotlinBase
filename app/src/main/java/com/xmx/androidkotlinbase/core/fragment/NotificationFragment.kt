@@ -5,15 +5,13 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
-import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
+import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
 import com.xmx.androidkotlinbase.common.notification.NotificationTempActivity
 import com.xmx.androidkotlinbase.module.service.MainService
 import com.xmx.androidkotlinbase.utils.NotificationUtils
@@ -83,7 +81,7 @@ class NotificationFragment : BaseFragment() {
                 service.putExtra("content", content)
             }
             context.startService(service)
-            operationLogEntityManager.addLog("开启服务")
+            OperationLogEntityManager.addLog("开启服务")
             showToast("已开启服务")
         }
 

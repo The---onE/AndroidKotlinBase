@@ -9,7 +9,7 @@ import java.util.Date
  * Created by The_onE on 2016/9/4.
  * 操作日志实体管理器，单例对象
  */
-object operationLogEntityManager : BaseSQLEntityManager<OperationLog>() {
+object OperationLogEntityManager : BaseSQLEntityManager<OperationLog>() {
 
     init {
         tableName = "OperationLog" // 表名

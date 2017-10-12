@@ -33,7 +33,7 @@ import java.util.*
  */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private var um: IUserManager = userManager // 用户管理器
+    private var um: IUserManager = UserManager // 用户管理器
 
     private val WRITE_SD_REQUEST = 1
     // 侧滑菜单登录菜单项

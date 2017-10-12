@@ -21,9 +21,7 @@ object JSONUtil {
      * @throws Exception 解析异常
      */
     @Throws(Exception::class)
-    fun parseObject(json: String): Map<String, Any> {
-        return parseObject(JSONObject(json))
-    }
+    fun parseObject(json: String): Map<String, Any> = parseObject(JSONObject(json))
 
     /**
      * 将JSONObject解析为Map
@@ -70,9 +68,7 @@ object JSONUtil {
      * @throws Exception 解析异常
      */
     @Throws(Exception::class)
-    fun parseArray(json: String): List<Any> {
-        return parseArray(JSONArray(json))
-    }
+    fun parseArray(json: String): List<Any> = parseArray(JSONArray(json))
 
     /**
      * 将JSONArray解析为List
@@ -85,11 +81,11 @@ object JSONUtil {
     private fun parseArray(array: JSONArray): List<Any> {
         val list = ArrayList<Any>()
         val length = array.length()
-        for (i in 0..length - 1) {
+        for (i in 0 until length) {
             try {
                 // 若为数组
                 val arr = array.getJSONArray(i)
-                val res = parseArray(array)
+                val res = parseArray(arr)
                 list.add(res)
             } catch (e: JSONException) {
                 try {
@@ -152,20 +148,24 @@ object JSONUtil {
                                  level: Int, sep: String, tab: String): StringBuilder {
         var result = source
         val t = StringBuilder()
-        for (i in 0..level - 1) {
+        for (i in 0 until level) {
             t.append(tab)
         }
         for ((key, value) in map) {
             result.append(t).append(key).append(sep)
-            if (value is Map<*, *>) {
-                result.append("\n")
-                result = appendJSONObject(value as Map<String, Any>, result, level + 1, sep, tab)
-            } else if (value is List<*>) {
-                result.append("\n")
-                result = appendJSONArray(value as List<Any>, result, level + 1, sep, tab)
-            } else {
-                result.append(value.toString())
-                result.append("\n")
+            when (value) {
+                is Map<*, *> -> {
+                    result.append("\n")
+                    result = appendJSONObject(value as Map<String, Any>, result, level + 1, sep, tab)
+                }
+                is List<*> -> {
+                    result.append("\n")
+                    result = appendJSONArray(value as List<Any>, result, level + 1, sep, tab)
+                }
+                else -> {
+                    result.append(value.toString())
+                    result.append("\n")
+                }
             }
         }
         return result
@@ -186,23 +186,25 @@ object JSONUtil {
                                 level: Int, sep: String, tab: String): StringBuilder {
         var result = source
         val t = StringBuilder()
-        for (i in 0..level - 1) {
+        for (i in 0 until level) {
             t.append(tab)
         }
-        var i = 0
-        for (item in list) {
+        for ((i, item) in list.withIndex()) {
             result.append(t).append("[").append(i).append("]").append(sep)
-            if (item is Map<*, *>) {
-                result.append("\n")
-                result = appendJSONObject(item as Map<String, Any>, result, level + 1, sep, tab)
-            } else if (item is List<*>) {
-                result.append("\n")
-                result = appendJSONArray(item as List<Any>, result, level + 1, sep, tab)
-            } else {
-                result.append(item.toString())
-                result.append("\n")
+            when (item) {
+                is Map<*, *> -> {
+                    result.append("\n")
+                    result = appendJSONObject(item as Map<String, Any>, result, level + 1, sep, tab)
+                }
+                is List<*> -> {
+                    result.append("\n")
+                    result = appendJSONArray(item as List<Any>, result, level + 1, sep, tab)
+                }
+                else -> {
+                    result.append(item.toString())
+                    result.append("\n")
+                }
             }
-            i++
         }
         return result
     }

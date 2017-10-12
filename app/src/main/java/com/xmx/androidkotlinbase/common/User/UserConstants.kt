@@ -19,8 +19,6 @@ object UserConstants {
     val CHECKSUM_ERROR = -6 // 校验码错误
     val CANNOT_CHECK_LOGIN = -10 // 尚未通过注册、登录或自动登录完成登录，不能校验登录
 
-    val LOGIN_SUCCESS = 1 // 登录成功
-
     val LOGIN_REQUEST_CODE = 1000 // 登录请求代码
     val REGISTER_REQUEST_CODE = 1001 // 登录请求代码
 }

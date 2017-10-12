@@ -5,6 +5,4 @@ package com.xmx.androidkotlinbase.common.user
  * 登录事件
  */
 
-class LoginEvent {
-
-}
+class LoginEvent

@@ -4,7 +4,7 @@ package com.xmx.androidkotlinbase.common.log
  * Created by The_onE on 2016/2/24.
  * 操作日志数据管理器，单例对象
  */
-object operationLogManager {
+object OperationLogManager {
     // 实体管理器版本，不一致时需更新
     private var sqlVersion: Long = 0
     // 自身版本，提示调用者是否有更新
@@ -19,7 +19,7 @@ object operationLogManager {
 
     // 更新数据，若实体有更新则同步更新
     fun updateData(): Long {
-        val logManager = operationLogEntityManager
+        val logManager = OperationLogEntityManager
         // 判断实体是否有更新
         if (logManager.version != sqlVersion) {
             sqlVersion = logManager.version

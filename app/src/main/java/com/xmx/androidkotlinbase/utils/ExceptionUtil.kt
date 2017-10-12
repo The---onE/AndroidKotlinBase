@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 
-import com.xmx.androidkotlinbase.common.log.operationLogEntityManager
+import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
 import com.xmx.androidkotlinbase.core.CoreConstants
 
 /**
@@ -19,7 +19,7 @@ object ExceptionUtil {
      */
     fun normalException(e: Exception, context: Context? = null) {
         // 记录错误日志
-        operationLogEntityManager.addLog("$e")
+        OperationLogEntityManager.addLog("$e")
         // 在调试状态显示错误信息
         if (CoreConstants.EXCEPTION_DEBUG) {
             // 打印异常堆栈跟踪
@@ -38,7 +38,7 @@ object ExceptionUtil {
      */
     fun fatalError(e: Exception, context: Context? = null) {
         // 记录错误日志
-        operationLogEntityManager.addLog("$e")
+        OperationLogEntityManager.addLog("$e")
         // 在调试状态显示错误信息
         if (CoreConstants.EXCEPTION_DEBUG) {
             // 打印异常堆栈跟踪

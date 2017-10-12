@@ -14,12 +14,9 @@ import com.xmx.androidkotlinbase.utils.StringUtil
  * Fragment基类，声明业务接口，提供常用功能
  */
 abstract class BaseFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // 设置Fragment对应布局
-        val view = getContentView(inflater, container)
-
-        return view
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? =// 设置Fragment对应布局
+            getContentView(inflater, container)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

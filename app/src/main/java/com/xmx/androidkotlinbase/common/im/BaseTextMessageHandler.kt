@@ -22,7 +22,7 @@ abstract class BaseTextMessageHandler : AVIMTypedMessageHandler<AVIMTextMessage>
         super.onMessage(message, conversation, client)
         try {
             // 检查是否是当前用户接收到的消息
-            val username = imClientManager.username
+            val username = ImClientManager.username
             if (client!!.clientId == username) {
                 // 从消息中提取信息
                 val text = message!!.text

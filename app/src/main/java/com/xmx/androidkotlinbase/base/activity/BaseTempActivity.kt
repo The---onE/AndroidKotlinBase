@@ -33,9 +33,7 @@ abstract class BaseTempActivity : BaseActivity() {
      * @param[event] 触摸事件
      * @return true:事件已处理完成，不向下传递 false:事件未处理完成，向下传递
      */
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return mGestureDetector.onTouchEvent(event)
-    }
+    override fun onTouchEvent(event: MotionEvent): Boolean = mGestureDetector.onTouchEvent(event)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

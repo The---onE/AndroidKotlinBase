@@ -1,7 +1,5 @@
 package com.xmx.androidkotlinbase.common.user
 
-import com.avos.avoscloud.AVException
-
 /**
  * Created by The_onE on 2017/1/29.
  * 用户管理器接口，通过该接口提供的服务进行注册登录等操作
@@ -20,10 +18,10 @@ interface IUserManager {
 
     /**
      * 注销接口
-     * @param[proc] 注销成功的处理，返回注销用户数据
+     * @param[process] 注销成功的处理，返回注销用户数据
      * @return 是否注销成功
      */
-    fun logout(proc: ((UserData) -> Unit)?): Boolean
+    fun logout(process: ((UserData) -> Unit)?): Boolean
 
     /**
      * 注册接口
