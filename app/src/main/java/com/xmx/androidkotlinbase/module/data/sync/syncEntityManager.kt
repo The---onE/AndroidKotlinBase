@@ -11,7 +11,7 @@ import com.xmx.androidkotlinbase.utils.ExceptionUtil
  * Created by The_onE on 2016/3/27.
  * 测试SQLite数据库与LeanCloud数据库同步实体管理器，单例对象
  */
-object syncEntityManager : BaseSyncEntityManager<Sync>() {
+object SyncEntityManager : BaseSyncEntityManager<Sync>() {
 
     init {
         // 初始化表名、模版、用户字段

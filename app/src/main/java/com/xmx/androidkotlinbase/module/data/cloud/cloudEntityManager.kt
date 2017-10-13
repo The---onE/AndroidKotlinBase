@@ -11,7 +11,7 @@ import com.xmx.androidkotlinbase.utils.ExceptionUtil
  * Created by The_onE on 2016/3/27.
  * 测试LeanCloud实体管理器，单例对象
  */
-object cloudEntityManager : BaseCloudEntityManager<Cloud>() {
+object CloudEntityManager : BaseCloudEntityManager<Cloud>() {
 
     init {
         tableName = "CloudTest" // 表名

@@ -6,7 +6,7 @@ import com.xmx.androidkotlinbase.common.data.sql.BaseSQLEntityManager
  * Created by The_onE on 2016/3/27.
  * 测试SQLite实体管理器，单例对象
  */
-object sqlEntityManager : BaseSQLEntityManager<SQL>() {
+object SqlEntityManager : BaseSQLEntityManager<SQL>() {
 
     init {
         tableName = "SQLTest" // 表名
