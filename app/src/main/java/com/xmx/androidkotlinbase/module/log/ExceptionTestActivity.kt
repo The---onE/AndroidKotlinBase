@@ -17,12 +17,12 @@ class ExceptionTestActivity : BaseTempActivity() {
 
     override fun setListener() {
         // 测试除0异常
-        btnDivideByZero.setOnClickListener(View.OnClickListener { val e = 1 / 0 })
+        btnDivideByZero.setOnClickListener { val e = 1 / 0 }
         // 测试空指针异常
-        btnNullPointer.setOnClickListener(View.OnClickListener {
+        btnNullPointer.setOnClickListener {
             val e: String? = null
             e!!.contains("e")
-        })
+        }
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {

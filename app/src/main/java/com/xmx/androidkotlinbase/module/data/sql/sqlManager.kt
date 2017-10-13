@@ -1,7 +1,5 @@
 package com.xmx.androidkotlinbase.module.data.sql
 
-import java.util.ArrayList
-
 /**
  * Created by The_onE on 2016/2/24.
  * 测试SQLite数据管理器，单例对象
@@ -25,7 +23,7 @@ object sqlManager {
      * @return 管理器自身当前版本
      */
     fun updateData(): Long {
-        val sqlManager = sqlEntityManager
+        val sqlManager = SqlEntityManager
         // //判断实体是否有更新
         // 多应用同时操作数据库不判断，直接进行覆盖
         if (sqlManager.version != sqlVersion) {

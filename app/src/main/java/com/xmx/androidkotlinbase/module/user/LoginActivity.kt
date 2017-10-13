@@ -30,37 +30,37 @@ class LoginActivity : BaseTempActivity() {
             val username = tvUsername.text.toString()
             val password = tvPassword.text.toString()
             // 输入校验
-            if (username.isBlank()) {
-                showToast(R.string.username_empty)
-            } else if (password.isBlank()) {
-                showToast(R.string.password_empty)
-            } else {
-                // 处理登录
-                btnLogin.isEnabled = false
-                um.login(username, password,
-                        success = {
-                            // 登录成功
-                            showToast(R.string.login_success)
-                            setResult(RESULT_OK, Intent())
-                            finish()
-                        },
-                        error = {
-                            e ->
-                            // 登录失败
-                            when (e) {
-                                UserConstants.USERNAME_ERROR -> showToast(R.string.username_error)
-                                UserConstants.PASSWORD_ERROR -> showToast(R.string.password_error)
+            when {
+                username.isBlank() -> showToast(R.string.username_empty)
+                password.isBlank() -> showToast(R.string.password_empty)
+                else -> {
+                    // 处理登录
+                    btnLogin.isEnabled = false
+                    um.login(username, password,
+                            success = {
+                                // 登录成功
+                                showToast(R.string.login_success)
+                                setResult(RESULT_OK, Intent())
+                                finish()
+                            },
+                            error = {
+                                e ->
+                                // 登录失败
+                                when (e) {
+                                    UserConstants.USERNAME_ERROR -> showToast(R.string.username_error)
+                                    UserConstants.PASSWORD_ERROR -> showToast(R.string.password_error)
+                                }
+                                btnLogin.isEnabled = true
+                            },
+                            cloudError = {
+                                e ->
+                                // 网络错误，登录失败
+                                showToast(R.string.network_error)
+                                ExceptionUtil.normalException(e, this)
+                                btnLogin.isEnabled = true
                             }
-                            btnLogin.isEnabled = true
-                        },
-                        cloudError = {
-                            e ->
-                            // 网络错误，登录失败
-                            showToast(R.string.network_error)
-                            ExceptionUtil.normalException(e, this)
-                            btnLogin.isEnabled = true
-                        }
-                )
+                    )
+                }
             }
         }
 

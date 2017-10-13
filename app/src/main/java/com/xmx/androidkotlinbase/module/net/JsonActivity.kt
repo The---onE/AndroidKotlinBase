@@ -2,7 +2,6 @@ package com.xmx.androidkotlinbase.module.net
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
@@ -20,22 +19,24 @@ class JsonActivity : BaseTempActivity() {
     }
 
     override fun setListener() {
-        btnParse.setOnClickListener(View.OnClickListener {
+        btnParse.setOnClickListener {
             val json = editJson.text.toString().trim { it <= ' ' }
             try {
-                if (json.startsWith("{")) {
-                    val map = JSONUtil.parseObject(json)
-                    textResult.text = JSONUtil.formatJSONObject(map, " : ", "|----")
-                } else if (json.startsWith("[")) {
-                    val list = JSONUtil.parseArray(json)
-                    textResult.text = JSONUtil.formatJSONArray(list, " : ", "|----")
-                } else {
-                    showToast("格式不正确")
+                when {
+                    json.startsWith("{") -> {
+                        val map = JSONUtil.parseObject(json)
+                        textResult.text = JSONUtil.formatJSONObject(map, " : ", "|----")
+                    }
+                    json.startsWith("[") -> {
+                        val list = JSONUtil.parseArray(json)
+                        textResult.text = JSONUtil.formatJSONArray(list, " : ", "|----")
+                    }
+                    else -> showToast("格式不正确")
                 }
             } catch (e: Exception) {
                 ExceptionUtil.normalException(e, this@JsonActivity)
             }
-        })
+        }
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {

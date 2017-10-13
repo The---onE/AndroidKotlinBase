@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.module.data.cloud
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -23,13 +24,14 @@ class CloudAdapter(context: Context, data: List<Cloud>) : BaseEntityAdapter<Clou
         internal var time: TextView? = null
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         val holder: ViewHolder?
         // 是否有可复用的项
         if (view == null) {
             // 若没有则创建新的ViewHolder
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_cloud, null)
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_cloud, parent, false)
             if (view != null) {
                 holder = ViewHolder()
                 holder.data = view.findViewById(R.id.itemData) as TextView

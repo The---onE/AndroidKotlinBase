@@ -1,14 +1,13 @@
 package com.xmx.androidkotlinbase.module.im
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.Toast
 
 import com.avos.avoscloud.im.v2.AVIMClient
 import com.avos.avoscloud.im.v2.AVIMConversation
 import com.xmx.androidkotlinbase.common.im.BaseTextMessageHandler
 import com.xmx.androidkotlinbase.utils.StringUtil
 
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -25,6 +24,7 @@ class IMTextMessageHandler(private var context: Context,
                                                    AVIMConversation, AVIMClient) -> Unit)
     : BaseTextMessageHandler() {
 
+    @SuppressLint("SimpleDateFormat")
     override fun onReceiveText(text: String, from: String, time: Long,
                                conversation: AVIMConversation, client: AVIMClient) {
         // 显示消息提示

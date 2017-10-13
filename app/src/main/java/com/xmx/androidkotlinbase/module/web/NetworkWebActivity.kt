@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.module.web
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 
@@ -22,6 +23,7 @@ class NetworkWebActivity : BaseTempActivity() {
     override fun setListener() {
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun processLogic(savedInstanceState: Bundle?) {
         // 允许JS执行
         webBrowser.settings.javaScriptEnabled = true
@@ -34,8 +36,7 @@ class NetworkWebActivity : BaseTempActivity() {
                 val builder = AlertDialog.Builder(this@NetworkWebActivity)
                 builder.setMessage(message)
                         .setTitle("提示")
-                        .setPositiveButton("确定", {
-                            dialogInterface, i ->
+                        .setPositiveButton("确定", { dialogInterface, _ ->
                             dialogInterface.dismiss()
                         })
                         .show()

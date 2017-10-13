@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.module.im
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -25,13 +26,14 @@ class IMAdapter(context: Context, data: List<AVIMTextMessage>) : BaseEntityAdapt
     }
 
     // 将数据填充到列表项中
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         val holder: ViewHolder?
         // 是否有可复用的项
         if (view == null) {
             // 若没有则创建新的ViewHolder
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_im, null)
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_im, parent, false)
             if (view != null) {
                 holder = ViewHolder()
                 holder.data = view.findViewById(R.id.itemData) as TextView

@@ -1,11 +1,9 @@
 package com.xmx.androidkotlinbase.module.log
 
 import android.os.Bundle
-import android.view.View
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
 import com.xmx.androidkotlinbase.common.log.LogChangeEvent
-import com.xmx.androidkotlinbase.common.log.OperationLog
 import com.xmx.androidkotlinbase.common.log.OperationLogEntityManager
 import com.xmx.androidkotlinbase.common.log.OperationLogManager
 import kotlinx.android.synthetic.main.activity_operation_log.*
@@ -26,17 +24,17 @@ class OperationLogActivity : BaseTempActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_operation_log)
-        operationLogAdapter = OperationLogAdapter(this, ArrayList<OperationLog>())
+        operationLogAdapter = OperationLogAdapter(this, ArrayList())
         listOperationLog.adapter = operationLogAdapter
     }
 
     override fun setListener() {
         // 清空日志
-        btnClearLog.setOnClickListener(View.OnClickListener {
+        btnClearLog.setOnClickListener {
             OperationLogEntityManager.clearDatabase()
             OperationLogManager.updateData()
             operationLogAdapter?.updateList(OperationLogManager.data!!)
-        })
+        }
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {

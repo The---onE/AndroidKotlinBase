@@ -13,11 +13,11 @@ import java.util.Date
  */
 class SQL : ISQLEntity {
     // ID，手动生成实体默认为-1
-    public var id: Long = -1
+    var id: Long = -1
     // 数据内容
-    public var data: String? = null
+    var data: String? = null
     // 时间
-    public var time: Date? = null
+    var time: Date? = null
 
     // 数据库中的表结构
     override fun tableFields(): String {

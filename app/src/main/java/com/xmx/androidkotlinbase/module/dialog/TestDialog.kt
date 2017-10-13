@@ -13,9 +13,8 @@ import com.xmx.androidkotlinbase.base.dialog.BaseDialog
  */
 
 class TestDialog : BaseDialog() {
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.dialog_test, container)
-    }
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View =
+            inflater.inflate(R.layout.dialog_test, container)
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 

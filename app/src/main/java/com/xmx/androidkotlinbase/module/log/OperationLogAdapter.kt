@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.module.log
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -24,13 +25,14 @@ class OperationLogAdapter(context: Context, data: List<OperationLog>) : BaseEnti
     }
 
     // 将数据填充到列表项中
+    @SuppressLint("SimpleDateFormat")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         val holder: ViewHolder?
         // 是否有可复用的项
         if (view == null) {
             // 若没有则创建新的ViewHolder
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_operation_log, null)
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_operation_log, parent, false)
             if (view != null) {
                 holder = ViewHolder()
                 holder.operation = view.findViewById(R.id.itemOperation) as TextView

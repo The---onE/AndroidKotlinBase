@@ -14,9 +14,7 @@ import com.xmx.androidkotlinbase.utils.Timer
  * 测试服务，显示通知并定时记录日志
  */
 class MainService : BaseService() {
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(p0: Intent?): IBinder? = null
 
     private var time = System.currentTimeMillis()
     // 定时任务

@@ -2,7 +2,6 @@ package com.xmx.androidkotlinbase.module.net
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
 
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.activity.BaseTempActivity
@@ -22,26 +21,24 @@ class GetRequestActivity : BaseTempActivity() {
     }
 
     override fun setListener() {
-        btnRequest.setOnClickListener(View.OnClickListener {
+        btnRequest.setOnClickListener {
             var address = editAddress.text.toString()
             if (address != "") {
                 if (!address.startsWith("http://")) {
                     address = "http://" + address
                 }
                 HttpManager.get(address, null,
-                        success = {
-                            result ->
+                        success = { result ->
                             textResponse.text = result
                         },
-                        fail = {
-                            e ->
+                        fail = { e ->
                             ExceptionUtil.normalException(e, this@GetRequestActivity)
                         }
                 )
             } else {
                 showToast("地址不能为空")
             }
-        })
+        }
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {

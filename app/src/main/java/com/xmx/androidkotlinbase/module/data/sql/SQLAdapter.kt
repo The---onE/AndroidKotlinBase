@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.module.data.sql
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import android.widget.TextView
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.common.data.BaseEntityAdapter
 
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 /**
@@ -25,13 +25,14 @@ class SQLAdapter(context: Context, data: List<SQL>) : BaseEntityAdapter<SQL>(con
     }
 
     // 将数据填充到列表项中
+    @SuppressLint("SimpleDateFormat")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         val holder: ViewHolder?
         // 是否有可复用的项
         if (view == null) {
             // 若没有则创建新的ViewHolder
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_sql, null)
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_sql, parent, false)
             if (view != null) {
                 holder = ViewHolder()
                 holder.data = view.findViewById(R.id.itemData) as TextView

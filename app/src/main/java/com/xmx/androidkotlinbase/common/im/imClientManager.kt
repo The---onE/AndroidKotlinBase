@@ -17,7 +17,7 @@ import java.util.ArrayList
  * Created by The_onE on 15/8/13.
  * IM客户端管理器，单例对象
  */
-object imClientManager {
+object ImClientManager {
     // IM客户端
     private var client: AVIMClient? = null
     // 获取用户名，IM客户端以用户名为唯一标识
@@ -32,9 +32,7 @@ object imClientManager {
      * 检查客户端是否打开
      * @return 客户端是否打开
      */
-    private fun checkClient(): Boolean {
-        return openFlag && client != null && !username.isNullOrEmpty()
-    }
+    private fun checkClient(): Boolean = openFlag && client != null && !username.isNullOrEmpty()
 
     /**
      * 打开客户端，所有操作必须在打开客户端之后进行
@@ -78,46 +76,42 @@ object imClientManager {
                            success: (AVIMConversation) -> Unit,
                            exist: (AVIMConversation) -> Unit,
                            failure: (Exception) -> Unit,
-                           clientError: () -> Unit) {
-        // 检查客户端是否打开
-        if (checkClient()) {
-            // 客户端已打开
-            val query = client!!.query
-            query.whereEqualTo("name", name)
-            // 根据对话名查找对话
-            query.findInBackground(object : AVIMConversationQueryCallback() {
-                override fun done(conversations: List<AVIMConversation>?, e: AVIMException?) {
-                    if (e == null) {
-                        if (conversations != null && !conversations.isEmpty()) {
-                            // 若对话已存在则不创建，获取该对话
-                            val conversation = conversations[0]
-                            exist(conversation)
-                        } else {
-                            // 对话不存在，创建对话
-                            client!!.createConversation(ArrayList<String>(), name, null,
-                                    object : AVIMConversationCreatedCallback() {
-                                        override fun done(imConversation: AVIMConversation, e: AVIMException?) {
-                                            if (e == null) {
-                                                // 创建成功，获取对话
-                                                success(imConversation)
-                                            } else {
-                                                // 创建失败
-                                                failure(e)
-                                            }
-                                        }
-                                    })
-                        }
-                    } else {
-                        // 查找对话失败
-                        failure(e)
-                    }
-                }
-            })
-        } else {
-            // 客户端尚未打开
-            clientError()
-        }
-    }
+                           clientError: () -> Unit) =// 检查客户端是否打开
+            if (checkClient()) {
+                // 客户端已打开
+                val query = client!!.query
+                query.whereEqualTo("name", name)
+                // 根据对话名查找对话
+                query.findInBackground(object : AVIMConversationQueryCallback() {
+                    override fun done(conversations: List<AVIMConversation>?, e: AVIMException?) =
+                            if (e == null) {
+                                if (conversations != null && !conversations.isEmpty()) {
+                                    // 若对话已存在则不创建，获取该对话
+                                    val conversation = conversations[0]
+                                    exist(conversation)
+                                } else {
+                                    // 对话不存在，创建对话
+                                    client!!.createConversation(ArrayList<String>(), name, null,
+                                            object : AVIMConversationCreatedCallback() {
+                                                override fun done(imConversation: AVIMConversation, e: AVIMException?) =
+                                                        if (e == null) {
+                                                            // 创建成功，获取对话
+                                                            success(imConversation)
+                                                        } else {
+                                                            // 创建失败
+                                                            failure(e)
+                                                        }
+                                            })
+                                }
+                            } else {
+                                // 查找对话失败
+                                failure(e)
+                            }
+                })
+            } else {
+                // 客户端尚未打开
+                clientError()
+            }
 
     /**
      * 查找对话
@@ -131,34 +125,31 @@ object imClientManager {
                          found: (AVIMConversation) -> Unit,
                          notFound: () -> Unit,
                          failure: (Exception) -> Unit,
-                         clientError: () -> Unit) {
-        // 检查客户端是否打开
-        if (checkClient()) {
-            // 客户端已打开
-            val query = client!!.query
-            query.whereEqualTo("name", name)
-            // 根据对话名查找对话
-            query.findInBackground(object : AVIMConversationQueryCallback() {
-                override fun done(conversations: List<AVIMConversation>?, e: AVIMException?) {
-                    if (e == null) {
-                        if (conversations != null && !conversations.isEmpty()) {
-                            // 对话存在，获取对话
-                            found(conversations[0])
-                        } else {
-                            // 对话不存在
-                            notFound()
-                        }
-                    } else {
-                        // 查找失败
-                        failure(e)
-                    }
-                }
-            })
-        } else {
-            // 客户端尚未打开
-            clientError()
-        }
-    }
+                         clientError: () -> Unit) =// 检查客户端是否打开
+            if (checkClient()) {
+                // 客户端已打开
+                val query = client!!.query
+                query.whereEqualTo("name", name)
+                // 根据对话名查找对话
+                query.findInBackground(object : AVIMConversationQueryCallback() {
+                    override fun done(conversations: List<AVIMConversation>?, e: AVIMException?) =
+                            if (e == null) {
+                                if (conversations != null && !conversations.isEmpty()) {
+                                    // 对话存在，获取对话
+                                    found(conversations[0])
+                                } else {
+                                    // 对话不存在
+                                    notFound()
+                                }
+                            } else {
+                                // 查找失败
+                                failure(e)
+                            }
+                })
+            } else {
+                // 客户端尚未打开
+                clientError()
+            }
 
     /**
      * 加入对话，在创建或查找到对话后调用
@@ -206,19 +197,15 @@ object imClientManager {
      * @param[conversation] 查找或创建的对话
      * @param[success] 退出成功
      * @param[failure] 退出失败
-     * @param[clientError] 客户端未打开，退出失败
      */
-    fun quitConversation(conversation: AVIMConversation,
-                         success: (AVIMConversation) -> Unit,
-                         failure: (Exception) -> Unit,
-                         clientError: () -> Unit) {
-        // 检查客户端是否打开
-        if (checkClient()) {
-            // 客户端已打开
-            // 退出对话
-            conversation.quit(object : AVIMConversationCallback() {
-                override fun done(e: AVIMException?) {
-                    if (e == null) {
+    private fun quitConversation(conversation: AVIMConversation,
+                                 success: (AVIMConversation) -> Unit,
+                                 failure: (Exception) -> Unit) =// 检查客户端是否打开
+            if (checkClient()) {
+                // 客户端已打开
+                // 退出对话
+                conversation.quit(object : AVIMConversationCallback() {
+                    override fun done(e: AVIMException?) = if (e == null) {
                         // 退出成功
                         success(conversation)
                         currentConversation = null
@@ -226,12 +213,10 @@ object imClientManager {
                         // 退出失败
                         failure(e)
                     }
-                }
-            })
-        } else {
-            // 客户端尚未打开
-        }
-    }
+                })
+            } else {
+                // 客户端尚未打开
+            }
 
     /**
      * 退出最近加入的对话
@@ -241,16 +226,14 @@ object imClientManager {
      */
     fun quitConversation(success: (AVIMConversation) -> Unit,
                          failure: (Exception) -> Unit,
-                         clientError: () -> Unit) {
-        // 检查是否已加入对话
-        if (checkClient() && currentConversation != null) {
-            // 退出当前对话
-            quitConversation(currentConversation!!, success, failure, clientError)
-        } else {
-            // 尚未加入对话
-            clientError()
-        }
-    }
+                         clientError: () -> Unit) =// 检查是否已加入对话
+            if (checkClient() && currentConversation != null) {
+                // 退出当前对话
+                quitConversation(currentConversation!!, success, failure)
+            } else {
+                // 尚未加入对话
+                clientError()
+            }
 
     /**
      * 发送文本消息，发送到对应的对话中
@@ -260,34 +243,30 @@ object imClientManager {
      * @param[failure] 发送失败
      * @param[conversationError] 未加入对话，发送失败
      */
-    fun sendText(conversation: AVIMConversation,
+    private fun sendText(conversation: AVIMConversation,
                  text: String,
                  success: () -> Unit,
                  failure: (Exception) -> Unit,
-                 conversationError: () -> Unit) {
-        // 检查是否已加入对话
-        if (checkClient()) {
-            // 已加入对话
-            // 生成文本消息实体
-            val message = AVIMTextMessage()
-            message.text = text
-            // 发送消息
-            conversation.sendMessage(message, object : AVIMConversationCallback() {
-                override fun done(e: AVIMException?) {
-                    if (e == null) {
+                 conversationError: () -> Unit) =// 检查是否已加入对话
+            if (checkClient()) {
+                // 已加入对话
+                // 生成文本消息实体
+                val message = AVIMTextMessage()
+                message.text = text
+                // 发送消息
+                conversation.sendMessage(message, object : AVIMConversationCallback() {
+                    override fun done(e: AVIMException?) = if (e == null) {
                         // 发送成功
                         success()
                     } else {
                         // 发送失败
                         failure(e)
                     }
-                }
-            })
-        } else {
-            // 尚未加入对话
-            conversationError()
-        }
-    }
+                })
+            } else {
+                // 尚未加入对话
+                conversationError()
+            }
 
     /**
      * 发送文本消息，发送到最近加入的对话中
@@ -299,17 +278,15 @@ object imClientManager {
     fun sendText(text: String,
                  success: () -> Unit,
                  failure: (Exception) -> Unit,
-                 conversationError: () -> Unit) {
-        // 检查是否已加入对话
-        if (checkClient() && currentConversation != null) {
-            // 已加入对话
-            // 发送文本到最近加入的对话
-            sendText(currentConversation!!, text, success, failure, conversationError)
-        } else {
-            // 尚未加入对话
-            conversationError()
-        }
-    }
+                 conversationError: () -> Unit) =// 检查是否已加入对话
+            if (checkClient() && currentConversation != null) {
+                // 已加入对话
+                // 发送文本到最近加入的对话
+                sendText(currentConversation!!, text, success, failure, conversationError)
+            } else {
+                // 尚未加入对话
+                conversationError()
+            }
 
     /**
      * 获取最近加入的对话的文本聊天记录
@@ -319,29 +296,26 @@ object imClientManager {
      */
     fun getTextChatLog(success: (List<AVIMTextMessage>) -> Unit,
                        failure: (Exception) -> Unit,
-                       conversationError: () -> Unit) {
-        // 检查是否已加入对话
-        if (checkClient() && currentConversation != null) {
-            // 已加入对话
-            // 查询最近加入对话消息记录
-            currentConversation!!.queryMessages(object : AVIMMessagesQueryCallback() {
-                override fun done(messages: List<AVIMMessage>, e: AVIMException?) {
-                    if (e == null) {
-                        // 获取成功
-                        // 将消息记录中的文本消息提取并生成列表
-                        val ms = messages.indices.reversed()
-                                .map { messages[it] }
-                                .filterIsInstance<AVIMTextMessage>()
-                        success(ms)
-                    } else {
-                        // 获取失败
-                        failure(e)
-                    }
-                }
-            })
-        } else {
-            // 尚未加入对话
-            conversationError()
-        }
-    }
+                       conversationError: () -> Unit) =// 检查是否已加入对话
+            if (checkClient() && currentConversation != null) {
+                // 已加入对话
+                // 查询最近加入对话消息记录
+                currentConversation!!.queryMessages(object : AVIMMessagesQueryCallback() {
+                    override fun done(messages: List<AVIMMessage>, e: AVIMException?) =
+                            if (e == null) {
+                                // 获取成功
+                                // 将消息记录中的文本消息提取并生成列表
+                                val ms = messages.indices.reversed()
+                                        .map { messages[it] }
+                                        .filterIsInstance<AVIMTextMessage>()
+                                success(ms)
+                            } else {
+                                // 获取失败
+                                failure(e)
+                            }
+                })
+            } else {
+                // 尚未加入对话
+                conversationError()
+            }
 }
