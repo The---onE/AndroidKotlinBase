@@ -18,9 +18,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * 测试各零散组件是否运行正常，演示其使用方法
  */
 class HomeFragment : BaseFragment() {
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View =
+            inflater.inflate(R.layout.fragment_home, container, false)
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 
@@ -59,7 +58,7 @@ class HomeFragment : BaseFragment() {
 
         // 弹出对话框
         btnDialogTest.setOnClickListener {
-            var dialog = TestDialog();
+            val dialog = TestDialog();
             dialog.initDialog(context)
             dialog.show(activity.fragmentManager, "TEST")
         }

@@ -19,7 +19,7 @@ class SplashActivity : BaseSplashActivity() {
     private var um: IUserManager = UserManager // 用户管理器
 
     // 定时器，一定时间后跳转主Activity
-    val timer: Timer by lazy {
+    private val timer: Timer by lazy {
         Timer {
             jumpToMainActivity()
         }
@@ -43,7 +43,7 @@ class SplashActivity : BaseSplashActivity() {
         // 自动登录
         um.autoLogin(
                 success = {
-                    data: UserData ->
+                    _: UserData ->
                     EventBus.getDefault().post(LoginEvent())
                 },
                 error = {

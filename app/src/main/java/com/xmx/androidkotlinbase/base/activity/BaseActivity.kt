@@ -8,6 +8,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.annotation.StringRes
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -104,7 +105,7 @@ abstract class BaseActivity : AppCompatActivity() {
      * 显示提示信息
      * @param[resId] 要显示的字符串在strings文件中的ID
      */
-    protected fun showToast(@IdRes resId: Int) {
+    protected fun showToast(@StringRes resId: Int) {
         StringUtil.showToast(this, resId)
     }
 

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -35,11 +36,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private var um: IUserManager = UserManager // 用户管理器
 
-    private val WRITE_SD_REQUEST = 1
+    private val writeSdRequest = 1
     // 侧滑菜单登录菜单项
-    var loginItem: MenuItem? = null
+    private var loginItem: MenuItem? = null
     // 是否已成功登录
-    var loginFlag = false
+    private var loginFlag = false
 
     override fun initView(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
@@ -50,7 +51,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // 初始化侧滑菜单
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.setDrawerListener(toggle)
+        drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
 
@@ -88,14 +89,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     // 登录成功的处理
-    val loginSuccess = {
+    private val loginSuccess = {
         data: UserData ->
         loginItem?.title = "${data.nickname} 点击注销"
         loginFlag = true
     }
 
     // 登录失败的处理
-    val loginError = {
+    private val loginError = {
         e: Int ->
         when (e) {
             UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
@@ -106,9 +107,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun processLogic(savedInstanceState: Bundle?) {
-        checkLocalPhonePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_SD_REQUEST)
-        checkOpsPermission(AppOpsManager.OPSTR_WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_SD_REQUEST)
+        checkLocalPhonePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, writeSdRequest)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkOpsPermission(AppOpsManager.OPSTR_WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, writeSdRequest)
+        }
 
         // 设置侧滑菜单
         val menu = nav_view.menu
@@ -119,7 +122,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    fun checkLogin() {
+    private fun checkLogin() {
         um.checkLogin(
                 success = loginSuccess,
                 error = loginError,
@@ -157,8 +160,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     val builder = AlertDialog.Builder(this)
                     builder.setMessage("确定要注销吗？")
                     builder.setTitle("提示")
-                    builder.setNeutralButton("取消") { dialogInterface, i -> dialogInterface.dismiss() }
-                    builder.setPositiveButton("确定") { dialogInterface, i ->
+                    builder.setNeutralButton("取消") { dialogInterface, _ -> dialogInterface.dismiss() }
+                    builder.setPositiveButton("确定") { _, _ ->
                         // 确认注销
                         um.logout {
                             //SyncEntityManager.getInstance().getSQLManager().clearDatabase();
@@ -201,7 +204,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            WRITE_SD_REQUEST -> {
+            writeSdRequest -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     showToast("您拒绝了读写手机存储的权限，某些功能会导致程序出错，请手动允许该权限！")
                 }

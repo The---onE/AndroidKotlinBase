@@ -16,9 +16,8 @@ import kotlinx.android.synthetic.main.fragment_data.*
  * 测试数据相关组件是否运行正常，演示其使用方法
  */
 class DataFragment : BaseFragment() {
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.fragment_data, container, false);
-    }
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View =
+            inflater.inflate(R.layout.fragment_data, container, false)
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 

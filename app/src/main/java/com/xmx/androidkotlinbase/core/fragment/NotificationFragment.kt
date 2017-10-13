@@ -23,9 +23,8 @@ import kotlinx.android.synthetic.main.fragment_notification.*
  */
 class NotificationFragment : BaseFragment() {
 
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.fragment_notification, container, false);
-    }
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View =
+            inflater.inflate(R.layout.fragment_notification, container, false)
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
     }

@@ -1,5 +1,6 @@
 package com.xmx.androidkotlinbase.core.fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
@@ -28,16 +29,16 @@ class UserFragment : BaseFragment() {
     private var um: IUserManager = UserManager // 用户管理器
 
     // 是否已成功登录
-    var loginFlag = false
+    private var loginFlag = false
 
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.fragment_user, container, false);
-    }
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View =
+            inflater.inflate(R.layout.fragment_user, container, false)
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun setListener(view: View) {
         // 打开登录页
         btnLogin.setOnClickListener {
@@ -76,7 +77,8 @@ class UserFragment : BaseFragment() {
     }
 
     // 登录成功的处理
-    val loginSuccess = {
+    @SuppressLint("SetTextI18n")
+    private val loginSuccess = {
         data: UserData ->
         loginFlag = true
         tvStatus.text = "当前状态：已登陆"
@@ -88,7 +90,7 @@ class UserFragment : BaseFragment() {
     }
 
     // 登录失败的处理
-    val loginError = {
+    private val loginError = {
         e: Int ->
         when (e) {
             UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)

@@ -3,6 +3,7 @@ package com.xmx.androidkotlinbase.base.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -73,7 +74,7 @@ abstract class BaseFragment : Fragment() {
      * 显示提示信息
      * @param[resId] 要显示的字符串在strings文件中的ID
      */
-    protected fun showToast(@IdRes resId: Int) {
+    protected fun showToast(@StringRes resId: Int) {
         StringUtil.showToast(context, resId)
     }
 

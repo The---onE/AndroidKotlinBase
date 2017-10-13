@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.avos.avoscloud.im.v2.AVIMClient
 import com.avos.avoscloud.im.v2.AVIMException
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback
-import com.avos.avoscloud.im.v2.messages.AVIMTextMessage
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.fragment.BaseFragment
 import com.xmx.androidkotlinbase.common.im.IMMessageHandlerManager
@@ -33,19 +32,18 @@ class IMFragment : BaseFragment() {
 
     // 消息记录适配器
     private val imAdapter: IMAdapter by lazy {
-        IMAdapter(context, ArrayList<AVIMTextMessage>())
+        IMAdapter(context, ArrayList())
     }
 
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.fragment_im, container, false)
-    }
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View =
+            inflater.inflate(R.layout.fragment_im, container, false)
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 
     }
 
     // 登录失败的处理
-    val loginError = {
+    private val loginError = {
         e: Int ->
         when (e) {
             UserConstants.NOT_LOGGED_IN -> showToast(R.string.not_loggedin)
@@ -178,7 +176,7 @@ class IMFragment : BaseFragment() {
         // 创建自定义文本消息处理器
         val handler = IMTextMessageHandler(context,
                 onReceive = {
-                    text, from, time, conversation, client ->
+                    _, _, _, _, _ ->
                     updateList()
                 })
         // 添加自定义文本消息处理器
@@ -188,7 +186,7 @@ class IMFragment : BaseFragment() {
     /**
      * 读取并更新消息记录列表
      */
-    fun updateList() {
+    private fun updateList() {
         // 读取消息记录
         ImClientManager.getTextChatLog(
                 success = {
