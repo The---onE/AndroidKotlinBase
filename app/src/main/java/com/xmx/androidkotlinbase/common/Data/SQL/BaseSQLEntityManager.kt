@@ -451,7 +451,7 @@ abstract class BaseSQLEntityManager<Entity : ISQLEntity> {
         // 查询条件
         var content = ""
         if (condition.isNotEmpty()) {
-            content = condition.joinToString(prefix = "where ", separator = "and ")
+            content = condition.joinToString(prefix = "where ", separator = " and ")
         }
         // 设置排序方式
         val asc: String = if (ascFlag) {

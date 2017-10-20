@@ -45,11 +45,8 @@ abstract class BaseDialog : DialogFragment() {
     /**
      * 设置Fragment对应布局接口
      * 实现中return inflater.inflate(R.layout.Dialog布局, container);
-
      * @param inflater  用于加载Fragment的布局
-     * *
      * @param container 存放Fragment的layout的ViewGroup
-     * *
      * @return Fragment对应的布局
      */
     protected abstract fun getContentView(inflater: LayoutInflater, container: ViewGroup?): View

@@ -35,8 +35,8 @@ class OperationLogAdapter(context: Context, data: List<OperationLog>) : BaseEnti
             view = LayoutInflater.from(mContext).inflate(R.layout.item_operation_log, parent, false)
             if (view != null) {
                 holder = ViewHolder()
-                holder.operation = view.findViewById(R.id.itemOperation) as TextView
-                holder.time = view.findViewById(R.id.itemTime) as TextView
+                holder.operation = view.findViewById(R.id.itemOperation)
+                holder.time = view.findViewById(R.id.itemTime)
                 view.tag = holder
             } else {
                 holder = null

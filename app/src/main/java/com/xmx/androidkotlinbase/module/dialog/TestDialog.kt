@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.xmx.androidkotlinbase.R
 import com.xmx.androidkotlinbase.base.dialog.BaseDialog
 
@@ -21,12 +22,12 @@ class TestDialog : BaseDialog() {
     }
 
     override fun setListener(view: View) {
-        view.findViewById(R.id.btnOK).setOnClickListener {
+        view.findViewById<Button>(R.id.btnOK).setOnClickListener {
             showToast(R.string.confirm)
             dismiss()
         }
 
-        view.findViewById(R.id.btnCancel).setOnClickListener {
+        view.findViewById<Button>(R.id.btnCancel).setOnClickListener {
             showToast(R.string.cancel)
             dismiss()
         }

@@ -36,8 +36,8 @@ class IMAdapter(context: Context, data: List<AVIMTextMessage>) : BaseEntityAdapt
             view = LayoutInflater.from(mContext).inflate(R.layout.item_im, parent, false)
             if (view != null) {
                 holder = ViewHolder()
-                holder.data = view.findViewById(R.id.itemData) as TextView
-                holder.time = view.findViewById(R.id.itemTime) as TextView
+                holder.data = view.findViewById(R.id.itemData)
+                holder.time = view.findViewById(R.id.itemTime)
                 view.tag = holder
             } else {
                 holder = null
